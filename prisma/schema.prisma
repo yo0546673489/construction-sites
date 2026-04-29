@@ -1,0 +1,87 @@
+// Prisma schema — Premium Lead System (Multi-tenant)
+// Database: SQLite (zero-config local dev). Swap to Postgres for production.
+//
+// בידוד בין לקוחות:
+// - כל "לקוח" של הפלטפורמה הוא Tenant.
+// - לכל Tenant: דף נחיתה משלו (content), משתמשים משלו, לידים משלו.
+// - SUPERADMIN — אתה (בעל הפלטפורמה). יכול ליצור/למחוק Tenants.
+// - OWNER — בעל העסק (השיפוצניק). שולט רק ב-Tenant שלו.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 דורש שה-URL יוגדר ב-prisma.config.ts (לא כאן).
+datasource db {
+  provider = "sqlite"
+}
+
+// =========================================================
+// Tenant — לקוח של הפלטפורמה (עסק)
+// =========================================================
+model Tenant {
+  id        String   @id @default(cuid())
+  // ה-slug הוא חלק מה-URL הציבורי: /sites/{slug}
+  slug      String   @unique
+  // שם העסק — מוצג בדשבורד
+  name      String
+  // התבנית של הדף — קובע איזה רנדרר ואיזו סכמת תוכן בשימוש
+  // ערכים: "renovator" (שיפוצניקים), "charity" (עמותות)
+  template  String   @default("renovator")
+  // תוכן דף הנחיתה — JSON-serialized; הסכימה תלויה ב-template
+  content   String
+  // האם דף הנחיתה פעיל לציבור
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  leads Lead[]
+
+  @@index([slug])
+}
+
+// =========================================================
+// User — משתמש מערכת. שייך ל-Tenant אחד (פרט ל-SUPERADMIN).
+// =========================================================
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  // תפקידים:
+  //   "SUPERADMIN" — בעל הפלטפורמה. tenantId = null. גישה לכלי ניהול גלובליים.
+  //   "OWNER"      — בעל העסק. גישה מלאה ל-Tenant שלו.
+  //   "EDITOR"     — עורך תוכן. עורך תוכן + רואה לידים. לא מנהל משתמשים.
+  role         String   @default("OWNER")
+
+  tenantId String?
+  tenant   Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+// =========================================================
+// Lead — פנייה שהגיעה דרך הטופס בדף הנחיתה. תמיד שייכת ל-Tenant.
+// =========================================================
+model Lead {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  name  String
+  phone String
+  area  String?
+  // הערות — שדה חופשי. נוסיף UI לעריכה בעתיד.
+  notes String?
+  // סטטוס: NEW / CONTACTED / WON / LOST
+  status String @default("NEW")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId, createdAt])
+}

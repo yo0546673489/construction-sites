@@ -1,0 +1,652 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import {
+  ArrowLeftIcon,
+  CircleCheckIcon,
+  HardHatIcon,
+  SparklesIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LeadForm } from "@/components/lead-form";
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { Typewriter } from "@/components/typewriter";
+import { PainList } from "@/components/pain-list";
+import { Counter } from "@/components/counter";
+import { prisma } from "@/lib/db";
+import { parseSiteContent, getElementCSS } from "@/lib/content";
+import { parseCharityContent } from "@/lib/charity-content";
+import { painIcon, solutionIcon, marketingIcon } from "@/lib/icon-map";
+import { CharityLanding } from "@/components/charity/charity-landing";
+import { BeforeAfter } from "@/components/renovator/before-after";
+import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
+import { TestimonialCard } from "@/components/renovator/testimonial-card";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/sites/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const tenant = await prisma.tenant.findUnique({
+    where: { slug },
+    select: { content: true, published: true, template: true },
+  });
+  if (!tenant || !tenant.published) {
+    return { title: "האתר לא נמצא" };
+  }
+
+  if (tenant.template === "charity") {
+    const content = parseCharityContent(tenant.content);
+    return {
+      title: content.meta.pageTitle,
+      description: content.meta.pageDescription,
+    };
+  }
+
+  const content = parseSiteContent(tenant.content);
+  return {
+    title: content.meta.pageTitle,
+    description: content.meta.pageDescription,
+  };
+}
+
+export default async function PublicLandingPage({
+  params,
+}: PageProps<"/sites/[slug]">) {
+  const { slug } = await params;
+  const tenant = await prisma.tenant.findUnique({
+    where: { slug },
+  });
+
+  if (!tenant || !tenant.published) {
+    notFound();
+  }
+
+  /* ============== Dispatcher לפי template ============== */
+  if (tenant.template === "charity") {
+    const charityContent = parseCharityContent(tenant.content);
+    return <CharityLanding content={charityContent} />;
+  }
+
+  /* ============== ברירת מחדל — שיפוצניק ============== */
+  const content = parseSiteContent(tenant.content);
+  // Helper מקוצר להחלת style override per-element
+  const css = (key: string) => getElementCSS(content, key);
+
+  // Fallback URL במקרה שעורך התוכן ניקה את שדה התמונה בטעות
+  const heroBg =
+    content.hero.backgroundImage ||
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80";
+
+  return (
+    <main className="flex flex-1 flex-col bg-black text-white">
+      {/* ============== HERO ============== */}
+      <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+        <Image
+          src={heroBg}
+          alt="שיפוץ דירה ברמה גבוהה"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover [filter:brightness(0.45)] fade-in"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(201,162,74,0.18),transparent_55%)]" />
+
+        <div className="relative mx-auto w-full max-w-6xl px-6 py-32 md:py-40">
+          <div className="max-w-4xl">
+            <div className="fade-up mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-xs font-medium tracking-wide text-white/85 backdrop-blur-md md:text-sm">
+              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+              <span style={css("hero.badge")}>{content.hero.badge}</span>
+            </div>
+
+            <h1 className="text-balance text-4xl font-black leading-[1.1] tracking-tight md:text-6xl lg:text-[4.25rem]">
+              <Typewriter
+                text={content.hero.headlineLine1}
+                delay={150}
+                speed={50}
+                className="block"
+                style={css("hero.headlineLine1")}
+              />
+              <span
+                className="mt-3 block text-[#C9A24A]"
+                style={css("hero.headlineLine2")}
+              >
+                <Typewriter
+                  text={content.hero.headlineLine2}
+                  delay={1700}
+                  speed={50}
+                />
+              </span>
+            </h1>
+
+            <p
+              className="fade-up mt-7 max-w-2xl text-balance text-lg leading-relaxed text-white/75 md:text-xl"
+              style={{ animationDelay: "3s", ...css("hero.subheadline") }}
+            >
+              {content.hero.subheadline}
+            </p>
+
+            <div className="fade-up mt-10" style={{ animationDelay: "3.4s" }}>
+              <Button
+                size="lg"
+                nativeButton={false}
+                className="cta-pulse h-14 rounded-full bg-[#C9A24A] px-8 text-base font-bold text-black shadow-2xl shadow-[#C9A24A]/30 transition-all hover:bg-white hover:text-black"
+                render={<a href="#lead-form" />}
+              >
+                <span style={css("hero.primaryCta")}>
+                  {content.hero.primaryCta}
+                </span>
+                <ArrowLeftIcon className="size-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============== PAIN ============== */}
+      <section className="border-y border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="mb-12 text-center md:mb-16">
+            <div
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              style={css("pain.kicker")}
+            >
+              {content.pain.kicker}
+            </div>
+            <h2
+              className="text-balance text-4xl font-black leading-[1.1] tracking-tight md:text-5xl"
+              style={css("pain.title")}
+            >
+              {content.pain.title}
+            </h2>
+          </div>
+
+          <PainList
+            items={content.pain.items.map((item) => ({
+              icon: painIcon(item.iconName, "size-5"),
+              text: item.text,
+            }))}
+          />
+        </div>
+      </section>
+
+      {/* ============== שבירת אמונה ============== */}
+      <section className="relative overflow-hidden py-28 md:py-36">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(201,162,74,0.10),transparent_60%)]" />
+        <div className="relative mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-balance text-5xl font-black leading-[1.05] tracking-tight md:text-7xl">
+            <span style={css("beliefBreaker.titleBefore")}>
+              {content.beliefBreaker.titleBefore}
+            </span>
+            <span
+              className="text-[#C9A24A]"
+              style={css("beliefBreaker.titleHighlight")}
+            >
+              {content.beliefBreaker.titleHighlight}
+            </span>
+          </h2>
+          <p
+            className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl"
+            style={css("beliefBreaker.paragraph1")}
+          >
+            {content.beliefBreaker.paragraph1}
+          </p>
+          <p
+            className="mx-auto mt-6 max-w-2xl text-lg font-semibold leading-relaxed text-white md:text-xl"
+            style={css("beliefBreaker.paragraph2")}
+          >
+            {content.beliefBreaker.paragraph2}
+          </p>
+        </div>
+      </section>
+
+      {/* ============== הפתרון ============== */}
+      <section
+        id="how-it-works"
+        className="scroll-mt-12 border-y border-white/[0.08] bg-zinc-950 py-28 md:py-36"
+      >
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-20 text-center">
+            <div
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              style={css("solution.kicker")}
+            >
+              {content.solution.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-5xl">
+              <span style={css("solution.titleBefore")}>
+                {content.solution.titleBefore}
+              </span>
+              <br />
+              <span
+                className="text-[#C9A24A]"
+                style={css("solution.titleHighlight")}
+              >
+                {content.solution.titleHighlight}
+              </span>
+            </h2>
+          </div>
+
+          <div className="relative grid gap-12 md:grid-cols-3 md:gap-8">
+            {content.solution.steps.length === 3 && (
+              <div
+                aria-hidden="true"
+                className="absolute top-7 right-[16.66%] left-[16.66%] hidden h-px bg-gradient-to-r from-transparent via-[#C9A24A]/50 to-transparent md:block"
+              />
+            )}
+
+            {content.solution.steps.map((step) => (
+              <div
+                key={step.num}
+                className="relative flex flex-col items-center text-center"
+              >
+                <div className="relative z-10 flex size-14 items-center justify-center rounded-full border border-[#C9A24A]/40 bg-zinc-950 text-[#C9A24A]">
+                  {solutionIcon(step.iconName, "size-6")}
+                </div>
+                <div className="mt-5 text-xs font-bold tracking-[0.3em] text-[#C9A24A]">
+                  {step.num}
+                </div>
+                <h3 className="mt-3 text-xl font-bold md:text-2xl">
+                  {step.title}
+                </h3>
+                <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/65">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== BEFORE / AFTER (רקע בהיר) ============== */}
+      <section className="bg-gradient-to-b from-[#FAF9F6] via-white to-[#FAF9F6] py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 text-center md:mb-20">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#A07820]">
+              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+              {content.beforeAfter.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
+              {content.beforeAfter.title}
+            </h2>
+            <p className="mt-4 text-base text-zinc-600 md:text-lg">
+              {content.beforeAfter.subtitle}
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {content.beforeAfter.items.map((item, i) => (
+              <BeforeAfter key={i} {...item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== WORK PHOTOS — תמונות שיפוצניקים אמיתיים ============== */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center md:mb-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-zinc-900/[0.04] px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-zinc-700">
+              <HardHatIcon className="size-3.5" />
+              {content.workPhotos.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
+              {content.workPhotos.title}
+            </h2>
+            <p className="mt-4 text-base text-zinc-600 md:text-lg">
+              {content.workPhotos.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {content.workPhotos.items.map((photo, i) => (
+              <figure
+                key={`${photo.src}-${i}`}
+                className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-zinc-200"
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.caption}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/20 to-transparent" />
+                <figcaption className="absolute right-3 bottom-3 left-3 text-xs font-bold text-white md:text-sm">
+                  {photo.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== MARKETING PROCESS — איך המערכת עובדת ============== */}
+      <section className="relative overflow-hidden border-y border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 20%, rgba(201,162,74,0.20), transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-6xl px-6">
+          <div className="mb-14 text-center md:mb-20">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C9A24A]/30 bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#C9A24A]">
+              <SparklesIcon className="size-3.5" />
+              {content.marketingProcess.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black tracking-tight md:text-5xl">
+              {content.marketingProcess.title}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-white/65 md:text-lg">
+              {content.marketingProcess.subtitle}
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {content.marketingProcess.items.map((item, i) => (
+              <div
+                key={i}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:-translate-y-1 hover:border-[#C9A24A]/40 hover:bg-white/[0.05]"
+              >
+                <div className="flex size-12 items-center justify-center rounded-xl bg-[#C9A24A]/15 text-[#C9A24A] transition-transform group-hover:scale-110">
+                  {marketingIcon(item.iconName, "size-5")}
+                </div>
+                <h3 className="mt-5 text-lg font-black">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">
+                  {item.description}
+                </p>
+                <div
+                  className="absolute inset-x-0 -bottom-px h-px scale-x-0 bg-gradient-to-r from-transparent via-[#C9A24A]/60 to-transparent transition-transform group-hover:scale-x-100"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== TAGLINE — משפט חזק ============== */}
+      <section className="relative overflow-hidden bg-[#FAF9F6] py-20 md:py-28">
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(201,162,74,0.18), transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl px-6 text-center">
+          <p className="text-balance text-3xl font-black leading-[1.1] tracking-tight text-zinc-900 md:text-5xl lg:text-6xl">
+            {content.tagline.line1}
+          </p>
+          <p className="mt-3 text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
+            <span style={{ color: "#A07820" }}>{content.tagline.line2}</span>
+          </p>
+        </div>
+      </section>
+
+      {/* ============== WHATSAPP PROOF — לידים אמיתיים ============== */}
+      <section className="bg-zinc-50 py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 text-center md:mb-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#25D366]/15 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#075E54]">
+              <span className="size-1.5 rounded-full bg-[#25D366]" />
+              {content.whatsappProof.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
+              {content.whatsappProof.title}
+            </h2>
+            <p className="mt-4 text-base text-zinc-600 md:text-lg">
+              {content.whatsappProof.subtitle}
+            </p>
+          </div>
+
+          <WhatsAppChat messages={content.whatsappProof.messages} />
+        </div>
+      </section>
+
+      {/* ============== הוכחה — מספרים ============== */}
+      <section className="border-b border-white/[0.08] py-28 md:py-36">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-16 text-center">
+            <div
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              style={css("proof.kicker")}
+            >
+              {content.proof.kicker}
+            </div>
+            <h2
+              className="text-balance text-3xl font-black tracking-tight md:text-5xl"
+              style={css("proof.title")}
+            >
+              {content.proof.title}
+            </h2>
+          </div>
+
+          <div
+            className={`grid gap-px overflow-hidden rounded-3xl bg-white/10 md:grid-cols-${Math.min(
+              content.proof.stats.length,
+              3
+            )}`}
+          >
+            {content.proof.stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="flex flex-col items-center bg-black px-6 py-14 text-center md:py-20"
+              >
+                <Counter
+                  to={stat.value}
+                  suffix={stat.suffix}
+                  className="text-6xl font-black tracking-tight text-[#C9A24A] md:text-7xl"
+                />
+                <div className="mt-3 text-sm font-medium uppercase tracking-wider text-white/55">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== TESTIMONIALS — שיפוצניקים שכבר עובדים איתנו ============== */}
+      <section className="bg-gradient-to-b from-white via-[#FAF9F6] to-white py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 text-center md:mb-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#A07820]">
+              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+              {content.testimonials.kicker}
+            </div>
+            <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
+              {content.testimonials.title}
+            </h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {content.testimonials.items.map((t, i) => (
+              <TestimonialCard key={i} {...t} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== גלריה ============== */}
+      <section className="border-b border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 text-center md:mb-20">
+            <div
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              style={css("gallery.kicker")}
+            >
+              {content.gallery.kicker}
+            </div>
+            <h2
+              className="text-balance text-3xl font-black tracking-tight md:text-5xl"
+              style={css("gallery.title")}
+            >
+              {content.gallery.title}
+            </h2>
+            <p className="mt-4 text-white/55" style={css("gallery.subtitle")}>
+              {content.gallery.subtitle}
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+            {content.gallery.items.map((img, i) => (
+              <figure
+                key={`${img.src}-${i}`}
+                className={`group relative overflow-hidden rounded-3xl bg-black ${
+                  i === 0 ? "md:col-span-2 md:row-span-2" : ""
+                }`}
+              >
+                <div
+                  className={`relative ${
+                    i === 0
+                      ? "aspect-[4/5] md:aspect-auto md:h-full"
+                      : "aspect-[4/5]"
+                  }`}
+                >
+                  {img.src && (
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
+                  <figcaption className="absolute bottom-5 right-5 text-sm font-semibold tracking-wide text-white">
+                    {img.label}
+                  </figcaption>
+                </div>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== בידול ============== */}
+      <section className="py-28 md:py-36">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <div
+            className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+            style={css("differentiator.kicker")}
+          >
+            {content.differentiator.kicker}
+          </div>
+          <h2
+            className="text-balance text-4xl font-black leading-[1.05] tracking-tight md:text-6xl"
+            style={css("differentiator.title")}
+          >
+            {content.differentiator.title}
+          </h2>
+          <p className="mx-auto mt-7 max-w-2xl text-balance text-lg leading-relaxed text-white/70 md:text-xl">
+            <span style={css("differentiator.paragraph1Before")}>
+              {content.differentiator.paragraph1Before}
+            </span>
+            <span
+              className="font-semibold text-white"
+              style={css("differentiator.paragraph1Highlight")}
+            >
+              {content.differentiator.paragraph1Highlight}
+            </span>
+          </p>
+          <p className="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed text-white/70 md:text-xl">
+            <span style={css("differentiator.paragraph2Before")}>
+              {content.differentiator.paragraph2Before}
+            </span>
+            <span
+              className="font-semibold text-white"
+              style={css("differentiator.paragraph2Highlight")}
+            >
+              {content.differentiator.paragraph2Highlight}
+            </span>
+          </p>
+        </div>
+      </section>
+
+      {/* ============== CTA + טופס ============== */}
+      <section
+        id="lead-form"
+        className="scroll-mt-12 relative overflow-hidden border-t border-white/[0.08] bg-zinc-950 py-28 md:py-36"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(201,162,74,0.18),transparent_55%)]" />
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-6 md:grid-cols-2 md:gap-20">
+          <div>
+            <div
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              style={css("ctaSection.kicker")}
+            >
+              {content.ctaSection.kicker}
+            </div>
+            <h2 className="text-balance text-4xl font-black leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+              <span style={css("ctaSection.titleBefore")}>
+                {content.ctaSection.titleBefore}
+              </span>
+              <span
+                className="text-[#C9A24A]"
+                style={css("ctaSection.titleHighlight")}
+              >
+                {content.ctaSection.titleHighlight}
+              </span>
+            </h2>
+            <p
+              className="mt-6 max-w-md text-lg leading-relaxed text-white/65"
+              style={css("ctaSection.description")}
+            >
+              {content.ctaSection.description}
+            </p>
+
+            <div className="mt-10 space-y-4">
+              {content.ctaSection.bullets.map((b) => (
+                <div key={b} className="flex items-center gap-3">
+                  <div className="flex size-7 items-center justify-center rounded-full bg-[#C9A24A]">
+                    <CircleCheckIcon className="size-4 text-black" />
+                  </div>
+                  <span className="text-base font-medium text-white/90">
+                    {b}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <LeadForm
+            tenantId={tenant.id}
+            buttonText={content.ctaSection.formButtonText}
+          />
+        </div>
+      </section>
+
+      {/* ============== Footer ============== */}
+      <footer className="bg-black py-12 text-white/50">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 text-sm md:flex-row">
+          <div className="flex items-center gap-2.5">
+            <HardHatIcon className="size-5 text-[#C9A24A]" />
+            <span
+              className="font-bold tracking-wide text-white"
+              style={css("meta.brandName")}
+            >
+              {content.meta.brandName}
+            </span>
+          </div>
+          <div className="flex items-center gap-7">
+            <a href="#how-it-works" className="hover:text-white">
+              איך זה עובד
+            </a>
+            <a href="#lead-form" className="hover:text-white">
+              צור קשר
+            </a>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+        </div>
+      </footer>
+
+      <WhatsAppButton
+        number={content.contact.whatsappNumber}
+        message={content.contact.whatsappMessage}
+      />
+    </main>
+  );
+}
