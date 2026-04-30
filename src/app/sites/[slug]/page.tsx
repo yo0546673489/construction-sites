@@ -6,7 +6,6 @@ import {
   HardHatIcon,
   SparklesIcon,
 } from "lucide-react";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/lead-form";
 import { WhatsAppButton } from "@/components/whatsapp-button";
@@ -21,25 +20,9 @@ import { parseCharityContent } from "@/lib/charity-content";
 import { painIcon, solutionIcon, marketingIcon } from "@/lib/icon-map";
 import { CharityLanding } from "@/components/charity/charity-landing";
 import { BeforeAfter } from "@/components/renovator/before-after";
+import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
 import { TestimonialCard } from "@/components/renovator/testimonial-card";
-
-// ===== Below-the-fold — lazy loaded לטיפול ב-render-blocking + JS bundle =====
-const WhatsAppChat = dynamic(
-  () =>
-    import("@/components/renovator/whatsapp-chat").then((m) => ({
-      default: m.WhatsAppChat,
-    })),
-  { ssr: true }
-);
-
-// FloatingProof — popups שמופיעים רק 2.2s אחרי טעינה. אין צורך ב-SSR.
-const FloatingProof = dynamic(
-  () =>
-    import("@/components/renovator/floating-proof").then((m) => ({
-      default: m.FloatingProof,
-    })),
-  { ssr: false }
-);
+import { FloatingProof } from "@/components/renovator/floating-proof";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
