@@ -55,7 +55,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           placeholder="שם פרטי ושם משפחה"
           autoComplete="name"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/65 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
@@ -71,7 +71,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           placeholder="050-0000000"
           autoComplete="tel"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/65 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
@@ -84,7 +84,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           name="area"
           placeholder="למשל: מרכז, ירושלים, צפון"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/65 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
@@ -96,7 +96,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
         {pending ? "שולח..." : buttonText}
       </Button>
 
-      <p className="text-center text-xs text-white/45">
+      <p className="text-center text-xs text-white/70">
         בלחיצה על הכפתור אתה מאשר שניצור איתך קשר בנוגע לפניות חדשות.
       </p>
     </form>
