@@ -83,7 +83,7 @@ export function WidgetSettings({ widget, onChange }: Props) {
   function setProps<P>(patch: Partial<P>) {
     onChange({
       ...widget,
-      props: { ...(widget.props as P), ...patch } as typeof widget.props,
+      props: { ...(widget.props as P), ...patch } as unknown as typeof widget.props,
     });
   }
 
