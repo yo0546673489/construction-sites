@@ -1,11 +1,11 @@
-// PM2 production config — מופעל בשרת ב-/home/webapp/platform/my-website
+// PM2 production config — מופעל בשרת ב-/home/webapp/platform
 module.exports = {
   apps: [
     {
       name: "pro-digital",
       script: "node_modules/next/dist/bin/next",
       args: "start",
-      cwd: "/home/webapp/platform/my-website",
+      cwd: "/home/webapp/platform",
       instances: 1,
       exec_mode: "fork",
       env: {
