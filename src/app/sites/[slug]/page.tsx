@@ -266,7 +266,7 @@ export default async function PublicLandingPage({
                 <h3 className="mt-3 text-xl font-bold md:text-2xl">
                   {step.title}
                 </h3>
-                <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/65">
+                <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/75">
                   {step.desc}
                 </p>
               </div>
@@ -356,7 +356,7 @@ export default async function PublicLandingPage({
             <h2 className="text-balance text-3xl font-black tracking-tight md:text-5xl">
               {content.marketingProcess.title}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-white/65 md:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-white/75 md:text-lg">
               {content.marketingProcess.subtitle}
             </p>
           </div>
@@ -371,7 +371,7 @@ export default async function PublicLandingPage({
                   {marketingIcon(item.iconName, "size-5")}
                 </div>
                 <h3 className="mt-5 text-lg font-black">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">
+                <p className="mt-2 text-sm leading-relaxed text-white/75">
                   {item.description}
                 </p>
                 <div
@@ -597,7 +597,7 @@ export default async function PublicLandingPage({
             <p className="text-balance text-4xl font-black leading-tight tracking-tight md:text-6xl lg:text-7xl">
               {content.bigRealization?.line1 || "הבעיה היא לא בך."}
             </p>
-            <div className="mx-auto mt-10 max-w-xl space-y-3 text-lg font-medium text-white/65 md:text-2xl">
+            <div className="mx-auto mt-10 max-w-xl space-y-3 text-lg font-medium text-white/75 md:text-2xl">
               <p>{content.bigRealization?.line2 || "זה לא המקצוע שלך."}</p>
               <p>{content.bigRealization?.line3 || "זה לא השירות שלך."}</p>
             </div>
@@ -668,7 +668,7 @@ export default async function PublicLandingPage({
               </span>
             </h2>
             <p
-              className="mt-6 max-w-md text-lg leading-relaxed text-white/65"
+              className="mt-6 max-w-md text-lg leading-relaxed text-white/75"
               style={css("ctaSection.description")}
             >
               {content.ctaSection.description}
