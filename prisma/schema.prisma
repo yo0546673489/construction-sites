@@ -32,6 +32,9 @@ model Tenant {
   content   String
   // האם דף הנחיתה פעיל לציבור
   published Boolean  @default(true)
+  // קוד פיקסל פייסבוק מלא (כפי שפייסבוק נותן ב-Events Manager).
+  // אופציונלי. מכיל script + noscript, מוטמע as-is באתר הציבורי.
+  facebookPixelCode String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -79,6 +82,8 @@ model Lead {
   notes String?
   // סטטוס: NEW / CONTACTED / WON / LOST
   status String @default("NEW")
+  // האם הליד טופל — toggle עצמאי שמשתמש מסמן ידנית
+  handled Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

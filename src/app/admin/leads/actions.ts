@@ -50,3 +50,24 @@ export async function deleteLead(leadId: string) {
   revalidatePath("/admin");
   return { ok: true } as const;
 }
+
+/**
+ * סימון/ביטול-סימון של ליד כ"טופל".
+ * תיבת בחירה עצמאית — ניתן להפעיל ללא קשר לסטטוס המפורט.
+ */
+export async function toggleLeadHandled(leadId: string, handled: boolean) {
+  const { tenant } = await requireTenantUser();
+
+  const result = await prisma.lead.updateMany({
+    where: { id: leadId, tenantId: tenant.id },
+    data: { handled },
+  });
+
+  if (result.count === 0) {
+    return { ok: false, error: "הליד לא נמצא" } as const;
+  }
+
+  revalidatePath("/admin/leads");
+  revalidatePath("/admin");
+  return { ok: true } as const;
+}

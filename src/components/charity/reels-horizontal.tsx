@@ -18,16 +18,16 @@ type Props = {
 };
 
 /**
- * Reels — סקרול אופקי עם snap.
+ * Reels — סקרול אופקי עם snap mandatory.
  * כל card הוא וידאו אנכי 9:16 שמתנגן אוטומטית כשנכנס למסך.
- * Mobile: native swipe.
+ * CTA על גבי הכרטיס (למטה) — לא מתחת — לחיסכון בגובה.
  */
 export function ReelsHorizontal({ items, donationUrl }: Props) {
   return (
     <div className="relative">
       <div
-        className="flex gap-4 overflow-x-auto px-6 pb-6 snap-x snap-mandatory [scrollbar-width:thin]"
-        style={{ scrollPaddingInline: "1.5rem" }}
+        className="flex gap-2 overflow-x-auto px-4 pb-4 snap-x snap-mandatory [scrollbar-width:thin] sm:px-6 sm:gap-3"
+        style={{ scrollPaddingInline: "1rem" }}
       >
         {items.map((item, i) => (
           <ReelCard
@@ -64,9 +64,8 @@ function ReelCard({ item, donationUrl }: { item: Item; donationUrl: string }) {
   }, []);
 
   return (
-    <div className="group relative w-[260px] shrink-0 snap-start md:w-[290px]">
-      {/* Video card */}
-      <div className="relative aspect-[9/16] overflow-hidden rounded-3xl bg-zinc-900 shadow-xl shadow-zinc-900/15 transition-transform group-hover:scale-[1.02]">
+    <div className="group relative w-[260px] shrink-0 snap-start sm:w-[300px] md:w-[340px] lg:w-[360px]">
+      <div className="relative aspect-[9/16] overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl shadow-black/50 ring-1 ring-white/10 transition-all duration-500 group-hover:scale-[1.04] group-hover:shadow-[0_30px_70px_-15px_rgba(0,0,0,0.7)]">
         {item.videoUrl ? (
           <video
             ref={ref}
@@ -75,7 +74,7 @@ function ReelCard({ item, donationUrl }: { item: Item; donationUrl: string }) {
             playsInline
             poster={item.poster}
             preload="metadata"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           >
             <source src={item.videoUrl} type="video/mp4" />
           </video>
@@ -84,31 +83,35 @@ function ReelCard({ item, donationUrl }: { item: Item; donationUrl: string }) {
           <img
             src={item.poster}
             alt={item.overlayText}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         )}
-        {/* gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+
+        {/* gradient overlay חזק לתחתית — לקריאות הטקסט והכפתור */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
         {/* טקסט תחתון */}
-        <div className="absolute right-4 bottom-4 left-4 text-white">
-          <p className="text-base font-black leading-tight">
+        <div className="absolute right-4 bottom-20 left-4">
+          <p className="text-base font-black leading-tight text-white text-shadow-soft md:text-lg">
             {item.overlayText}
           </p>
         </div>
-      </div>
 
-      {/* CTA תחתון */}
-      <a
-        href={donationUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white shadow-md transition-all hover:scale-[1.02]"
-        style={{ background: RED }}
-      >
-        <HeartIcon className="size-4 fill-white" />
-        {item.cta}
-        <ArrowLeftIcon className="size-3.5" />
-      </a>
+        {/* CTA על הכרטיס */}
+        <a
+          href={donationUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md transition-all hover:scale-[1.02]"
+          style={{
+            background: `linear-gradient(135deg, ${RED}E6, #C62828E6)`,
+          }}
+        >
+          <HeartIcon className="size-4 fill-white" />
+          {item.cta}
+          <ArrowLeftIcon className="size-3.5" />
+        </a>
+      </div>
     </div>
   );
 }

@@ -277,4 +277,115 @@
       background-position: 100% 50%;
     }
   }
+
+  /* ===== Visual depth utilities ===== */
+
+  /* טקסט-שאדו קצר לכיתובים על תמונות/וידאו (קל) */
+  .text-shadow-soft {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  /* טקסט-שאדו דרמטי יותר לכותרות גדולות מעל מדיה רועשת */
+  .text-shadow-strong {
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Parallax — תמונה צמודה ל-viewport (fixed) שלא זזה עם הסקרול */
+  .parallax-fixed {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  /* iOS Safari לא תומך טוב ב-fixed → fallback ל-scroll */
+  @supports (-webkit-touch-callout: none) {
+    .parallax-fixed {
+      background-attachment: scroll;
+    }
+  }
+
+  /* זום איטי שתמיד רץ — לתמונות רקע של סקשנים */
+  .slow-zoom {
+    animation: slowZoom 22s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+  @keyframes slowZoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.12);
+    }
+  }
+
+  /* Scroll-reveal — מצב התחלתי (דורש .is-visible כדי להיחשף) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-zoom {
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal-zoom.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Hover-lift — עדין, לתמונות גלריה וכרטיסים */
+  .hover-lift {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.5s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Floating card — ריחוף עדין מתמיד לכרטיסי תרומה */
+  .cl-floating-card {
+    animation: cl-float 4s ease-in-out infinite;
+    will-change: transform;
+  }
+  @keyframes cl-float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  /* Sweep — פס אור עובר על כפתור/תמונה */
+  .sweep::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transform: skewX(-20deg);
+    animation: sweep 4.5s ease-in-out infinite;
+  }
+  @keyframes sweep {
+    0%, 70% {
+      left: -100%;
+    }
+    100% {
+      left: 200%;
+    }
+  }
 }

@@ -5,8 +5,10 @@ import { toast } from "sonner";
 import {
   ExternalLinkIcon,
   EyeIcon,
+  MonitorIcon,
   MousePointer2Icon,
   SaveIcon,
+  SmartphoneIcon,
   XIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,9 +21,15 @@ import {
   type TextElementKey,
   type SectionElementKey,
 } from "@/lib/element-registry";
+import {
+  WIDGET_REGISTRY,
+  type WidgetInstance,
+} from "@/lib/widgets";
 import { saveContent } from "@/app/admin/content/actions";
 import { LandingPreview } from "./landing-preview";
 import { TextStylePanel } from "./text-style-panel";
+import { WidgetListCanvas } from "./widget-list-canvas";
+import { WidgetSettings } from "./widget-settings";
 import {
   BeforeAfterFields,
   ContactFields,
@@ -48,8 +56,38 @@ export function ContentEditor({
 }) {
   const [content, setContent] = useState<SiteContent>(initial);
   const [selected, setSelected] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">(
+    "desktop"
+  );
   const [isPending, startTransition] = useTransition();
   const [hasChanges, setHasChanges] = useState(false);
+
+  function setWidgets(
+    next: WidgetInstance[] | ((prev: WidgetInstance[]) => WidgetInstance[])
+  ) {
+    setContent((prev) => {
+      const current = prev.customWidgets ?? [];
+      const updated = typeof next === "function" ? next(current) : next;
+      return { ...prev, customWidgets: updated };
+    });
+    setHasChanges(true);
+  }
+
+  /** מזהה ווידג'ט = "widget:<id>". בודק האם הבחירה הנוכחית היא של ווידג'ט. */
+  const isWidgetSelection =
+    selected !== null && selected.startsWith("widget:");
+  const selectedWidgetId = isWidgetSelection ? selected!.slice(7) : null;
+  const selectedWidget =
+    selectedWidgetId !== null
+      ? (content.customWidgets ?? []).find((w) => w.id === selectedWidgetId) ??
+        null
+      : null;
+
+  function updateWidget(updated: WidgetInstance) {
+    setWidgets((prev) =>
+      prev.map((w) => (w.id === updated.id ? updated : w))
+    );
+  }
 
   function patchContent(next: SiteContent) {
     setContent(next);
@@ -80,11 +118,15 @@ export function ContentEditor({
   }
 
   const panelTitle = selected
-    ? isTextElementKey(selected)
-      ? TEXT_ELEMENTS[selected].label
-      : isSectionElementKey(selected)
-      ? SECTION_ELEMENTS[selected as SectionElementKey].label
-      : ""
+    ? isWidgetSelection
+      ? selectedWidget
+        ? WIDGET_REGISTRY[selectedWidget.type].label
+        : "ווידג'ט"
+      : isTextElementKey(selected)
+        ? TEXT_ELEMENTS[selected].label
+        : isSectionElementKey(selected)
+          ? SECTION_ELEMENTS[selected as SectionElementKey].label
+          : ""
     : "";
 
   return (
@@ -94,9 +136,10 @@ export function ContentEditor({
         <div>
           <h1 className="text-base font-bold">עורך ויזואלי</h1>
           <p className="text-xs text-white/50">
-            לחץ על פנסיל ✏️ לצד כל אלמנט כדי לערוך אותו
+            לחץ על אלמנט כדי לערוך · בסוף הדף הוסף ווידג'טים חדשים
           </p>
         </div>
+
         <div className="flex items-center gap-2">
           <a
             href={`/sites/${tenantSlug}`}
@@ -119,19 +162,66 @@ export function ContentEditor({
         </div>
       </div>
 
-      {/* Body — split */}
+      {/* Preview-mode toolbar (shared) */}
+      <div className="flex items-center justify-center gap-1 border-b border-white/10 bg-zinc-950/50 px-4 py-2.5">
+        <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1">
+          <button
+            type="button"
+            onClick={() => setPreviewMode("desktop")}
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
+              previewMode === "desktop"
+                ? "bg-[#C9A24A] text-black"
+                : "text-white/60 hover:text-white"
+            }`}
+            aria-label="תצוגת מחשב"
+          >
+            <MonitorIcon className="size-3.5" />
+            מחשב
+          </button>
+          <button
+            type="button"
+            onClick={() => setPreviewMode("mobile")}
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
+              previewMode === "mobile"
+                ? "bg-[#C9A24A] text-black"
+                : "text-white/60 hover:text-white"
+            }`}
+            aria-label="תצוגת מובייל"
+          >
+            <SmartphoneIcon className="size-3.5" />
+            מובייל
+          </button>
+        </div>
+      </div>
+
       <div className="flex flex-1 overflow-hidden">
         {/* Preview pane */}
-        <div
-          className="flex-1 overflow-y-auto bg-zinc-900 p-6"
-          onClick={() => setSelected(null)}
-        >
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/40">
-            <LandingPreview
-              content={content}
-              selected={selected}
-              onSelect={setSelected}
-            />
+        <div className="flex flex-1 flex-col overflow-hidden bg-zinc-900">
+          {/* Scrollable preview area */}
+          <div
+            className="flex-1 overflow-y-auto p-6"
+            onClick={() => setSelected(null)}
+          >
+            <div
+              className={`mx-auto overflow-hidden border shadow-2xl shadow-black/40 transition-all duration-500 ${
+                previewMode === "mobile"
+                  ? "max-w-[400px] rounded-[2.5rem] border-zinc-700 ring-8 ring-zinc-800"
+                  : "max-w-3xl rounded-2xl border-white/10"
+              }`}
+            >
+              <LandingPreview
+                content={content}
+                selected={selected}
+                onSelect={setSelected}
+              />
+              {/* רשימת ווידג'טים מותאמים + כפתור "+" — תמיד מוצגים בסוף הדף */}
+              <WidgetListCanvas
+                widgets={content.customWidgets ?? []}
+                onChange={setWidgets}
+                selectedWidgetId={selectedWidgetId}
+                onSelect={(id) => setSelected(id ? `widget:${id}` : null)}
+              />
+            </div>
           </div>
         </div>
 
@@ -156,8 +246,16 @@ export function ContentEditor({
               </div>
 
               <div className="flex-1 overflow-y-auto p-5">
+                {/* WIDGET — settings פר-סוג */}
+                {isWidgetSelection && selectedWidget && (
+                  <WidgetSettings
+                    widget={selectedWidget}
+                    onChange={updateWidget}
+                  />
+                )}
+
                 {/* TEXT element — full text + style controls */}
-                {isTextElementKey(selected) && (
+                {!isWidgetSelection && isTextElementKey(selected) && (
                   <TextStylePanel
                     elementKey={selected as TextElementKey}
                     content={content}

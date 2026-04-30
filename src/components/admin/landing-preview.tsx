@@ -29,7 +29,7 @@ function s(content: SiteContent, key: string) {
  */
 export function LandingPreview({ content, selected, onSelect }: Props) {
   return (
-    <div dir="rtl" className="bg-black text-white">
+    <div dir="rtl" className="@container bg-black text-white">
       {/* ============== HERO ============== */}
       <section className="relative flex min-h-[600px] items-center overflow-hidden">
         {/* תמונת רקע — אלמנט בודד עם פנסיל בפינה */}
@@ -61,7 +61,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
           </div>
         </div>
 
-        <div className="relative w-full px-8 py-20 md:py-24">
+        <div className="relative w-full px-8 py-20 @[768px]:py-24">
           <div className="max-w-3xl space-y-5">
             <EditableElement
               elementKey="hero.badge"
@@ -78,7 +78,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               </div>
             </EditableElement>
 
-            <h1 className="text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-5xl">
+            <h1 className="text-balance text-3xl font-black leading-[1.1] tracking-tight @[768px]:text-5xl">
               <EditableElement
                 elementKey="hero.headlineLine1"
                 selected={selected === "hero.headlineLine1"}
@@ -111,7 +111,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               className="block max-w-xl"
             >
               <p
-                className="text-balance text-base leading-relaxed text-white/75 md:text-lg"
+                className="text-balance text-base leading-relaxed text-white/75 @[768px]:text-lg"
                 style={s(content, "hero.subheadline")}
               >
                 {content.hero.subheadline}
@@ -137,7 +137,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== PAIN ============== */}
-      <section className="border-y border-white/[0.08] bg-zinc-950 py-16 md:py-20">
+      <section className="border-y border-white/[0.08] bg-zinc-950 py-16 @[768px]:py-20">
         <div className="mx-auto max-w-3xl px-6">
           <div className="mb-10 space-y-3 text-center">
             <EditableElement
@@ -160,7 +160,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               onSelect={onSelect}
             >
               <h2
-                className="text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-4xl"
+                className="text-balance text-3xl font-black leading-[1.1] tracking-tight @[768px]:text-4xl"
                 style={s(content, "pain.title")}
               >
                 {content.pain.title}
@@ -183,7 +183,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A24A]/15 text-[#C9A24A]">
                     {painIcon(item.iconName, "size-5")}
                   </span>
-                  <span className="text-sm font-medium text-white/90 md:text-base">
+                  <span className="text-sm font-medium text-white/90 @[768px]:text-base">
                     {item.text}
                   </span>
                 </li>
@@ -194,10 +194,10 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== שבירת אמונה ============== */}
-      <section className="relative overflow-hidden py-20 md:py-24">
+      <section className="relative overflow-hidden py-20 @[768px]:py-24">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(201,162,74,0.10),transparent_60%)]" />
         <div className="relative mx-auto max-w-3xl space-y-6 px-6 text-center">
-          <h2 className="text-balance text-4xl font-black leading-[1.05] tracking-tight md:text-5xl">
+          <h2 className="text-balance text-4xl font-black leading-[1.05] tracking-tight @[768px]:text-5xl">
             <EditableElement
               elementKey="beliefBreaker.titleBefore"
               selected={selected === "beliefBreaker.titleBefore"}
@@ -229,7 +229,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             className="mx-auto block max-w-2xl"
           >
             <p
-              className="text-base leading-relaxed text-white/70 md:text-lg"
+              className="text-base leading-relaxed text-white/70 @[768px]:text-lg"
               style={s(content, "beliefBreaker.paragraph1")}
             >
               {content.beliefBreaker.paragraph1}
@@ -242,7 +242,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             className="mx-auto block max-w-2xl"
           >
             <p
-              className="text-base font-semibold leading-relaxed text-white md:text-lg"
+              className="text-base font-semibold leading-relaxed text-white @[768px]:text-lg"
               style={s(content, "beliefBreaker.paragraph2")}
             >
               {content.beliefBreaker.paragraph2}
@@ -252,7 +252,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== הפתרון ============== */}
-      <section className="border-y border-white/[0.08] bg-zinc-950 py-16 md:py-24">
+      <section className="border-y border-white/[0.08] bg-zinc-950 py-16 @[768px]:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-12 space-y-3 text-center">
             <EditableElement
@@ -269,7 +269,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
                 {content.solution.kicker}
               </div>
             </EditableElement>
-            <h2 className="text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-4xl">
+            <h2 className="text-balance text-3xl font-black leading-[1.1] tracking-tight @[768px]:text-4xl">
               <EditableElement
                 elementKey="solution.titleBefore"
                 selected={selected === "solution.titleBefore"}
@@ -302,7 +302,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             selected={selected === "section:solution.steps"}
             onSelect={onSelect}
           >
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-8 @[768px]:grid-cols-3">
               {content.solution.steps.map((step) => (
                 <div
                   key={step.num}
@@ -337,7 +337,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-[#A07820]">
                 {content.beforeAfter.kicker}
               </div>
-              <h2 className="text-2xl font-black md:text-3xl">
+              <h2 className="text-2xl font-black @[768px]:text-3xl">
                 {content.beforeAfter.title}
               </h2>
               <p className="mt-2 text-sm text-zinc-600">
@@ -385,7 +385,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-zinc-700">
                 {content.workPhotos.kicker}
               </div>
-              <h2 className="text-2xl font-black md:text-3xl">
+              <h2 className="text-2xl font-black @[768px]:text-3xl">
                 {content.workPhotos.title}
               </h2>
               <div className="mt-4 grid grid-cols-4 gap-1.5">
@@ -423,7 +423,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-[#C9A24A]">
                 {content.marketingProcess.kicker}
               </div>
-              <h2 className="text-2xl font-black md:text-3xl">
+              <h2 className="text-2xl font-black @[768px]:text-3xl">
                 {content.marketingProcess.title}
               </h2>
               <div className="mt-4 grid grid-cols-3 gap-2">
@@ -452,11 +452,11 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             onSelect={onSelect}
           >
             <div className="text-center">
-              <p className="text-xl font-black leading-tight md:text-2xl">
+              <p className="text-xl font-black leading-tight @[768px]:text-2xl">
                 {content.tagline.line1}
               </p>
               <p
-                className="mt-1 text-xl font-black leading-tight md:text-2xl"
+                className="mt-1 text-xl font-black leading-tight @[768px]:text-2xl"
                 style={{ color: "#A07820" }}
               >
                 {content.tagline.line2}
@@ -478,7 +478,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-[#075E54]">
                 {content.whatsappProof.kicker}
               </div>
-              <h2 className="text-2xl font-black md:text-3xl">
+              <h2 className="text-2xl font-black @[768px]:text-3xl">
                 {content.whatsappProof.title}
               </h2>
               <div className="mt-4 grid grid-cols-2 gap-2 text-right">
@@ -502,7 +502,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== הוכחה ============== */}
-      <section className="border-b border-white/[0.08] py-16 md:py-24">
+      <section className="border-b border-white/[0.08] py-16 @[768px]:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-10 space-y-3 text-center">
             <EditableElement
@@ -525,7 +525,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               onSelect={onSelect}
             >
               <h2
-                className="text-balance text-3xl font-black tracking-tight md:text-4xl"
+                className="text-balance text-3xl font-black tracking-tight @[768px]:text-4xl"
                 style={s(content, "proof.title")}
               >
                 {content.proof.title}
@@ -540,7 +540,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             onSelect={onSelect}
           >
             <div
-              className={`grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-${Math.min(
+              className={`grid gap-px overflow-hidden rounded-2xl bg-white/10 @[768px]:grid-cols-${Math.min(
                 content.proof.stats.length,
                 3
               )}`}
@@ -548,9 +548,9 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               {content.proof.stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex flex-col items-center bg-black px-6 py-10 text-center md:py-14"
+                  className="flex flex-col items-center bg-black px-6 py-10 text-center @[768px]:py-14"
                 >
-                  <div className="text-5xl font-black tracking-tight text-[#C9A24A] md:text-6xl">
+                  <div className="text-5xl font-black tracking-tight text-[#C9A24A] @[768px]:text-6xl">
                     {stat.value}
                     {stat.suffix}
                   </div>
@@ -576,7 +576,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-[#A07820]">
                 {content.testimonials.kicker}
               </div>
-              <h2 className="text-2xl font-black md:text-3xl">
+              <h2 className="text-2xl font-black @[768px]:text-3xl">
                 {content.testimonials.title}
               </h2>
               <div className="mt-4 grid grid-cols-3 gap-2">
@@ -605,7 +605,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== גלריה ============== */}
-      <section className="border-b border-white/[0.08] bg-zinc-950 py-16 md:py-24">
+      <section className="border-b border-white/[0.08] bg-zinc-950 py-16 @[768px]:py-24">
         <div className="mx-auto max-w-5xl px-6">
           <div className="mb-10 space-y-3 text-center">
             <EditableElement
@@ -628,7 +628,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               onSelect={onSelect}
             >
               <h2
-                className="text-balance text-3xl font-black tracking-tight md:text-4xl"
+                className="text-balance text-3xl font-black tracking-tight @[768px]:text-4xl"
                 style={s(content, "gallery.title")}
               >
                 {content.gallery.title}
@@ -654,18 +654,18 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             selected={selected === "section:gallery.items"}
             onSelect={onSelect}
           >
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-3 @[768px]:grid-cols-3">
               {content.gallery.items.map((img, i) => (
                 <figure
                   key={`${img.src}-${i}`}
                   className={`relative overflow-hidden rounded-2xl bg-black ${
-                    i === 0 ? "md:col-span-2 md:row-span-2" : ""
+                    i === 0 ? "@[768px]:col-span-2 @[768px]:row-span-2" : ""
                   }`}
                 >
                   <div
                     className={`relative ${
                       i === 0
-                        ? "aspect-[4/5] md:aspect-auto md:h-full"
+                        ? "aspect-[4/5] @[768px]:aspect-auto @[768px]:h-full"
                         : "aspect-[4/5]"
                     }`}
                   >
@@ -692,7 +692,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== בידול ============== */}
-      <section className="py-20 md:py-24">
+      <section className="py-20 @[768px]:py-24">
         <div className="mx-auto max-w-3xl space-y-5 px-6 text-center">
           <EditableElement
             elementKey="differentiator.kicker"
@@ -714,13 +714,13 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
             onSelect={onSelect}
           >
             <h2
-              className="text-balance text-3xl font-black leading-[1.05] tracking-tight md:text-5xl"
+              className="text-balance text-3xl font-black leading-[1.05] tracking-tight @[768px]:text-5xl"
               style={s(content, "differentiator.title")}
             >
               {content.differentiator.title}
             </h2>
           </EditableElement>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 md:text-lg">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 @[768px]:text-lg">
             <EditableElement
               elementKey="differentiator.paragraph1Before"
               selected={selected === "differentiator.paragraph1Before"}
@@ -745,7 +745,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
               </span>
             </EditableElement>
           </p>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 md:text-lg">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/70 @[768px]:text-lg">
             <EditableElement
               elementKey="differentiator.paragraph2Before"
               selected={selected === "differentiator.paragraph2Before"}
@@ -774,9 +774,9 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
       </section>
 
       {/* ============== CTA + Form ============== */}
-      <section className="relative overflow-hidden border-t border-white/[0.08] bg-zinc-950 py-16 md:py-20">
+      <section className="relative overflow-hidden border-t border-white/[0.08] bg-zinc-950 py-16 @[768px]:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(201,162,74,0.18),transparent_55%)]" />
-        <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-6 md:grid-cols-2">
+        <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-6 @[768px]:grid-cols-2">
           <div className="space-y-4">
             <EditableElement
               elementKey="ctaSection.kicker"
@@ -792,7 +792,7 @@ export function LandingPreview({ content, selected, onSelect }: Props) {
                 {content.ctaSection.kicker}
               </div>
             </EditableElement>
-            <h2 className="text-balance text-3xl font-black leading-[1.05] tracking-tight md:text-4xl">
+            <h2 className="text-balance text-3xl font-black leading-[1.05] tracking-tight @[768px]:text-4xl">
               <EditableElement
                 elementKey="ctaSection.titleBefore"
                 selected={selected === "ctaSection.titleBefore"}

@@ -11,6 +11,7 @@ import {
   ExternalLinkIcon,
   LogOutIcon,
   ArrowLeftCircleIcon,
+  SettingsIcon,
 } from "lucide-react";
 import { exitTenant } from "@/app/admin/tenants/actions";
 
@@ -56,6 +57,11 @@ export function AdminSidebar({ user, tenant, isImpersonating }: Props) {
       href: "/admin/users",
       label: "משתמשים",
       icon: UsersIcon,
+    });
+    tenantNav.push({
+      href: "/admin/settings",
+      label: "הגדרות",
+      icon: SettingsIcon,
     });
   }
 

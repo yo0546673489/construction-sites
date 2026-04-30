@@ -11,6 +11,8 @@
  *  - Popup: מופיע אחרי 15 שניות
  */
 
+import type { StyleOverrides } from "@/lib/content";
+
 export type CharitySiteContent = {
   /* SEO + מיתוג */
   meta: {
@@ -41,6 +43,10 @@ export type CharitySiteContent = {
     typewriterPhase1: string;
     typewriterPhase2: string;
     typewriterPhase3: string;
+    /** וידאו חלופי לצד ה-Hero — אם הוגדר, גובר על sideMedia */
+    altSideMedia?: string;
+    /** סוג מדיה חלופי (image/video) */
+    altSideMediaType?: "image" | "video";
   };
 
   /* Reels — horizontal scroll */
@@ -52,6 +58,8 @@ export type CharitySiteContent = {
       overlayText: string;
       cta: string;
     }>;
+    /** טקסט מעל הכותרת (אופציונלי) */
+    altIntroText?: string;
   };
 
   /* Story — סיפור העמותה */
@@ -59,6 +67,14 @@ export type CharitySiteContent = {
     kicker: string;
     paragraphs: string[];
     cta: string;
+    /** תמונת רקע parallax (אופציונלי). ריק = רקע gradient רך. */
+    bgImage?: string;
+    /** פסקאות חלופיות — אם קיימות, גוברות על paragraphs */
+    altParagraphs?: string[];
+    /** CTA חלופי */
+    altCta?: string;
+    /** תמונת רקע חלופית — גוברת על bgImage */
+    altBgImage?: string;
   };
 
   /* Gallery — רגעים מהשטח */
@@ -69,6 +85,16 @@ export type CharitySiteContent = {
       src: string;
       caption: string;
     }>;
+    /** כותרת חלופית */
+    altTitle?: string;
+    /** subtitle חלופי */
+    altSubtitle?: string;
+    /** items חלופיים — אם קיים, גובר על items */
+    altItems?: Array<{ src: string; caption: string }>;
+    /** טקסט CTA חלופי בתחתית */
+    altBottomCta?: string;
+    /** טקסט מעל הכפתור */
+    altBottomLine?: string;
   };
 
   /* Impact */
@@ -79,6 +105,16 @@ export type CharitySiteContent = {
       suffix: string;
       label: string;
     }>;
+    /** מערך חזק חלופי — מוצג אם הוגדר (override על counters). */
+    altCounters?: Array<{
+      value: number;
+      suffix: string;
+      label: string;
+    }>;
+    /** טקסט אקסטרה (label שאינו מספר) — דוגמה: "קהילה של מתנדבים מכל הארץ" */
+    extraLabel?: string;
+    /** תמונת רקע מטושטשת (אופציונלי). ריק = gradient רגיל. */
+    bgImage?: string;
   };
 
   /* Donation Cards (glass) */
@@ -91,6 +127,16 @@ export type CharitySiteContent = {
       description: string;
     }>;
     customLabel: string;
+    /** subtitle חלופי */
+    altSubtitle?: string;
+    /** טקסט קטן אדום מעל הכרטיסים */
+    altMicroText?: string;
+    /** cards חלופיים — אם קיים, גובר על cards */
+    altCards?: Array<{
+      amount: number;
+      title: string;
+      description: string;
+    }>;
   };
 
   /* Urgency */
@@ -100,6 +146,8 @@ export type CharitySiteContent = {
     goal: number;
     raised: number;
     deadline: string;
+    /** תמונת רקע דרמטית (אופציונלי). ריק = gradient כהה. */
+    bgImage?: string;
   };
 
   /* Big Video — וידאו ענק עם play overlay */
@@ -108,6 +156,25 @@ export type CharitySiteContent = {
     subtitle: string;
     videoUrl: string;
     poster: string;
+    /** טקסט קטן שמעל הוידאו (אופציונלי) — שורה 1 */
+    kickerLine1?: string;
+    /** טקסט קטן שמעל הוידאו (אופציונלי) — שורה 2 */
+    kickerLine2?: string;
+    /** כותרת overlay על הוידאו — אם הוגדר, גובר על title */
+    overlayTitle?: string;
+    /** CTA חיצוני שמופיע ב-overlay של הוידאו (אופציונלי) */
+    overlayCta?: string;
+    /** וידאו חלופי — אם הוגדר, גובר על videoUrl */
+    altVideoUrl?: string;
+  };
+
+  /** סקשן רגשי — מחליף את ה-Urgency כברירת מחדל. אם enabled=false → מציג Urgency. */
+  emotional?: {
+    enabled?: boolean;
+    title?: string;
+    subtitle?: string;
+    cta?: string;
+    bgImage?: string;
   };
 
   /* Trust */
@@ -153,6 +220,9 @@ export type CharitySiteContent = {
     email: string;
     phone: string;
   };
+
+  /** דריסות עיצוב per-element (אופציונלי) */
+  styleOverrides?: StyleOverrides;
 };
 
 /* ===========================================================
@@ -178,8 +248,10 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
     sideMediaType: "video",
     sideMediaPoster: "/uploads/charity/image-01.jpg",
     typewriterPhase1: "יש משפחות שלא יודעות איך תראה השבת שלהן...",
-    typewriterPhase2: "אבל בזכותך – זה יכול להשתנות",
+    typewriterPhase2: "ובזכותך זה יכול להשתנות",
     typewriterPhase3: "פותחים את הלב. מצילים משפחות.",
+    altSideMedia: "/uploads/charity/feature-video.mp4",
+    altSideMediaType: "video",
   },
   reels: {
     title: "ככה זה נראה בשטח",
@@ -221,6 +293,7 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
         cta: "אני בפנים",
       },
     ],
+    altIntroText: "זה לא תמונות. זו מציאות של מאות משפחות",
   },
   story: {
     kicker: "הסיפור שלנו",
@@ -230,6 +303,16 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
       "העמותה פועלת בהתנדבות מלאה של בני נוער שמובילים עשייה אמיתית — אוספים, אורזים, מעמיסים, ויוצאים לשטח עם שליחות בלב.",
     ],
     cta: "אני רוצה להיות חלק ❤️",
+    bgImage: "/uploads/charity/image-09.jpg",
+    altParagraphs: [
+      'עמותת "פותחים את הלב בהובלת הנוער" הוקמה בשיא מגפת הקורונה ביוזמה של בני נוער מפרדס חנה-כרכור, מתוך רצון אמיתי לפעול ולעזור למי שצריך.',
+      "בכל שבוע מחולקים כ-250 סלי מזון למשפחות, קשישים ונזקקים. בתקופות חגים מעל 400 סלים, כשהצורך רק הולך וגדל.",
+      "העמותה פועלת בהתנדבות מלאה של בני נוער ומתנדבים מכל הארץ. אוספים, אורזים ומגיעים לשטח כדי להביא עזרה אמיתית.",
+      "במהלך המלחמה חולקו אלפי מארזים לחיילים ולכוחות הביטחון.",
+      "זו לא רק עמותה. זו קהילה של נתינה ועשייה.",
+    ],
+    altCta: "אני רוצה להיות חלק ❤️",
+    altBgImage: "/uploads/charity/story-bg.jpg",
   },
   gallery: {
     title: "רגעים מהשטח",
@@ -245,15 +328,37 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
       { src: "/uploads/charity/image-15.jpg", caption: "מאחורי הקלעים" },
       { src: "/uploads/charity/image-16.jpg", caption: "צוות המתנדבים" },
     ],
+    altTitle: "רגעים מהעשייה",
+    altSubtitle: "כך נראית העשייה מאחורי כל סל מזון",
+    altItems: [
+      { src: "/uploads/charity/image-08.jpg", caption: "מארזי שי לחגים מוכנים לחלוקה" },
+      { src: "/uploads/charity/image-09.jpg", caption: "מתנדבי הנוער אורזים סלי ירקות" },
+      { src: "/uploads/charity/image-10.jpg", caption: "סלי מזון מסודרים לקראת חלוקה" },
+      { src: "/uploads/charity/image-11.jpg", caption: "מתנדבות מסיימות אריזת מארזים" },
+      { src: "/uploads/charity/image-12.jpg", caption: "מבצע קמחא דפסחא — היערכות לחלוקה" },
+      { src: "/uploads/charity/image-13.jpg", caption: "קמחא דפסחא — מאות סלים מוכנים" },
+      { src: "/uploads/charity/image-14.jpg", caption: "סידור סלי המזון לפני החלוקה" },
+      { src: "/uploads/charity/image-15.jpg", caption: "אולם החלוקה הראשי" },
+      { src: "/uploads/charity/image-16.jpg", caption: "מתנדבי העמותה במלוא העשייה" },
+    ],
+    altBottomLine: "גם אני רוצה להיות חלק מהעשייה",
+    altBottomCta: "גם אני רוצה לקחת חלק",
   },
   impact: {
     title: "במספרים",
     counters: [
+      { value: 5000, suffix: "+", label: "סלי מזון חולקו" },
       { value: 250, suffix: "", label: "משפחות בכל שבוע" },
       { value: 400, suffix: "+", label: "סלים בחגים" },
-      { value: 5, suffix: "", label: "שנות פעילות" },
       { value: 100, suffix: "%", label: "התנדבות נוער" },
     ],
+    altCounters: [
+      { value: 250, suffix: "", label: "משפחות בכל שבוע" },
+      { value: 200, suffix: "+", label: "מתנדבים פעילים" },
+      { value: 5000, suffix: "+", label: "סלי מזון חולקו" },
+    ],
+    extraLabel: "קהילה של נתינה ועשייה",
+    bgImage: "/uploads/charity/image-11.jpg",
   },
   donationCards: {
     title: "בחר את גובה התרומה",
@@ -276,6 +381,25 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
       },
     ],
     customLabel: "לבחירת סכום נוסף",
+    altSubtitle: "כל תרומה הופכת לסל מזון אמיתי",
+    altMicroText: "גם סכום קטן יכול לשנות חיים",
+    altCards: [
+      {
+        amount: 50,
+        title: "סיוע בסיסי",
+        description: "סיוע בסיסי למשפחה",
+      },
+      {
+        amount: 100,
+        title: "תמיכה שבועית",
+        description: "תמיכה שבועית למשפחה נזקקת",
+      },
+      {
+        amount: 250,
+        title: "סל מזון מלא",
+        description: "סל מזון מלא למשפחה לשבוע",
+      },
+    ],
   },
   urgency: {
     title: "הביקוש עולה — ואנחנו חייבים אתכם",
@@ -284,12 +408,27 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
     goal: 100000,
     raised: 78000,
     deadline: "30 בנובמבר",
+    bgImage: "/uploads/charity/image-15.jpg",
   },
   bigVideo: {
-    title: "תראו איך נראית החלוקה בפועל",
+    title: "כך נראית החלוקה האמיתית בשטח",
     subtitle: "סרטון אחד שווה אלף מילים",
     videoUrl: "/uploads/charity/video-08.mp4",
     poster: "/uploads/charity/image-17.jpg",
+    kickerLine1: "פותחים את הלב בהובלת הנוער",
+    kickerLine2: "מסייעים למאות משפחות בכל שבוע",
+    overlayTitle: "כך נראית החלוקה האמיתית בשטח",
+    overlayCta: "גם אני רוצה להיות חלק ❤️",
+    altVideoUrl: "/uploads/charity/feature-video.mp4",
+  },
+  // Override of bigVideo.kickerLine2 for the new spec ↑ already correct
+
+  emotional: {
+    enabled: true,
+    title: "מאות משפחות מחכות לחלוקה הקרובה",
+    subtitle: "ובלעדינו זה פשוט לא יקרה",
+    cta: "תרום עכשיו ❤️",
+    bgImage: "/uploads/charity/image-15.jpg",
   },
   trust: {
     title: "אנחנו עמותה אמיתית — נוער מתנדב",
@@ -320,7 +459,7 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
   },
   finalCta: {
     line1: "פותחים את הלב — ביחד",
-    line2: "וגורמים לשינוי אמיתי",
+    line2: "ומשנים חיים אמיתיים",
     button: "תרום עכשיו ❤️",
   },
   popup: {
@@ -341,10 +480,40 @@ export const DEFAULT_CHARITY_CONTENT: CharitySiteContent = {
 /* ===========================================================
    Helpers
    =========================================================== */
+
+/** deep-merge רקורסיבי: defaults עם חורים שה-incoming מכסה.
+ *  arrays — הפרסום שולט (אין מיזוג). objects רגילים — מתמזגים מפתח-מפתח.
+ *  זה חיוני כדי ששדות חדשים שנוספו לסכימה (כמו bgImage) יקבלו ערכי ברירת
+ *  מחדל גם עבור tenants ישנים שלא עודכנו דרך הדשבורד. */
+function deepMerge<T>(base: T, override: unknown): T {
+  if (
+    !override ||
+    typeof override !== "object" ||
+    Array.isArray(override) ||
+    !base ||
+    typeof base !== "object" ||
+    Array.isArray(base)
+  ) {
+    return (override === undefined ? base : (override as T));
+  }
+  const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+  for (const k of Object.keys(override as Record<string, unknown>)) {
+    const baseVal = (base as Record<string, unknown>)[k];
+    const ovVal = (override as Record<string, unknown>)[k];
+    out[k] =
+      baseVal && typeof baseVal === "object" && !Array.isArray(baseVal)
+        ? deepMerge(baseVal, ovVal)
+        : ovVal !== undefined
+          ? ovVal
+          : baseVal;
+  }
+  return out as T;
+}
+
 export function parseCharityContent(json: string): CharitySiteContent {
   try {
     const parsed = JSON.parse(json);
-    return { ...DEFAULT_CHARITY_CONTENT, ...parsed } as CharitySiteContent;
+    return deepMerge(DEFAULT_CHARITY_CONTENT, parsed);
   } catch {
     return DEFAULT_CHARITY_CONTENT;
   }

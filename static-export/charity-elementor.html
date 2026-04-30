@@ -1,0 +1,1175 @@
+<!--
+  ===========================================================
+  CHARITY LANDING — Elementor HTML widget snippet
+  ---------------------------------------------------------
+  • Paste this entire snippet into ONE HTML widget in Elementor.
+  • Everything is scoped under .cl-root → won't conflict with theme.
+  • Tailwind utilities loaded via CDN (one-time, ~150KB).
+  • All custom keyframes/utilities are scoped + prefixed.
+  • Replace image/video paths (search: /uploads/charity/) with your URLs.
+  ===========================================================
+-->
+
+<!-- 1. Heebo font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- 2. Tailwind CDN (Play CDN — fine for one-page embed) -->
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Heebo', 'system-ui', 'sans-serif'],
+        },
+        colors: {
+          'cl-blue': '#2F5D8C',
+          'cl-red': '#E53935',
+          'cl-yellow': '#F4C542',
+        },
+      },
+    },
+  };
+</script>
+
+<!-- 3. Custom CSS — scoped under .cl-root -->
+<style>
+  .cl-root {
+    font-family: 'Heebo', system-ui, -apple-system, sans-serif;
+    color: #1A1A1A;
+    background: #FFFFFF;
+    --cl-blue: #2F5D8C;
+    --cl-red: #E53935;
+    --cl-yellow: #F4C542;
+    --cl-text: #1A1A1A;
+    line-height: 1.5;
+  }
+  .cl-root * { box-sizing: border-box; }
+  .cl-root img, .cl-root video { display: block; max-width: 100%; height: auto; }
+
+  /* === Animations === */
+  @keyframes clFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes clFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .cl-root .cl-fade-up { animation: clFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .cl-root .cl-fade-up-d1 { animation: clFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.15s; }
+  .cl-root .cl-fade-up-d2 { animation: clFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.3s; }
+  .cl-root .cl-fade-up-d3 { animation: clFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.45s; }
+  .cl-root .cl-fade-in { animation: clFadeIn 1.2s ease-out both; }
+
+  /* CTA pulse */
+  .cl-root .cl-cta-pulse { position: relative; }
+  .cl-root .cl-cta-pulse::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: inherit; z-index: -1;
+    animation: clCtaPulse 2.2s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  }
+  @keyframes clCtaPulse {
+    0% { transform: scale(1); opacity: 0.55; }
+    70% { transform: scale(1.18); opacity: 0; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+
+  /* Ken Burns slow zoom */
+  .cl-root .cl-ken-burns {
+    animation: clKenBurns 16s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+  @keyframes clKenBurns {
+    0% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.08) translate(-1%, -1%); }
+    100% { transform: scale(1.12) translate(1%, 1%); }
+  }
+
+  /* Slow zoom (always running) */
+  .cl-root .cl-slow-zoom {
+    animation: clSlowZoom 22s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+  @keyframes clSlowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.12); }
+  }
+
+  /* Number explode */
+  .cl-root .cl-number-explode {
+    animation: clNumberExplode 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes clNumberExplode {
+    0% { opacity: 0; transform: scale(0.4); filter: blur(8px); }
+    60% { opacity: 1; transform: scale(1.1); filter: blur(0); }
+    100% { transform: scale(1); }
+  }
+
+  /* Floating particles */
+  .cl-root .cl-particle {
+    position: absolute; bottom: -10px; border-radius: 9999px; background: white;
+    animation: clParticleFloat linear infinite; will-change: transform, opacity;
+  }
+  @keyframes clParticleFloat {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translateY(-50vh) translateX(20px); }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100vh) translateX(-10px); opacity: 0; }
+  }
+
+  /* Gradient shift */
+  .cl-root .cl-gradient-shift {
+    background-size: 200% 200%;
+    animation: clGradientShift 12s ease infinite;
+  }
+  @keyframes clGradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Text shadows */
+  .cl-root .cl-text-shadow-soft {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .cl-root .cl-text-shadow-strong {
+    text-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 2px 6px rgba(0,0,0,0.6);
+  }
+
+  /* Parallax */
+  .cl-root .cl-parallax-fixed {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  @supports (-webkit-touch-callout: none) {
+    .cl-root .cl-parallax-fixed { background-attachment: scroll; }
+  }
+
+  /* Reveal on scroll */
+  .cl-root .cl-reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .cl-root .cl-reveal.is-visible { opacity: 1; transform: translateY(0); }
+  .cl-root .cl-reveal-zoom {
+    opacity: 0; transform: scale(0.94);
+    transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cl-root .cl-reveal-zoom.is-visible { opacity: 1; transform: scale(1); }
+
+  /* Hover lift */
+  .cl-root .cl-hover-lift {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+  }
+  .cl-root .cl-hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  }
+
+  /* Sweep */
+  .cl-root .cl-sweep { position: relative; overflow: hidden; }
+  .cl-root .cl-sweep::after {
+    content: ""; position: absolute; top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg);
+    animation: clSweep 4.5s ease-in-out infinite;
+  }
+  @keyframes clSweep {
+    0%, 70% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  /* Reels horizontal scroll */
+  .cl-root .cl-reels-track {
+    display: flex; gap: 0.75rem; overflow-x: auto; padding: 0 1rem 1rem 1rem;
+    scroll-snap-type: x mandatory; scrollbar-width: thin; scroll-padding-inline: 1rem;
+  }
+  @media (min-width: 640px) { .cl-root .cl-reels-track { padding: 0 1.5rem 1rem 1.5rem; } }
+  @media (min-width: 768px) { .cl-root .cl-reels-track { gap: 1rem; } }
+  .cl-root .cl-reel-card { width: 260px; flex-shrink: 0; scroll-snap-align: start; }
+  @media (min-width: 640px) { .cl-root .cl-reel-card { width: 300px; } }
+  @media (min-width: 768px) { .cl-root .cl-reel-card { width: 340px; } }
+  @media (min-width: 1024px) { .cl-root .cl-reel-card { width: 360px; } }
+
+  /* Pulse animation for live feed dot */
+  @keyframes clPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .cl-root .cl-pulse { animation: clPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+  /* Sticky donate */
+  .cl-root .cl-sticky-donate {
+    position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 50;
+    transform: translateY(120%); transition: transform 0.4s ease;
+  }
+  .cl-root .cl-sticky-donate.is-visible { transform: translateY(0); }
+  @media (min-width: 768px) {
+    .cl-root .cl-sticky-donate { left: auto; right: 1rem; bottom: 1.5rem; max-width: 280px; }
+  }
+
+  /* Popup overlay */
+  .cl-root .cl-popup-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    display: none; align-items: center; justify-content: center;
+    z-index: 60; padding: 1rem; animation: clFadeIn 0.3s ease both;
+  }
+  .cl-root .cl-popup-overlay.is-open { display: flex; }
+</style>
+
+<!-- 4. The actual page -->
+<div class="cl-root font-sans" dir="rtl">
+
+  <!-- ====================================================
+       0. TOP BANNER
+       ==================================================== -->
+  <section class="relative w-full overflow-hidden bg-black">
+    <div class="relative w-full overflow-hidden">
+      <img src="/uploads/charity/banner.png" alt="פותחים את הלב"
+           class="block w-full h-auto cl-slow-zoom" loading="eager">
+      <div class="pointer-events-none absolute inset-0"
+           style="background: linear-gradient(180deg, rgba(15,30,55,0.05) 0%, transparent 25%, transparent 70%, rgba(15,30,55,0.18) 100%);"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       1. HERO — Split layout
+       ==================================================== -->
+  <section class="relative min-h-screen overflow-hidden"
+           style="background: linear-gradient(135deg, #F9FBFF 0%, #EEF3F8 100%);">
+
+    <!-- Floating particles bg -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden" id="cl-particles"></div>
+
+    <!-- Blurred backdrop image -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-25"
+         style="background-image: url('/uploads/charity/image-01.jpg'); background-size: cover; background-position: center; filter: blur(60px) saturate(1.1); transform: scale(1.2);"></div>
+
+    <!-- Grid -->
+    <div class="relative mx-auto grid min-h-screen max-w-7xl items-center gap-8 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-14 md:py-20">
+
+      <!-- MEDIA -->
+      <div class="relative order-2 md:order-1">
+        <div class="relative overflow-hidden rounded-3xl shadow-2xl" style="aspect-ratio: 4 / 5;">
+          <video autoplay loop muted playsinline poster="/uploads/charity/image-01.jpg"
+                 class="absolute inset-0 h-full w-full object-cover">
+            <source src="/uploads/charity/video-01.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%);"></div>
+          <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(47,93,140,0.13) 0%, transparent 60%);"></div>
+
+          <div class="absolute right-3 bottom-3 left-3 cl-text-shadow-soft sm:right-5 sm:bottom-5 sm:left-5">
+            <p class="text-sm font-black leading-tight text-white sm:text-base md:text-lg">250 משפחות בכל שבוע</p>
+            <p class="mt-0.5 text-[10px] font-medium text-white/85 sm:mt-1 sm:text-xs md:text-sm">בני נוער מובילים שינוי אמיתי</p>
+          </div>
+
+          <div class="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset" style="border-color: rgba(244,197,66,0.4);"></div>
+        </div>
+
+        <div class="absolute -bottom-3 -left-3 hidden size-16 rounded-full opacity-90 blur-xl md:block" style="background: var(--cl-yellow);"></div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="order-1 md:order-2">
+        <!-- Badge -->
+        <div class="mb-4 inline-flex flex-wrap items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-bold tracking-widest sm:px-4 sm:text-xs"
+             style="background: rgba(47,93,140,0.06); color: var(--cl-blue); border: 1px solid rgba(47,93,140,0.15);">
+          <span class="size-1.5 rounded-full cl-pulse" style="background: var(--cl-red);"></span>
+          <span>פותחים את הלב</span>
+          <span class="opacity-50">·</span>
+          <span>בהובלת הנוער</span>
+        </div>
+
+        <!-- Typewriter h1 -->
+        <h1 id="cl-typewriter"
+            class="text-balance text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-5xl lg:text-6xl"
+            style="color: #0F1B2D; text-shadow: 0 1px 2px rgba(255,255,255,0.6); word-break: keep-all; overflow-wrap: break-word; min-height: 4em;"
+            data-phase1="יש משפחות שלא יודעות איך תראה השבת שלהן..."
+            data-phase2="אבל בזכותך – זה יכול להשתנות"
+            data-phase3="פותחים את הלב. מצילים משפחות.">
+          <span class="cl-tw-text"></span><span class="cl-tw-cursor inline-block w-[3px] align-middle" style="height: 0.85em; background: currentColor;"></span>
+        </h1>
+
+        <!-- Buttons -->
+        <div class="mt-7 flex flex-col gap-2.5 sm:mt-9 sm:flex-row sm:gap-3">
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="cl-sweep cl-cta-pulse group relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-full px-6 py-3 text-sm font-black text-white shadow-xl transition-transform hover:scale-105 sm:px-8 sm:py-3.5 sm:text-base"
+             style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 18px 45px -10px rgba(229,57,53,0.33);">
+            תרום עכשיו ❤️
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 transition-transform group-hover:-translate-x-1 sm:size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+          <a href="#cl-reels"
+             class="inline-flex items-center justify-center gap-2 rounded-full border-2 px-5 py-2.5 text-xs font-bold transition-colors hover:bg-white sm:px-6 sm:py-3 sm:text-sm"
+             style="color: var(--cl-blue); border-color: rgba(47,93,140,0.25);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 sm:size-5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            צפה בפעילות שלנו
+          </a>
+        </div>
+
+        <!-- Mini stats -->
+        <div class="mt-8 flex flex-wrap gap-4 text-sm sm:mt-10 sm:gap-6" style="color: var(--cl-blue);">
+          <div>
+            <div class="text-2xl font-black md:text-3xl">250</div>
+            <div class="text-xs opacity-70">משפחות בשבוע</div>
+          </div>
+          <div class="h-10 w-px bg-zinc-300"></div>
+          <div>
+            <div class="text-2xl font-black md:text-3xl">5,000+</div>
+            <div class="text-xs opacity-70">סלים חולקו</div>
+          </div>
+          <div class="h-10 w-px bg-zinc-300"></div>
+          <div>
+            <div class="text-2xl font-black md:text-3xl">100%</div>
+            <div class="text-xs opacity-70">התנדבות</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll arrow -->
+    <div class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 animate-bounce" style="color: rgba(47,93,140,0.5);">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       1.5  POST-HERO FULL-WIDTH VIDEO
+       ==================================================== -->
+  <section class="relative overflow-hidden bg-black">
+    <!-- Kicker bar -->
+    <div class="relative px-4 py-10 text-center sm:px-6 sm:py-14"
+         style="background: linear-gradient(135deg, var(--cl-blue) 0%, #1F3F60 100%);">
+      <div class="pointer-events-none absolute inset-0 opacity-40"
+           style="background: radial-gradient(ellipse at 80% 30%, rgba(244,197,66,0.2), transparent 50%), radial-gradient(ellipse at 10% 70%, rgba(229,57,53,0.13), transparent 55%);"></div>
+      <div class="cl-reveal relative mx-auto max-w-3xl">
+        <p class="cl-text-shadow-soft text-base font-black tracking-wide text-white sm:text-xl md:text-2xl">
+          פותחים את הלב בהובלת הנוער
+        </p>
+        <p class="cl-text-shadow-soft mt-2 text-sm font-medium text-white/90 sm:text-base md:text-lg">
+          מצילים משפחות. משנים חיים.
+        </p>
+      </div>
+    </div>
+
+    <!-- Big video -->
+    <div class="cl-bigvideo group relative w-full cursor-pointer overflow-hidden bg-black"
+         style="height: min(60vh, 720px);">
+      <video class="cl-bv-video absolute inset-0 h-full w-full object-cover"
+             loop playsinline poster="/uploads/charity/image-17.jpg" preload="metadata"
+             style="transform: scale(1.05); transition: transform 8s ease-out;">
+        <source src="/uploads/charity/video-08.mp4" type="video/mp4">
+      </video>
+      <div class="cl-bv-overlay absolute inset-0 transition-opacity duration-500"
+           style="background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.65) 100%);"></div>
+
+      <div class="cl-bv-content absolute inset-0 flex flex-col items-center justify-center px-6 text-center text-white">
+        <h2 class="cl-text-shadow-strong max-w-4xl text-balance text-3xl font-black leading-tight tracking-tight md:text-5xl lg:text-6xl">
+          כך נראית החלוקה האמיתית בשטח
+        </h2>
+        <p class="cl-text-shadow-soft mt-4 max-w-2xl text-balance text-base font-medium opacity-95 md:text-xl">
+          סרטון אחד שווה אלף מילים
+        </p>
+
+        <button type="button" class="cl-bv-play cl-cta-pulse mt-8 flex size-20 items-center justify-center rounded-full text-white shadow-2xl transition-transform group-hover:scale-110 md:size-24"
+                style="background: linear-gradient(135deg, var(--cl-blue), #1F3F60);" aria-label="הפעל וידאו">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-9 md:size-11"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        </button>
+
+        <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+           onclick="event.stopPropagation()"
+           class="cl-sweep mt-8 inline-flex items-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-base font-black text-white shadow-xl transition-transform hover:scale-105"
+           style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 18px 45px -10px rgba(229,57,53,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          גם אני רוצה להיות חלק ❤️
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       2. REELS — Horizontal scroll
+       ==================================================== -->
+  <section id="cl-reels" class="relative overflow-hidden py-14 sm:py-20 md:py-28"
+           style="background: linear-gradient(180deg, #FFFFFF 0%, #F4F8FD 60%, #EAF1F8 100%);">
+    <div class="pointer-events-none absolute inset-0 opacity-50"
+         style="background: radial-gradient(ellipse at 10% 0%, rgba(47,93,140,0.06), transparent 50%), radial-gradient(ellipse at 95% 100%, rgba(244,197,66,0.08), transparent 50%);"></div>
+
+    <div class="cl-reveal relative mx-auto mb-12 max-w-6xl px-6 text-center md:mb-14">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest"
+           style="background: rgba(47,93,140,0.06); color: var(--cl-blue);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+        וידאו
+      </div>
+      <h2 class="text-balance text-3xl font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">ככה זה נראה בשטח</h2>
+    </div>
+
+    <div class="cl-reels-track">
+      <!-- Card 1 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-02.jpg" preload="metadata">
+            <source src="/uploads/charity/video-02.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">אריזה לחלוקה השבועית</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            גם אני רוצה לעזור
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-03.jpg" preload="metadata">
+            <source src="/uploads/charity/video-03.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">חלוקה למשפחות</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            תרום עכשיו
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-04.jpg" preload="metadata">
+            <source src="/uploads/charity/video-04.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">בני נוער מובילים</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            אני רוצה להצטרף
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-05.jpg" preload="metadata">
+            <source src="/uploads/charity/video-05.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">סלי שבת מוכנים</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            תרום סל
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-06.jpg" preload="metadata">
+            <source src="/uploads/charity/video-06.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">כל שבוע — 250 משפחות</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            אני בעניין
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="group cl-reel-card relative">
+        <div class="relative overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl" style="aspect-ratio: 9 / 16;">
+          <video class="cl-reel-video absolute inset-0 h-full w-full object-cover" loop muted playsinline poster="/uploads/charity/image-07.jpg" preload="metadata">
+            <source src="/uploads/charity/video-07.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);"></div>
+          <div class="absolute right-4 bottom-20 left-4">
+            <p class="cl-text-shadow-soft text-base font-black leading-tight text-white md:text-lg">התנדבות מלאה של הנוער</p>
+          </div>
+          <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+             class="absolute right-4 bottom-4 left-4 flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-black text-white shadow-lg backdrop-blur-md hover:scale-105 transition-transform"
+             style="background: linear-gradient(135deg, rgba(229,57,53,0.9), rgba(198,40,40,0.9));">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            אני בפנים
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       3. STORY — parallax background
+       ==================================================== -->
+  <section class="cl-parallax-fixed relative overflow-hidden py-28 md:py-40"
+           style="background-image: url('/uploads/charity/image-09.jpg');">
+    <div class="absolute inset-0"
+         style="background: linear-gradient(180deg, rgba(10,18,35,0.78) 0%, rgba(15,30,55,0.82) 50%, rgba(10,18,35,0.85) 100%);"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-50"
+         style="background: radial-gradient(ellipse at 80% 30%, rgba(229,57,53,0.2), transparent 50%), radial-gradient(ellipse at 15% 80%, rgba(244,197,66,0.13), transparent 50%);"></div>
+
+    <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
+      <div class="cl-reveal inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-black uppercase tracking-widest backdrop-blur-md sm:px-4 sm:text-xs"
+           style="background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.25);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3 sm:size-3.5" style="color: var(--cl-red);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        הסיפור שלנו
+      </div>
+
+      <div class="mt-8 space-y-5 sm:mt-12 sm:space-y-7 md:mt-14 md:space-y-9">
+        <p class="cl-reveal cl-text-shadow-soft text-balance text-xl font-black leading-relaxed text-white sm:text-2xl md:text-3xl lg:text-4xl">
+          עמותת "פותחים את הלב בהובלת הנוער" הוקמה לפני כחמש שנים ביוזמה של בני נוער מפרדס חנה-כרכור — מתוך רצון אמיתי לשנות מציאות ולסייע למשפחות, קשישים ונכים נזקקים.
+        </p>
+        <p class="cl-reveal cl-text-shadow-soft text-balance text-base font-medium leading-relaxed sm:text-lg md:text-xl lg:text-2xl"
+           style="color: rgba(255,255,255,0.92);">
+          בכל שבוע מחולקים סלי מזון מלאים לכ-250 משפחות, ובחגים — מעל 400 סלים, כשהצורך רק הולך וגדל.
+        </p>
+        <p class="cl-reveal cl-text-shadow-soft text-balance text-base font-medium leading-relaxed sm:text-lg md:text-xl lg:text-2xl"
+           style="color: rgba(255,255,255,0.92);">
+          העמותה פועלת בהתנדבות מלאה של בני נוער שמובילים עשייה אמיתית — אוספים, אורזים, מעמיסים, ויוצאים לשטח עם שליחות בלב.
+        </p>
+      </div>
+
+      <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+         class="cl-reveal mt-10 inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-black text-white shadow-2xl hover:scale-105 transition-transform sm:mt-14 sm:px-9 sm:py-4 sm:text-base"
+         style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 22px 55px -12px rgba(229,57,53,0.5);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        אני רוצה להיות חלק ❤️
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       4. GALLERY — Ken Burns
+       ==================================================== -->
+  <section class="relative overflow-hidden py-16 sm:py-24 md:py-36"
+           style="background: linear-gradient(180deg, #FFFFFF 0%, #F9FBFF 100%);">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-15"
+         style="background-image: url('/uploads/charity/image-08.jpg'); background-size: cover; background-position: center; filter: blur(80px) saturate(1.2); transform: scale(1.3);"></div>
+    <div aria-hidden="true" class="pointer-events-none absolute top-20 right-[-100px] size-72 rounded-full opacity-30 blur-3xl cl-slow-zoom" style="background: var(--cl-yellow);"></div>
+    <div aria-hidden="true" class="pointer-events-none absolute bottom-20 left-[-100px] size-80 rounded-full opacity-25 blur-3xl cl-slow-zoom" style="background: var(--cl-blue); animation-delay: 8s;"></div>
+
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="cl-reveal mb-12 text-center md:mb-14">
+        <div class="mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest"
+             style="background: rgba(244,197,66,0.15); color: #7A5A00;">גלריה</div>
+        <h2 class="text-balance text-3xl font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">רגעים מהשטח</h2>
+        <p class="mt-3 text-balance text-base font-medium sm:mt-4 sm:text-lg md:text-xl" style="color: #5A5A5A;">תמונות אמיתיות. לב פתוח. שינוי אמיתי.</p>
+        <p class="mt-2 text-balance text-sm italic md:text-base" style="color: #7A5A00;">כל תמונה כאן היא חיים שנגעו בהם</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:gap-6">
+        <!-- 9 gallery items -->
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-08.jpg" alt="חלוקת מזון שבועית" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 0s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">חלוקת מזון שבועית</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-09.jpg" alt="אריזת סלי שבת" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 1.3s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">אריזת סלי שבת</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-10.jpg" alt="בני נוער בעבודה" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 2.6s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">בני נוער בעבודה</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-11.jpg" alt="מארזים לחיילים" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 3.9s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">מארזים לחיילים</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-12.jpg" alt="שליחות בלב" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 5.2s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">שליחות בלב</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-13.jpg" alt="ביחד יותר חזקים" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 0.5s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">ביחד יותר חזקים</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-14.jpg" alt="פתיחת לב" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 1.8s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">פתיחת לב</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-15.jpg" alt="מאחורי הקלעים" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 3.1s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">מאחורי הקלעים</span></figcaption></div></div></figure>
+        <figure class="cl-reveal-zoom"><div class="cl-hover-lift group relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-zinc-200/60"><div class="relative" style="aspect-ratio: 4/5;"><img src="/uploads/charity/image-16.jpg" alt="צוות המתנדבים" class="absolute inset-0 h-full w-full object-cover cl-ken-burns" style="animation-delay: 4.4s;"><div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%);"></div><figcaption class="absolute right-4 bottom-4 left-4 translate-y-3 opacity-90 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"><span class="inline-block rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md md:text-sm">צוות המתנדבים</span></figcaption></div></div></figure>
+      </div>
+
+      <div class="cl-reveal mt-14 text-center md:mt-16">
+        <p class="mb-5 text-base font-bold md:text-lg" style="color: #1A1A1A;">גם אתה יכול להיות חלק מהעשייה</p>
+        <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+           class="cl-sweep inline-flex items-center gap-2 overflow-hidden rounded-full px-8 py-3.5 text-base font-black text-white shadow-xl hover:scale-105 transition-transform"
+           style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 18px 45px -10px rgba(229,57,53,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          תרום עכשיו ❤️
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       5. IMPACT — Counters with parallax bg
+       ==================================================== -->
+  <section class="cl-parallax-fixed relative overflow-hidden py-24 text-white md:py-32"
+           style="background-image: url('/uploads/charity/image-11.jpg');">
+    <div class="absolute inset-0"
+         style="background: linear-gradient(135deg, rgba(15,30,55,0.88) 0%, rgba(31,63,96,0.85) 50%, rgba(10,20,40,0.9) 100%);"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-40"
+         style="background: radial-gradient(ellipse at 80% 20%, rgba(244,197,66,0.2), transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(229,57,53,0.13), transparent 50%);"></div>
+
+    <div class="relative mx-auto max-w-6xl px-6">
+      <h2 class="cl-reveal cl-text-shadow-soft text-balance text-center text-3xl font-black tracking-tight md:text-5xl">במספרים</h2>
+
+      <div class="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+        <div class="cl-reveal-zoom flex flex-col items-center text-center">
+          <div class="cl-counter cl-text-shadow-strong text-5xl font-black tracking-tight md:text-7xl" data-target="5000" data-suffix="+">0</div>
+          <div class="cl-text-shadow-soft mt-3 text-sm font-bold uppercase tracking-widest opacity-95 md:text-base">סלי מזון חולקו</div>
+        </div>
+        <div class="cl-reveal-zoom flex flex-col items-center text-center">
+          <div class="cl-counter cl-text-shadow-strong text-5xl font-black tracking-tight md:text-7xl" data-target="250" data-suffix="">0</div>
+          <div class="cl-text-shadow-soft mt-3 text-sm font-bold uppercase tracking-widest opacity-95 md:text-base">משפחות בכל שבוע</div>
+        </div>
+        <div class="cl-reveal-zoom flex flex-col items-center text-center">
+          <div class="cl-counter cl-text-shadow-strong text-5xl font-black tracking-tight md:text-7xl" data-target="400" data-suffix="+">0</div>
+          <div class="cl-text-shadow-soft mt-3 text-sm font-bold uppercase tracking-widest opacity-95 md:text-base">סלים בחגים</div>
+        </div>
+      </div>
+
+      <div class="cl-reveal mt-14 text-center">
+        <div class="inline-flex items-center gap-3 rounded-full px-6 py-3 text-base font-bold backdrop-blur-md md:text-lg"
+             style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5" style="color: var(--cl-red);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span class="cl-text-shadow-soft">קהילה של מתנדבים מכל הארץ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       6. DONATION CARDS
+       ==================================================== -->
+  <section class="relative overflow-hidden py-16 sm:py-24 md:py-36"
+           style="background: linear-gradient(135deg, #F0F6FD 0%, #FFFFFF 40%, #FCEEEE 100%);">
+    <div aria-hidden="true" class="pointer-events-none absolute -top-32 -right-32 size-96 rounded-full opacity-20 blur-3xl cl-slow-zoom" style="background: var(--cl-blue);"></div>
+    <div aria-hidden="true" class="pointer-events-none absolute -bottom-32 -left-32 size-96 rounded-full opacity-25 blur-3xl cl-slow-zoom" style="background: var(--cl-red); animation-delay: 10s;"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-50"
+         style="background: radial-gradient(ellipse at 50% 0%, rgba(229,57,53,0.06), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(47,93,140,0.06), transparent 55%);"></div>
+
+    <div class="relative mx-auto max-w-6xl px-6">
+      <div class="cl-reveal text-center">
+        <div class="mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest"
+             style="background: rgba(229,57,53,0.06); color: var(--cl-red);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          לתרומה
+        </div>
+        <h2 class="text-balance text-3xl font-black tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">בחר את גובה התרומה</h2>
+        <p class="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed md:text-xl" style="color: #5A5A5A;">כל סכום — שינוי אמיתי. בחר את מה שמתאים לך.</p>
+        <p class="mt-3 text-balance text-sm font-bold md:text-base" style="color: var(--cl-red);">כל סכום קטן הופך לארוחה אמיתית</p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:mt-14 sm:gap-5 md:mt-16 md:grid-cols-3 md:gap-7">
+        <!-- Card 1 -->
+        <div class="cl-reveal-zoom"><a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+          class="cl-hover-lift group relative flex h-full flex-col items-center gap-4 overflow-hidden rounded-3xl border border-zinc-100 bg-white p-6 text-center shadow-xl transition-shadow hover:shadow-2xl sm:gap-5 sm:p-8 md:p-10">
+          <div class="pointer-events-none absolute inset-x-0 top-0 h-1.5 transition-all group-hover:h-2"
+               style="background: linear-gradient(90deg, var(--cl-red), var(--cl-yellow), var(--cl-red));"></div>
+          <div class="flex size-16 items-center justify-center rounded-2xl shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 16px 40px -12px rgba(229,57,53,0.4);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <div class="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl" style="color: var(--cl-red);">₪50</div>
+          <div class="space-y-1.5">
+            <div class="text-lg font-black md:text-xl" style="color: #1A1A1A;">ארוחה חמה</div>
+            <div class="text-sm leading-relaxed md:text-base" style="color: #666;">מזון לכמה ימים למשפחה אחת</div>
+          </div>
+          <div class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold" style="background: rgba(244,197,66,0.15); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+            100% הולך למשפחות נזקקות
+          </div>
+          <div class="cl-sweep relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-black text-white shadow-md"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828);">
+            תרום עכשיו
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 transition-transform group-hover:-translate-x-1"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </div>
+        </a></div>
+
+        <!-- Card 2 -->
+        <div class="cl-reveal-zoom"><a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+          class="cl-hover-lift group relative flex h-full flex-col items-center gap-4 overflow-hidden rounded-3xl border border-zinc-100 bg-white p-6 text-center shadow-xl transition-shadow hover:shadow-2xl sm:gap-5 sm:p-8 md:p-10">
+          <div class="pointer-events-none absolute inset-x-0 top-0 h-1.5 transition-all group-hover:h-2"
+               style="background: linear-gradient(90deg, var(--cl-red), var(--cl-yellow), var(--cl-red));"></div>
+          <div class="flex size-16 items-center justify-center rounded-2xl shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 16px 40px -12px rgba(229,57,53,0.4);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <div class="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl" style="color: var(--cl-red);">₪100</div>
+          <div class="space-y-1.5">
+            <div class="text-lg font-black md:text-xl" style="color: #1A1A1A;">תמיכה למשפחה</div>
+            <div class="text-sm leading-relaxed md:text-base" style="color: #666;">מזון לשבוע מלא</div>
+          </div>
+          <div class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold" style="background: rgba(244,197,66,0.15); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+            100% הולך למשפחות נזקקות
+          </div>
+          <div class="cl-sweep relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-black text-white shadow-md"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828);">
+            תרום עכשיו
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 transition-transform group-hover:-translate-x-1"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </div>
+        </a></div>
+
+        <!-- Card 3 -->
+        <div class="cl-reveal-zoom"><a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+          class="cl-hover-lift group relative flex h-full flex-col items-center gap-4 overflow-hidden rounded-3xl border border-zinc-100 bg-white p-6 text-center shadow-xl transition-shadow hover:shadow-2xl sm:gap-5 sm:p-8 md:p-10">
+          <div class="pointer-events-none absolute inset-x-0 top-0 h-1.5 transition-all group-hover:h-2"
+               style="background: linear-gradient(90deg, var(--cl-red), var(--cl-yellow), var(--cl-red));"></div>
+          <div class="flex size-16 items-center justify-center rounded-2xl shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 16px 40px -12px rgba(229,57,53,0.4);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
+          <div class="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl" style="color: var(--cl-red);">₪250</div>
+          <div class="space-y-1.5">
+            <div class="text-lg font-black md:text-xl" style="color: #1A1A1A;">סל מלא לשבת</div>
+            <div class="text-sm leading-relaxed md:text-base" style="color: #666;">סל מזון מלא לכל המשפחה</div>
+          </div>
+          <div class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold" style="background: rgba(244,197,66,0.15); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+            100% הולך למשפחות נזקקות
+          </div>
+          <div class="cl-sweep relative mt-2 inline-flex items-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-black text-white shadow-md"
+               style="background: linear-gradient(135deg, var(--cl-red), #C62828);">
+            תרום עכשיו
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4 transition-transform group-hover:-translate-x-1"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          </div>
+        </a></div>
+      </div>
+
+      <div class="cl-reveal mt-12 text-center">
+        <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 text-sm font-bold underline-offset-4 transition-colors hover:underline md:text-base"
+           style="color: var(--cl-blue);">
+          לבחירת סכום נוסף
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       7. EMOTIONAL — full image + dark overlay
+       ==================================================== -->
+  <section class="cl-parallax-fixed relative overflow-hidden py-24 text-white sm:py-32 md:py-44"
+           style="background-image: url('/uploads/charity/image-15.jpg');">
+    <div class="absolute inset-0"
+         style="background: linear-gradient(135deg, rgba(8,12,20,0.88) 0%, rgba(20,15,15,0.85) 50%, rgba(40,10,15,0.9) 100%);"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-60"
+         style="background: radial-gradient(ellipse at 50% 60%, rgba(229,57,53,0.27) 0%, transparent 55%), radial-gradient(ellipse at 10% 20%, rgba(244,197,66,0.1), transparent 50%);"></div>
+
+    <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
+      <div class="cl-reveal inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest backdrop-blur-md"
+           style="background: rgba(255,255,255,0.12); color: #FFF; border: 1px solid rgba(255,255,255,0.25);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5" style="color: var(--cl-red);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        הם סומכים עליך
+      </div>
+
+      <h2 class="cl-reveal cl-text-shadow-strong mt-7 text-balance text-3xl font-black leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+        יש משפחות שמחכות לחלוקה הקרובה
+      </h2>
+      <p class="cl-reveal cl-text-shadow-soft mt-5 text-balance text-lg font-medium opacity-95 sm:text-xl md:text-2xl">
+        ובלעדיך – זה לא יקרה
+      </p>
+
+      <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+         class="cl-reveal cl-sweep cl-cta-pulse mt-10 inline-flex items-center gap-3 overflow-hidden rounded-full px-9 py-4 text-base font-black text-white shadow-2xl hover:scale-105 transition-transform sm:mt-14 sm:px-12 sm:py-5 sm:text-lg md:text-xl"
+         style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 25px 70px -15px rgba(229,57,53,0.67);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        אני רוצה לעזור עכשיו
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       8. TRUST
+       ==================================================== -->
+  <section class="relative overflow-hidden py-16 sm:py-24 md:py-36"
+           style="background: linear-gradient(180deg, #FFFFFF 0%, #FBF8F0 50%, #F5F0E0 100%);">
+    <div class="pointer-events-none absolute inset-0 opacity-60"
+         style="background: radial-gradient(ellipse at 80% 50%, rgba(244,197,66,0.08), transparent 50%), radial-gradient(ellipse at 10% 100%, rgba(47,93,140,0.06), transparent 50%);"></div>
+
+    <div class="relative mx-auto max-w-5xl px-6">
+      <div class="cl-reveal text-center">
+        <div class="inline-flex size-16 items-center justify-center rounded-full shadow-md"
+             style="background: rgba(47,93,140,0.06); color: var(--cl-blue);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-8"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h2 class="mt-6 text-balance text-4xl font-black tracking-tight md:text-5xl">אנחנו עמותה אמיתית — נוער מתנדב</h2>
+        <p class="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed md:text-xl" style="color: #5A5A5A;">
+          ללא מטרות רווח. ללא דמי תיווך. כל שקל — לאלה שצריכים אותו.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <div class="cl-reveal"><div class="cl-hover-lift group flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110" style="background: rgba(244,197,66,0.18); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <span class="text-sm font-bold" style="color: #1A1A1A;">עמותה הפועלת ללא מטרות רווח</span>
+        </div></div>
+
+        <div class="cl-reveal"><div class="cl-hover-lift group flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110" style="background: rgba(244,197,66,0.18); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <span class="text-sm font-bold" style="color: #1A1A1A;">מנוהלת כולה על ידי בני נוער ומתנדבים</span>
+        </div></div>
+
+        <div class="cl-reveal"><div class="cl-hover-lift group flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110" style="background: rgba(244,197,66,0.18); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <span class="text-sm font-bold" style="color: #1A1A1A;">100% שקיפות</span>
+        </div></div>
+
+        <div class="cl-reveal"><div class="cl-hover-lift group flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110" style="background: rgba(244,197,66,0.18); color: #7A5A00;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+          </div>
+          <span class="text-sm font-bold" style="color: #1A1A1A;">כל תרומה מגיעה ישירות לשטח</span>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       9. FINAL CTA — gradient + sweep
+       ==================================================== -->
+  <section class="relative overflow-hidden py-28 text-center text-white md:py-40"
+           style="background: linear-gradient(135deg, var(--cl-red) 0%, var(--cl-blue) 100%);">
+    <div class="absolute inset-0 opacity-40"
+         style="background: radial-gradient(ellipse at center, rgba(244,197,66,0.4), transparent 60%);"></div>
+    <div class="cl-gradient-shift absolute inset-0 opacity-20"
+         style="background: linear-gradient(120deg, transparent 0%, rgba(244,197,66,0.2) 50%, transparent 100%);"></div>
+
+    <div class="relative mx-auto max-w-3xl px-6">
+      <h2 class="cl-reveal cl-text-shadow-strong text-balance text-5xl font-black leading-tight tracking-tight md:text-7xl">
+        פותחים את הלב — ביחד
+      </h2>
+      <p class="cl-reveal cl-text-shadow-soft mt-6 text-balance text-xl font-medium opacity-95 md:text-2xl">
+        ומשנים חיים אמיתיים
+      </p>
+      <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+         class="cl-reveal-zoom cl-sweep cl-cta-pulse relative mt-14 inline-flex items-center gap-3 overflow-hidden rounded-full bg-white px-14 py-6 text-xl font-black shadow-2xl hover:scale-105 transition-transform md:text-2xl"
+         style="color: var(--cl-red); box-shadow: 0 25px 70px -15px rgba(0,0,0,0.4);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        תרום עכשיו ❤️
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FOOTER — strong, dark
+       ==================================================== -->
+  <footer class="relative overflow-hidden bg-zinc-950 text-zinc-400">
+    <div class="pointer-events-none absolute inset-0 opacity-40"
+         style="background: radial-gradient(ellipse at 15% 20%, rgba(229,57,53,0.13), transparent 50%), radial-gradient(ellipse at 85% 80%, rgba(47,93,140,0.13), transparent 55%);"></div>
+
+    <div class="relative mx-auto max-w-6xl px-6 py-16 md:py-20">
+      <div class="mb-12 text-center">
+        <p class="text-balance text-xl font-black text-white md:text-2xl">עדיין לא תרמת? כל סכום עוזר משפחה אחת השבוע</p>
+        <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+           class="cl-sweep mt-5 inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-sm font-black text-white shadow-xl hover:scale-105 transition-transform md:text-base"
+           style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 18px 45px -10px rgba(229,57,53,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          תרום עכשיו ❤️
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        </a>
+      </div>
+
+      <div class="mx-auto mb-12 h-px max-w-2xl" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);"></div>
+
+      <div class="grid gap-10 md:grid-cols-3 md:gap-12">
+        <div>
+          <div class="flex items-center gap-3">
+            <img src="/uploads/charity/logo.png" alt="פותחים את הלב" class="size-14 rounded-full bg-white p-1.5 shadow-lg">
+            <div>
+              <div class="text-lg font-black text-white">פותחים את הלב</div>
+              <div class="text-sm">בהובלת הנוער</div>
+            </div>
+          </div>
+          <p class="mt-5 max-w-xs text-sm leading-relaxed text-zinc-500">עמותה בהובלת בני נוער. ללא מטרות רווח. כל שקל מגיע לאלה שצריכים אותו.</p>
+        </div>
+
+        <div>
+          <h3 class="mb-4 text-sm font-black uppercase tracking-widest text-white">יצירת קשר</h3>
+          <ul class="space-y-3 text-sm">
+            <li><a href="tel:03-0000000" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              03-0000000
+            </a></li>
+            <li><a href="mailto:info@example.org" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              info@example.org
+            </a></li>
+            <li><a href="https://wa.me/972500000000" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+              וואטסאפ
+            </a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="mb-4 text-sm font-black uppercase tracking-widest text-white">למה לתרום אלינו?</h3>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2 text-zinc-400">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 size-4 shrink-0" style="color: var(--cl-yellow);"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>עמותה הפועלת ללא מטרות רווח</span>
+            </li>
+            <li class="flex items-start gap-2 text-zinc-400">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 size-4 shrink-0" style="color: var(--cl-yellow);"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>מנוהלת כולה על ידי בני נוער ומתנדבים</span>
+            </li>
+            <li class="flex items-start gap-2 text-zinc-400">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 size-4 shrink-0" style="color: var(--cl-yellow);"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>100% שקיפות</span>
+            </li>
+            <li class="flex items-start gap-2 text-zinc-400">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 size-4 shrink-0" style="color: var(--cl-yellow);"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>כל תרומה מגיעה ישירות לשטח</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mx-auto mt-12 h-px max-w-2xl" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);"></div>
+      <div class="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-zinc-500 md:flex-row">
+        <span id="cl-copyright">© פותחים את הלב · כל הזכויות שמורות</span>
+        <span>נבנה בלב פתוח · בהובלת הנוער</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====================================================
+       FLOATING — Sticky donate (mobile bottom bar)
+       ==================================================== -->
+  <a id="cl-sticky-donate" href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+     class="cl-sticky-donate flex items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-black text-white shadow-2xl"
+     style="background: linear-gradient(135deg, var(--cl-red), #C62828); box-shadow: 0 18px 45px -10px rgba(229,57,53,0.4);">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    תרום עכשיו ❤️
+  </a>
+
+  <!-- WhatsApp button -->
+  <a href="https://wa.me/972500000000?text=שלום,%20אני%20מעוניין/ת%20לעזור%20לעמותה" target="_blank" rel="noopener noreferrer"
+     aria-label="וואטסאפ"
+     class="fixed right-4 z-40 flex size-14 items-center justify-center rounded-full text-white shadow-2xl ring-4 ring-white hover:scale-110 transition-transform"
+     style="background: #25D366; bottom: 5.5rem;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+  </a>
+
+  <!-- Delayed popup -->
+  <div id="cl-popup" class="cl-popup-overlay">
+    <div class="relative max-w-md rounded-3xl bg-white p-8 text-center shadow-2xl">
+      <button type="button" id="cl-popup-close" class="absolute top-3 left-3 flex size-8 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100" aria-label="סגור">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+      <div class="flex size-16 mx-auto items-center justify-center rounded-2xl shadow-lg" style="background: linear-gradient(135deg, var(--cl-red), #C62828);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <h3 class="mt-5 text-2xl font-black" style="color: #1A1A1A;">רגע אחד...</h3>
+      <p class="mt-3 text-base leading-relaxed" style="color: #5A5A5A;">גם תרומה קטנה עושה שינוי גדול. רוצה לעזור עכשיו?</p>
+      <a href="https://example.com/donate" target="_blank" rel="noopener noreferrer"
+         class="cl-sweep mt-6 inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-base font-black text-white shadow-xl"
+         style="background: linear-gradient(135deg, var(--cl-red), #C62828);">
+        כן, אני תורם ❤️
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- 5. JavaScript — Typewriter, Reveal, Counter, Video autoplay, Sticky, Popup -->
+<script>
+(function () {
+  'use strict';
+  const root = document.querySelector('.cl-root');
+  if (!root) return;
+
+  /* ------ Update copyright year ------ */
+  const cp = document.getElementById('cl-copyright');
+  if (cp) cp.textContent = '© ' + new Date().getFullYear() + ' פותחים את הלב · כל הזכויות שמורות';
+
+  /* ------ Floating particles ------ */
+  const particlesHost = document.getElementById('cl-particles');
+  if (particlesHost) {
+    const N = 14;
+    let html = '';
+    for (let i = 0; i < N; i++) {
+      const size = 2 + ((i * 7) % 5);
+      const left = (i * 13) % 100;
+      const delay = (i * 0.7) % 8;
+      const duration = 9 + ((i * 3) % 8);
+      const opacity = 0.15 + ((i * 5) % 30) / 100;
+      html += '<span class="cl-particle" style="width:' + size + 'px;height:' + size + 'px;left:' + left + '%;opacity:' + opacity + ';animation-delay:' + delay + 's;animation-duration:' + duration + 's;"></span>';
+    }
+    particlesHost.innerHTML = html;
+  }
+
+  /* ------ Typewriter ------ */
+  const tw = document.getElementById('cl-typewriter');
+  if (tw) {
+    const txt = tw.querySelector('.cl-tw-text');
+    const phases = [tw.dataset.phase1, tw.dataset.phase2, tw.dataset.phase3];
+    let phaseIdx = 0;
+    const TYPE = 55, DEL = 25, PAUSE = 1100;
+    function typeIn(s, done) {
+      let i = 0;
+      (function tick() {
+        i++;
+        txt.textContent = s.slice(0, i);
+        if (i < s.length) setTimeout(tick, TYPE);
+        else setTimeout(done, PAUSE);
+      })();
+    }
+    function delOut(done) {
+      (function tick() {
+        const cur = txt.textContent;
+        if (cur.length === 0) { setTimeout(done, 200); return; }
+        txt.textContent = cur.slice(0, -1);
+        setTimeout(tick, DEL);
+      })();
+    }
+    function next() {
+      if (phaseIdx >= phases.length) return;
+      const phase = phases[phaseIdx];
+      typeIn(phase, function () {
+        phaseIdx++;
+        if (phaseIdx < phases.length) delOut(next);
+      });
+    }
+    next();
+  }
+
+  /* ------ Reveal on scroll ------ */
+  if ('IntersectionObserver' in window) {
+    const reveals = root.querySelectorAll('.cl-reveal, .cl-reveal-zoom');
+    const ob = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          ob.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    reveals.forEach(function (el) { ob.observe(el); });
+  } else {
+    root.querySelectorAll('.cl-reveal, .cl-reveal-zoom').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  /* ------ Number counters ------ */
+  if ('IntersectionObserver' in window) {
+    const counters = root.querySelectorAll('.cl-counter');
+    const cob = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseInt(el.dataset.target || '0', 10);
+        const suffix = el.dataset.suffix || '';
+        const dur = 1800;
+        const start = performance.now();
+        function step(now) {
+          const t = Math.min(1, (now - start) / dur);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const v = Math.round(target * eased);
+          el.textContent = v.toLocaleString('he-IL') + suffix;
+          if (t < 1) requestAnimationFrame(step);
+          else el.textContent = target.toLocaleString('he-IL') + suffix;
+        }
+        requestAnimationFrame(step);
+        cob.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(function (c) { cob.observe(c); });
+  }
+
+  /* ------ Reels: autoplay video when in viewport ------ */
+  if ('IntersectionObserver' in window) {
+    root.querySelectorAll('.cl-reel-video').forEach(function (v) {
+      const vob = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && e.intersectionRatio > 0.5) {
+            v.play().catch(function () {});
+          } else { v.pause(); }
+        });
+      }, { threshold: [0, 0.5, 0.8] });
+      vob.observe(v);
+    });
+  }
+
+  /* ------ Big Video play ------ */
+  const bv = root.querySelector('.cl-bigvideo');
+  if (bv) {
+    const video = bv.querySelector('.cl-bv-video');
+    const overlay = bv.querySelector('.cl-bv-overlay');
+    const content = bv.querySelector('.cl-bv-content');
+    let playing = false;
+    function toggle(e) {
+      if (e) e.stopPropagation();
+      if (playing) { video.pause(); playing = false; }
+      else {
+        video.muted = false;
+        video.play().catch(function () { video.muted = true; video.play().catch(function () {}); });
+        playing = true;
+        video.style.transform = 'scale(1)';
+      }
+      overlay.style.opacity = playing ? '0' : '1';
+      content.style.opacity = playing ? '0' : '1';
+      content.style.pointerEvents = playing ? 'none' : '';
+    }
+    bv.addEventListener('click', toggle);
+  }
+
+  /* ------ Sticky donate appears after 600px scroll ------ */
+  const sd = document.getElementById('cl-sticky-donate');
+  if (sd) {
+    function onScroll() {
+      if (window.scrollY > 600) sd.classList.add('is-visible');
+      else sd.classList.remove('is-visible');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ------ Delayed popup (15s) ------ */
+  const popup = document.getElementById('cl-popup');
+  const popupClose = document.getElementById('cl-popup-close');
+  if (popup && popupClose) {
+    let shown = false;
+    setTimeout(function () {
+      if (!shown && !sessionStorage.getItem('cl-popup-shown')) {
+        popup.classList.add('is-open');
+        shown = true;
+      }
+    }, 15000);
+    function closePopup() {
+      popup.classList.remove('is-open');
+      sessionStorage.setItem('cl-popup-shown', '1');
+    }
+    popupClose.addEventListener('click', closePopup);
+    popup.addEventListener('click', function (e) {
+      if (e.target === popup) closePopup();
+    });
+  }
+})();
+</script>

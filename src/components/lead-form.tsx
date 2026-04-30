@@ -43,7 +43,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-5 rounded-3xl border border-white/10 bg-black/60 p-7 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur md:p-9"
+      className="grid gap-5 rounded-3xl border border-white/10 bg-[#0B1D2A]/80 p-7 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur md:p-9"
     >
       <div className="grid gap-2">
         <Label htmlFor="name" className="text-sm font-medium text-white/80">
@@ -55,7 +55,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           placeholder="שם פרטי ושם משפחה"
           autoComplete="name"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
@@ -71,7 +71,7 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           placeholder="050-0000000"
           autoComplete="tel"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
@@ -84,14 +84,14 @@ export function LeadForm({ tenantId, buttonText }: Props) {
           name="area"
           placeholder="למשל: מרכז, ירושלים, צפון"
           required
-          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+          className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/40 focus-visible:border-[#C8A45D] focus-visible:ring-[#C8A45D]/30"
         />
       </div>
 
       <Button
         type="submit"
         disabled={pending}
-        className="cta-pulse h-13 w-full rounded-xl bg-[#C9A24A] py-3.5 text-base font-bold text-black transition-all hover:bg-white hover:text-black disabled:opacity-60"
+        className="cta-pulse h-13 w-full rounded-xl bg-[#C8A45D] py-3.5 text-base font-bold text-black transition-all hover:bg-white hover:text-black disabled:opacity-60"
       >
         {pending ? "שולח..." : buttonText}
       </Button>

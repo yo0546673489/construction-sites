@@ -86,14 +86,11 @@ export function HeroTypewriter({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage]);
 
-  // הפאזה השלישית נצבעת חזק יותר
   const isFinal = stage === "type3" || stage === "done";
 
   return (
     <span
-      className={`inline-block ${
-        isFinal ? "text-white" : "text-white/85"
-      }`}
+      className={`inline-block ${isFinal ? "opacity-100" : "opacity-90"}`}
       aria-label={phase3}
     >
       {text}

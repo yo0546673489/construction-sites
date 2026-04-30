@@ -78,9 +78,10 @@ export function styleToCSS(style: TextStyle | undefined): StyleCSS {
 
 /**
  * מחזיר את ה-CSS עבור ElementKey ספציפי (אם קיימת דריסה).
+ * Generic — עובד עם כל content שיש לו styleOverrides (renovator + charity).
  */
 export function getElementCSS(
-  content: SiteContent,
+  content: { styleOverrides?: StyleOverrides },
   elementKey: string
 ): StyleCSS {
   return styleToCSS(content.styleOverrides?.[elementKey]);
@@ -254,8 +255,41 @@ export type SiteContent = {
     }>;
   };
 
+  /** ===== סקשנים חדשים — מפרט V4 ===== */
+
+  /** סקשן הארה גדולה: "הבעיה היא לא בך" */
+  bigRealization?: {
+    enabled?: boolean;
+    line1?: string;
+    line2?: string;
+    line3?: string;
+    line4?: string;
+  };
+
+  /** סקשן shift: "תפסיק לחפש עבודה. תתחיל לגרום לעבודה להגיע אליך" */
+  shift?: {
+    enabled?: boolean;
+    line1?: string;
+    line2?: string;
+  };
+
+  /** Floating elements - fake notification + fake WhatsApp */
+  floatingElements?: {
+    fakeNotificationText?: string;
+    fakeWhatsAppText?: string;
+  };
+
+  /** Lead form — שדות נוספים */
+  leadFormFields?: {
+    enableArea?: boolean;
+    areaPlaceholder?: string;
+  };
+
   /** דריסות עיצוב per-element (אופציונלי) */
   styleOverrides?: StyleOverrides;
+
+  /** ווידג'טים מותאמים שנוספו בבונה החופשי (סגנון אלמנטור) */
+  customWidgets?: import("./widgets").WidgetInstance[];
 };
 
 /** אייקונים לסקשן "המערכת מאחורי הקלעים" */
@@ -307,34 +341,34 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     whatsappMessage: "היי, ראיתי את האתר ואני רוצה להתחיל לקבל עבודות",
   },
   hero: {
-    badge: "מערכת לשיפוצניקים — מביאה עבודה. לא הבטחות.",
-    headlineLine1: "שיפוצניק — יש לך ידיים זהב…",
+    badge: "מערכת לשיפוצניקים — מביאה עבודה, לא הבטחות",
+    headlineLine1: "שיפוצניק? יש לך ידיים זהב…",
     headlineLine2: "אבל אין לך עבודה קבועה?",
     subheadline:
-      "אם אתה עדיין מחפש לקוחות במקום שהם יגיעו אליך — אתה עובד קשה מדי בשביל פחות מדי כסף.",
-    primaryCta: "אני רוצה לקבל עבודות",
+      "אתה לא צריך עוד עבודה — אתה צריך מערכת שמביאה עבודה.",
+    primaryCta: "השאירו פרטים ותתחילו למלא את היומן",
     backgroundImage:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
   },
   pain: {
     kicker: "זיהוי",
-    title: "תגיד לי אם זה אתה...",
+    title: "תכיר אם זה אתה...",
     items: [
       {
-        iconName: "user-x",
-        text: "אתה רודף אחרי לקוחות במקום שהם ירדפו אחריך",
-      },
-      {
-        iconName: "megaphone",
-        text: "מפרסם בפייסבוק / יד2 — ולא יוצא מזה כלום",
-      },
-      {
         iconName: "calendar-off",
-        text: "יש חודשים חזקים... ואז פתאום שקט",
+        text: "חודש אחד מפוצץ — חודש אחד ריק",
       },
       {
-        iconName: "phone",
-        text: "לקוחות מתקשרים — אבל לא סוגרים",
+        iconName: "user-x",
+        text: "לקוחות נעלמים אחרי שיחה ראשונה",
+      },
+      {
+        iconName: "wallet",
+        text: "מורידים אותך במחיר עד שכמעט לא משתלם",
+      },
+      {
+        iconName: "frown",
+        text: "אין יציבות — כל חודש מחדש",
       },
       {
         iconName: "phone-off",
@@ -343,44 +377,44 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     ],
   },
   beliefBreaker: {
-    titleBefore: "הבעיה היא ",
-    titleHighlight: "לא בך.",
+    titleBefore: "זה לא בגלל שאתה לא טוב.",
+    titleHighlight: " זה בגלל שאין לך שיווק.",
     paragraph1:
       "רוב השיפוצניקים עובדים בלי מערכת שמביאה להם לקוחות. הם תלויים במזל, בהמלצות, ובפרסום שלא באמת עובד.",
     paragraph2: "ומי שלא שולט בזרימה של לקוחות — נשאר בלי עבודה.",
   },
   solution: {
     kicker: "הפתרון",
-    titleBefore: "אנחנו הופכים את זה",
-    titleHighlight: "למערכת שעובדת בשבילך.",
+    titleBefore: "אנחנו בונים לשיפוצניקים",
+    titleHighlight: "מערכת שמביאה לקוחות מדויקים — על בסיס קבוע.",
     steps: [
       {
         num: "01",
         iconName: "target",
-        title: "פניות של לקוחות אמיתיים",
-        desc: "אנחנו מאתרים לקוחות שמחפשים שיפוצניק עכשיו — באזור שלך.",
+        title: "פניות אמיתיות",
+        desc: "לקוחות שמחפשים שיפוצניק עכשיו, עם תקציב אמיתי.",
       },
       {
         num: "02",
         iconName: "phone-call",
-        title: "ישירות לטלפון שלך",
-        desc: "הפניות מגיעות אליך בזמן אמת לוואטסאפ. בלי תווכים.",
+        title: "מהאזור שלך",
+        desc: "מיקוד גיאוגרפי מדויק — רק לקוחות מהאזור שאתה עובד בו.",
       },
       {
         num: "03",
         iconName: "trending-up",
-        title: "סוגר. ממלא יומן.",
-        desc: "אתה מתקשר, סוגר ומגיע לעבוד. היומן שלך מתמלא.",
+        title: "אנשים שרוצים לסגור",
+        desc: "סינון של פניות לא רציניות — רק מי שמתכוון להזמין עבודה.",
       },
     ],
   },
   proof: {
     kicker: "הוכחה",
-    title: "זה כבר עובד לשיפוצניקים אחרים.",
+    title: "זה כבר עובד לשיפוצניקים אחרים",
     stats: [
-      { value: 30, suffix: "+", label: "פניות בחודש" },
-      { value: 200, suffix: "+", label: "לקוחות מרוצים" },
-      { value: 12, suffix: "", label: "אזורי פעילות" },
+      { value: 32, suffix: "+", label: "פניות בחודש" },
+      { value: 18, suffix: "+", label: "עבודות סגורות" },
+      { value: 100, suffix: "%", label: "יומן מלא קדימה" },
     ],
   },
   gallery: {
@@ -430,11 +464,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
   ctaSection: {
     kicker: "הצטרפות",
-    titleBefore: "רוצה להתחיל לקבל עבודות ",
-    titleHighlight: "כבר השבוע?",
-    description: "השאר פרטים — נחזור אליך תוך 24 שעות לפגישת התאמה קצרה.",
+    titleBefore: "רוצה למלא את היומן שלך ",
+    titleHighlight: "בעבודות?",
+    description:
+      "השאר פרטים עכשיו ותראה איך מתחילים להגיע לקוחות. נחזור אליך תוך 24 שעות.",
     bullets: ["ללא עלות התחלתית", "ללא התחייבות", "ביטול מתי שתרצה"],
-    formButtonText: "שלח לי עבודות עכשיו",
+    formButtonText: "השאר פרטים עכשיו",
   },
 
   /* ===== סקשנים חדשים ===== */
@@ -533,8 +568,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
 
   tagline: {
-    line1: "אתה לא צריך עוד עבודה.",
-    line2: "אתה צריך מערכת שמביאה עבודה.",
+    line1: "התוצאה שאתה רוצה להגיע אליה:",
+    line2: "יומן מלא. לקוחות איכותיים. עבודה בלי לחץ.",
   },
 
   whatsappProof: {
@@ -573,7 +608,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         name: "אבי כ.",
         area: "ראשון לציון",
         quote:
-          "עברתי מ-3 פניות בחודש ל-25 פניות חמות. היומן שלי מלא חודשיים קדימה.",
+          "הייתי בלי עבודה — היום אני מסנן לקוחות. היומן שלי מלא חודשיים קדימה.",
         before: "3",
         after: "25",
       },
@@ -581,7 +616,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         name: "יוסי ש.",
         area: "ירושלים",
         quote:
-          "לא הייתי מאמין שזה כזה הבדל. תוך שבועיים סגרתי 4 עבודות גדולות.",
+          "פעם רדפתי אחרי עבודה — היום היא מגיעה אליי. תוך שבועיים סגרתי 4 עבודות גדולות.",
         before: "1",
         after: "8",
       },
@@ -595,7 +630,61 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       },
     ],
   },
+
+  /* ===== סקשנים חדשים — מפרט V4 ===== */
+
+  bigRealization: {
+    enabled: true,
+    line1: "הבעיה היא לא בך.",
+    line2: "זה לא המקצוע שלך.",
+    line3: "זה לא השירות שלך.",
+    line4: "זה השיווק שלך.",
+  },
+
+  shift: {
+    enabled: true,
+    line1: "תפסיק לחפש עבודה.",
+    line2: "תתחיל לגרום לעבודה להגיע אליך.",
+  },
+
+  floatingElements: {
+    fakeNotificationText: "לקוח חדש: שיפוץ דירה 120 מ\"ר — תל אביב",
+    fakeWhatsAppText: "שלום, צריך הצעת מחיר לשיפוץ",
+  },
+
+  leadFormFields: {
+    enableArea: true,
+    areaPlaceholder: "אזור פעילות (למשל: מרכז, ת\"א, ירושלים)",
+  },
 };
+
+/** deep-merge רקורסיבי: שדות חדשים שנוספו ל-schema (כמו bigRealization)
+ *  יקבלו ערכי ברירת מחדל גם עבור tenants ישנים שלא עודכנו דרך הדשבורד.
+ *  arrays — incoming שולט (אין מיזוג). objects רגילים — מתמזגים מפתח-מפתח. */
+function deepMergeSite<T>(base: T, override: unknown): T {
+  if (
+    !override ||
+    typeof override !== "object" ||
+    Array.isArray(override) ||
+    !base ||
+    typeof base !== "object" ||
+    Array.isArray(base)
+  ) {
+    return override === undefined ? base : (override as T);
+  }
+  const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+  for (const k of Object.keys(override as Record<string, unknown>)) {
+    const baseVal = (base as Record<string, unknown>)[k];
+    const ovVal = (override as Record<string, unknown>)[k];
+    out[k] =
+      baseVal && typeof baseVal === "object" && !Array.isArray(baseVal)
+        ? deepMergeSite(baseVal, ovVal)
+        : ovVal !== undefined
+          ? ovVal
+          : baseVal;
+  }
+  return out as T;
+}
 
 /**
  * Parse JSON safely. אם השדה ב-DB פגום, נופלים על ברירת המחדל.
@@ -603,11 +692,30 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
 export function parseSiteContent(json: string): SiteContent {
   try {
     const parsed = JSON.parse(json);
-    // הגנה רדודה: ממזגים עם ברירת המחדל כדי שלא יחסר שדה ויפיל את ה-render
-    return { ...DEFAULT_SITE_CONTENT, ...parsed } as SiteContent;
+    const merged = deepMergeSite(DEFAULT_SITE_CONTENT, parsed) as SiteContent;
+    if (merged.customWidgets) {
+      merged.customWidgets = sanitizeWidgetsList(merged.customWidgets);
+    }
+    return merged;
   } catch {
     return DEFAULT_SITE_CONTENT;
   }
+}
+
+/** wrapper דק — מיובא לאזן circular מ-widgets.ts */
+function sanitizeWidgetsList(
+  raw: unknown
+): import("./widgets").WidgetInstance[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter(
+    (w): w is import("./widgets").WidgetInstance =>
+      !!w &&
+      typeof w === "object" &&
+      typeof (w as { id?: unknown }).id === "string" &&
+      typeof (w as { type?: unknown }).type === "string" &&
+      !!(w as { props?: unknown }).props &&
+      typeof (w as { props: unknown }).props === "object"
+  );
 }
 
 export function stringifySiteContent(content: SiteContent): string {

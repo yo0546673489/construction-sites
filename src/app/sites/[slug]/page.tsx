@@ -12,6 +12,8 @@ import { WhatsAppButton } from "@/components/whatsapp-button";
 import { Typewriter } from "@/components/typewriter";
 import { PainList } from "@/components/pain-list";
 import { Counter } from "@/components/counter";
+import { FacebookPixel } from "@/components/facebook-pixel";
+import { WidgetsCanvas } from "@/components/admin/widget-renderer";
 import { prisma } from "@/lib/db";
 import { parseSiteContent, getElementCSS } from "@/lib/content";
 import { parseCharityContent } from "@/lib/charity-content";
@@ -20,6 +22,7 @@ import { CharityLanding } from "@/components/charity/charity-landing";
 import { BeforeAfter } from "@/components/renovator/before-after";
 import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
 import { TestimonialCard } from "@/components/renovator/testimonial-card";
+import { FloatingProof } from "@/components/renovator/floating-proof";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -78,7 +81,7 @@ export default async function PublicLandingPage({
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80";
 
   return (
-    <main className="flex flex-1 flex-col bg-black text-white">
+    <main className="flex flex-1 flex-col bg-[#0B1D2A] text-white">
       {/* ============== HERO ============== */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
         <Image
@@ -89,13 +92,25 @@ export default async function PublicLandingPage({
           sizes="100vw"
           className="object-cover [filter:brightness(0.45)] fade-in"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(201,162,74,0.18),transparent_55%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1D2A]/70 via-[#0B1D2A]/50 to-[#0B1D2A]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(200,164,93,0.18),transparent_55%)]" />
+
+        {/* Floating proof popups */}
+        <FloatingProof
+          notificationText={
+            content.floatingElements?.fakeNotificationText ||
+            "לקוח חדש: שיפוץ דירה 120 מ\"ר — תל אביב"
+          }
+          whatsappText={
+            content.floatingElements?.fakeWhatsAppText ||
+            "שלום, צריך הצעת מחיר לשיפוץ"
+          }
+        />
 
         <div className="relative mx-auto w-full max-w-6xl px-6 py-32 md:py-40">
           <div className="max-w-4xl">
             <div className="fade-up mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-xs font-medium tracking-wide text-white/85 backdrop-blur-md md:text-sm">
-              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+              <span className="size-1.5 rounded-full bg-[#C8A45D]" />
               <span style={css("hero.badge")}>{content.hero.badge}</span>
             </div>
 
@@ -108,7 +123,7 @@ export default async function PublicLandingPage({
                 style={css("hero.headlineLine1")}
               />
               <span
-                className="mt-3 block text-[#C9A24A]"
+                className="mt-3 block text-[#C8A45D]"
                 style={css("hero.headlineLine2")}
               >
                 <Typewriter
@@ -130,7 +145,7 @@ export default async function PublicLandingPage({
               <Button
                 size="lg"
                 nativeButton={false}
-                className="cta-pulse h-14 rounded-full bg-[#C9A24A] px-8 text-base font-bold text-black shadow-2xl shadow-[#C9A24A]/30 transition-all hover:bg-white hover:text-black"
+                className="cta-pulse h-14 rounded-full bg-[#C8A45D] px-8 text-base font-bold text-black shadow-2xl shadow-[#C8A45D]/30 transition-all hover:bg-white hover:text-black"
                 render={<a href="#lead-form" />}
               >
                 <span style={css("hero.primaryCta")}>
@@ -144,11 +159,11 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== PAIN ============== */}
-      <section className="border-y border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+      <section className="border-y border-white/[0.08] bg-[#1E2F3F] py-24 md:py-32">
         <div className="mx-auto max-w-3xl px-6">
           <div className="mb-12 text-center md:mb-16">
             <div
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
               style={css("pain.kicker")}
             >
               {content.pain.kicker}
@@ -172,14 +187,14 @@ export default async function PublicLandingPage({
 
       {/* ============== שבירת אמונה ============== */}
       <section className="relative overflow-hidden py-28 md:py-36">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(201,162,74,0.10),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(200,164,93,0.10),transparent_60%)]" />
         <div className="relative mx-auto max-w-3xl px-6 text-center">
           <h2 className="text-balance text-5xl font-black leading-[1.05] tracking-tight md:text-7xl">
             <span style={css("beliefBreaker.titleBefore")}>
               {content.beliefBreaker.titleBefore}
             </span>
             <span
-              className="text-[#C9A24A]"
+              className="text-[#C8A45D]"
               style={css("beliefBreaker.titleHighlight")}
             >
               {content.beliefBreaker.titleHighlight}
@@ -203,12 +218,12 @@ export default async function PublicLandingPage({
       {/* ============== הפתרון ============== */}
       <section
         id="how-it-works"
-        className="scroll-mt-12 border-y border-white/[0.08] bg-zinc-950 py-28 md:py-36"
+        className="scroll-mt-12 border-y border-white/[0.08] bg-[#1E2F3F] py-28 md:py-36"
       >
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-20 text-center">
             <div
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
               style={css("solution.kicker")}
             >
               {content.solution.kicker}
@@ -219,7 +234,7 @@ export default async function PublicLandingPage({
               </span>
               <br />
               <span
-                className="text-[#C9A24A]"
+                className="text-[#C8A45D]"
                 style={css("solution.titleHighlight")}
               >
                 {content.solution.titleHighlight}
@@ -231,7 +246,7 @@ export default async function PublicLandingPage({
             {content.solution.steps.length === 3 && (
               <div
                 aria-hidden="true"
-                className="absolute top-7 right-[16.66%] left-[16.66%] hidden h-px bg-gradient-to-r from-transparent via-[#C9A24A]/50 to-transparent md:block"
+                className="absolute top-7 right-[16.66%] left-[16.66%] hidden h-px bg-gradient-to-r from-transparent via-[#C8A45D]/50 to-transparent md:block"
               />
             )}
 
@@ -240,10 +255,10 @@ export default async function PublicLandingPage({
                 key={step.num}
                 className="relative flex flex-col items-center text-center"
               >
-                <div className="relative z-10 flex size-14 items-center justify-center rounded-full border border-[#C9A24A]/40 bg-zinc-950 text-[#C9A24A]">
+                <div className="relative z-10 flex size-14 items-center justify-center rounded-full border border-[#C8A45D]/40 bg-[#1E2F3F] text-[#C8A45D]">
                   {solutionIcon(step.iconName, "size-6")}
                 </div>
-                <div className="mt-5 text-xs font-bold tracking-[0.3em] text-[#C9A24A]">
+                <div className="mt-5 text-xs font-bold tracking-[0.3em] text-[#C8A45D]">
                   {step.num}
                 </div>
                 <h3 className="mt-3 text-xl font-bold md:text-2xl">
@@ -259,11 +274,11 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== BEFORE / AFTER (רקע בהיר) ============== */}
-      <section className="bg-gradient-to-b from-[#FAF9F6] via-white to-[#FAF9F6] py-24 md:py-32">
+      <section className="bg-gradient-to-b from-[#F5F5F5] via-white to-[#F5F5F5] py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center md:mb-20">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#A07820]">
-              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C8A45D]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#8A6E2F]">
+              <span className="size-1.5 rounded-full bg-[#C8A45D]" />
               {content.beforeAfter.kicker}
             </div>
             <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
@@ -322,17 +337,17 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== MARKETING PROCESS — איך המערכת עובדת ============== */}
-      <section className="relative overflow-hidden border-y border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+      <section className="relative overflow-hidden border-y border-white/[0.08] bg-[#1E2F3F] py-24 md:py-32">
         <div
           className="absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(ellipse at 30% 20%, rgba(201,162,74,0.20), transparent 60%)",
+              "radial-gradient(ellipse at 30% 20%, rgba(200,164,93,0.20), transparent 60%)",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center md:mb-20">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C9A24A]/30 bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#C9A24A]">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C8A45D]/30 bg-[#C8A45D]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#C8A45D]">
               <SparklesIcon className="size-3.5" />
               {content.marketingProcess.kicker}
             </div>
@@ -348,9 +363,9 @@ export default async function PublicLandingPage({
             {content.marketingProcess.items.map((item, i) => (
               <div
                 key={i}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:-translate-y-1 hover:border-[#C9A24A]/40 hover:bg-white/[0.05]"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all hover:-translate-y-1 hover:border-[#C8A45D]/40 hover:bg-white/[0.05]"
               >
-                <div className="flex size-12 items-center justify-center rounded-xl bg-[#C9A24A]/15 text-[#C9A24A] transition-transform group-hover:scale-110">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-[#C8A45D]/15 text-[#C8A45D] transition-transform group-hover:scale-110">
                   {marketingIcon(item.iconName, "size-5")}
                 </div>
                 <h3 className="mt-5 text-lg font-black">{item.title}</h3>
@@ -358,7 +373,7 @@ export default async function PublicLandingPage({
                   {item.description}
                 </p>
                 <div
-                  className="absolute inset-x-0 -bottom-px h-px scale-x-0 bg-gradient-to-r from-transparent via-[#C9A24A]/60 to-transparent transition-transform group-hover:scale-x-100"
+                  className="absolute inset-x-0 -bottom-px h-px scale-x-0 bg-gradient-to-r from-transparent via-[#C8A45D]/60 to-transparent transition-transform group-hover:scale-x-100"
                 />
               </div>
             ))}
@@ -367,12 +382,12 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== TAGLINE — משפט חזק ============== */}
-      <section className="relative overflow-hidden bg-[#FAF9F6] py-20 md:py-28">
+      <section className="relative overflow-hidden bg-[#F5F5F5] py-20 md:py-28">
         <div
           className="absolute inset-0 opacity-50"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(201,162,74,0.18), transparent 60%)",
+              "radial-gradient(ellipse at center, rgba(200,164,93,0.18), transparent 60%)",
           }}
         />
         <div className="relative mx-auto max-w-3xl px-6 text-center">
@@ -380,13 +395,13 @@ export default async function PublicLandingPage({
             {content.tagline.line1}
           </p>
           <p className="mt-3 text-balance text-3xl font-black leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
-            <span style={{ color: "#A07820" }}>{content.tagline.line2}</span>
+            <span style={{ color: "#8A6E2F" }}>{content.tagline.line2}</span>
           </p>
         </div>
       </section>
 
       {/* ============== WHATSAPP PROOF — לידים אמיתיים ============== */}
-      <section className="bg-zinc-50 py-24 md:py-32">
+      <section className="bg-[#F5F5F5] py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center md:mb-16">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#25D366]/15 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#075E54]">
@@ -410,7 +425,7 @@ export default async function PublicLandingPage({
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-16 text-center">
             <div
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
               style={css("proof.kicker")}
             >
               {content.proof.kicker}
@@ -432,12 +447,12 @@ export default async function PublicLandingPage({
             {content.proof.stats.map((stat) => (
               <div
                 key={stat.label}
-                className="flex flex-col items-center bg-black px-6 py-14 text-center md:py-20"
+                className="flex flex-col items-center bg-[#0B1D2A] px-6 py-14 text-center md:py-20"
               >
                 <Counter
                   to={stat.value}
                   suffix={stat.suffix}
-                  className="text-6xl font-black tracking-tight text-[#C9A24A] md:text-7xl"
+                  className="text-6xl font-black tracking-tight text-[#C8A45D] md:text-7xl"
                 />
                 <div className="mt-3 text-sm font-medium uppercase tracking-wider text-white/55">
                   {stat.label}
@@ -449,11 +464,11 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== TESTIMONIALS — שיפוצניקים שכבר עובדים איתנו ============== */}
-      <section className="bg-gradient-to-b from-white via-[#FAF9F6] to-white py-24 md:py-32">
+      <section className="bg-gradient-to-b from-white via-[#F5F5F5] to-white py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center md:mb-16">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C9A24A]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#A07820]">
-              <span className="size-1.5 rounded-full bg-[#C9A24A]" />
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C8A45D]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#8A6E2F]">
+              <span className="size-1.5 rounded-full bg-[#C8A45D]" />
               {content.testimonials.kicker}
             </div>
             <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
@@ -470,11 +485,11 @@ export default async function PublicLandingPage({
       </section>
 
       {/* ============== גלריה ============== */}
-      <section className="border-b border-white/[0.08] bg-zinc-950 py-24 md:py-32">
+      <section className="border-b border-white/[0.08] bg-[#1E2F3F] py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center md:mb-20">
             <div
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
               style={css("gallery.kicker")}
             >
               {content.gallery.kicker}
@@ -494,7 +509,7 @@ export default async function PublicLandingPage({
             {content.gallery.items.map((img, i) => (
               <figure
                 key={`${img.src}-${i}`}
-                className={`group relative overflow-hidden rounded-3xl bg-black ${
+                className={`group relative overflow-hidden rounded-3xl bg-[#0B1D2A] ${
                   i === 0 ? "md:col-span-2 md:row-span-2" : ""
                 }`}
               >
@@ -529,7 +544,7 @@ export default async function PublicLandingPage({
       <section className="py-28 md:py-36">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <div
-            className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+            className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
             style={css("differentiator.kicker")}
           >
             {content.differentiator.kicker}
@@ -565,17 +580,76 @@ export default async function PublicLandingPage({
         </div>
       </section>
 
+      {/* ============== BIG REALIZATION — "הבעיה היא לא בך" ============== */}
+      {content.bigRealization?.enabled !== false && (
+        <section className="relative overflow-hidden bg-[#0B1D2A] py-28 md:py-40">
+          {/* Spotlight effect */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(200,164,93,0.18) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(11,29,42,1), transparent 60%)",
+            }}
+          />
+          <div className="relative mx-auto max-w-3xl px-6 text-center">
+            <p className="text-balance text-4xl font-black leading-tight tracking-tight md:text-6xl lg:text-7xl">
+              {content.bigRealization?.line1 || "הבעיה היא לא בך."}
+            </p>
+            <div className="mx-auto mt-10 max-w-xl space-y-3 text-lg font-medium text-white/65 md:text-2xl">
+              <p>{content.bigRealization?.line2 || "זה לא המקצוע שלך."}</p>
+              <p>{content.bigRealization?.line3 || "זה לא השירות שלך."}</p>
+            </div>
+            <p className="mt-12 text-balance text-4xl font-black leading-tight tracking-tight md:text-6xl lg:text-7xl">
+              <span className="text-white">זה </span>
+              <span className="text-[#C8A45D]">
+                {(content.bigRealization?.line4 || "השיווק שלך.").replace(
+                  /^זה\s*/,
+                  ""
+                )}
+              </span>
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ============== SHIFT — "תפסיק לחפש עבודה" ============== */}
+      {content.shift?.enabled !== false && (
+        <section
+          className="relative overflow-hidden py-24 md:py-32"
+          style={{
+            background:
+              "linear-gradient(135deg, #1E2F3F 0%, #0B1D2A 100%)",
+          }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-50"
+            style={{
+              background:
+                "radial-gradient(ellipse at 20% 50%, rgba(200,164,93,0.15), transparent 50%), radial-gradient(ellipse at 80% 50%, rgba(200,164,93,0.1), transparent 50%)",
+            }}
+          />
+          <div className="relative mx-auto max-w-3xl px-6 text-center">
+            <p className="text-balance text-3xl font-black leading-tight tracking-tight text-white/85 md:text-5xl lg:text-6xl">
+              {content.shift?.line1 || "תפסיק לחפש עבודה."}
+            </p>
+            <p className="mt-6 text-balance text-3xl font-black leading-tight tracking-tight text-[#C8A45D] md:text-5xl lg:text-6xl">
+              {content.shift?.line2 || "תתחיל לגרום לעבודה להגיע אליך."}
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* ============== CTA + טופס ============== */}
       <section
         id="lead-form"
-        className="scroll-mt-12 relative overflow-hidden border-t border-white/[0.08] bg-zinc-950 py-28 md:py-36"
+        className="scroll-mt-12 relative overflow-hidden border-t border-white/[0.08] bg-[#1E2F3F] py-28 md:py-36"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(201,162,74,0.18),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(200,164,93,0.18),transparent_55%)]" />
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-6 md:grid-cols-2 md:gap-20">
           <div>
             <div
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A24A]"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#C8A45D]"
               style={css("ctaSection.kicker")}
             >
               {content.ctaSection.kicker}
@@ -585,7 +659,7 @@ export default async function PublicLandingPage({
                 {content.ctaSection.titleBefore}
               </span>
               <span
-                className="text-[#C9A24A]"
+                className="text-[#C8A45D]"
                 style={css("ctaSection.titleHighlight")}
               >
                 {content.ctaSection.titleHighlight}
@@ -601,7 +675,7 @@ export default async function PublicLandingPage({
             <div className="mt-10 space-y-4">
               {content.ctaSection.bullets.map((b) => (
                 <div key={b} className="flex items-center gap-3">
-                  <div className="flex size-7 items-center justify-center rounded-full bg-[#C9A24A]">
+                  <div className="flex size-7 items-center justify-center rounded-full bg-[#C8A45D]">
                     <CircleCheckIcon className="size-4 text-black" />
                   </div>
                   <span className="text-base font-medium text-white/90">
@@ -619,11 +693,23 @@ export default async function PublicLandingPage({
         </div>
       </section>
 
+      {/* ============== Custom Widgets — שנוספו דרך ה"+" בדשבורד ============== */}
+      {content.customWidgets && content.customWidgets.length > 0 && (
+        <section
+          dir="rtl"
+          className="bg-[#0B1D2A] px-6 py-16 md:py-24"
+        >
+          <div className="mx-auto max-w-3xl">
+            <WidgetsCanvas widgets={content.customWidgets} />
+          </div>
+        </section>
+      )}
+
       {/* ============== Footer ============== */}
-      <footer className="bg-black py-12 text-white/50">
+      <footer className="bg-[#0B1D2A] py-12 text-white/50">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 text-sm md:flex-row">
           <div className="flex items-center gap-2.5">
-            <HardHatIcon className="size-5 text-[#C9A24A]" />
+            <HardHatIcon className="size-5 text-[#C8A45D]" />
             <span
               className="font-bold tracking-wide text-white"
               style={css("meta.brandName")}
@@ -647,6 +733,11 @@ export default async function PublicLandingPage({
         number={content.contact.whatsappNumber}
         message={content.contact.whatsappMessage}
       />
+
+      {/* ============== Facebook Pixel ============== */}
+      {tenant.facebookPixelCode && (
+        <FacebookPixel code={tenant.facebookPixelCode} />
+      )}
     </main>
   );
 }
