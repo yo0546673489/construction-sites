@@ -14,8 +14,14 @@ type Props = {
 };
 
 /**
- * אפקט טייפרייטר — מציג טקסט תו אחרי תו.
- * משתמש ב-IME-safe slicing (Array.from) כדי לטפל נכון בעברית.
+ * אפקט טייפרייטר — Zero-CLS implementation.
+ *
+ * חשוב: הטקסט המלא תמיד תופס את אותו שטח (גם בעת SSR), כך שאין layout shift
+ * כשהאנימציה מתקדמת. אנחנו פשוט מחביאים תווים שעוד לא "הוקלדו" עם
+ * `visibility: hidden` (תופס מקום אבל לא נראה).
+ *
+ * SSR מציג את הטקסט המלא כדי שגוגל/SEO יראו אותו ושה-LCP לא ייפגע.
+ * ב-hydration אנחנו מאתחלים את count ל-0 ומתחילים את האנימציה.
  */
 export function Typewriter({
   text,
@@ -24,10 +30,15 @@ export function Typewriter({
   className,
   style,
 }: Props) {
-  const [count, setCount] = useState(0);
   const chars = Array.from(text);
+  // SSR initial: full text visible (LCP-friendly).
+  // Client mounts and useEffect resets to 0 + animates.
+  const [count, setCount] = useState(chars.length);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    setCount(0);
     let cancelled = false;
     const startTimer = setTimeout(() => {
       let i = 0;
@@ -47,12 +58,22 @@ export function Typewriter({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
-  const visible = chars.slice(0, count).join("");
   const isDone = count >= chars.length;
 
   return (
     <span className={className} style={style} aria-label={text}>
-      {visible}
+      {/* כל תו תמיד תופס שטח. visibility: hidden מסתיר ללא קפיצת layout. */}
+      {chars.map((c, i) => (
+        <span
+          key={i}
+          style={{
+            visibility:
+              !isMounted || i < count ? "visible" : "hidden",
+          }}
+        >
+          {c}
+        </span>
+      ))}
       <span
         className={`mr-0.5 inline-block w-[3px] translate-y-1 bg-current align-middle ${
           isDone ? "animate-pulse opacity-60" : "opacity-90"

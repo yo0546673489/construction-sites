@@ -89,7 +89,9 @@ export default async function PublicLandingPage({
           alt="שיפוץ דירה ברמה גבוהה"
           fill
           priority
+          quality={70}
           sizes="100vw"
+          fetchPriority="high"
           className="object-cover [filter:brightness(0.45)] fade-in"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B1D2A]/70 via-[#0B1D2A]/50 to-[#0B1D2A]" />
@@ -706,7 +708,7 @@ export default async function PublicLandingPage({
       )}
 
       {/* ============== Footer ============== */}
-      <footer className="bg-[#0B1D2A] py-12 text-white/50">
+      <footer className="bg-[#0B1D2A] py-12 text-white/70">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 text-sm md:flex-row">
           <div className="flex items-center gap-2.5">
             <HardHatIcon className="size-5 text-[#C8A45D]" />
