@@ -12,6 +12,7 @@ import {
   LogOutIcon,
   ArrowLeftCircleIcon,
   SettingsIcon,
+  BarChart3Icon,
 } from "lucide-react";
 import { exitTenant } from "@/app/admin/tenants/actions";
 
@@ -46,6 +47,7 @@ export function AdminSidebar({ user, tenant, isImpersonating }: Props) {
         { href: "/admin", label: "סקירה", icon: LayoutDashboardIcon },
         { href: "/admin/content", label: "עריכת תוכן", icon: FileTextIcon },
         { href: "/admin/leads", label: "לידים", icon: InboxIcon },
+        { href: "/admin/analytics", label: "אנליטיקות", icon: BarChart3Icon },
       ]
     : [];
 

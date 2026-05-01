@@ -6,19 +6,23 @@ import {
   CheckCircleIcon,
   ExternalLinkIcon,
   InfoIcon,
+  KeyIcon,
   SaveIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
+  updateClarityApiToken,
   updateClarityCode,
   updateFacebookPixel,
 } from "@/app/admin/settings/actions";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   initialPixelCode: string;
   initialClarityCode: string;
+  initialClarityApiToken: string;
   tenantSlug: string;
 };
 
@@ -45,6 +49,7 @@ const CLARITY_PLACEHOLDER = `<script type="text/javascript">
 export function SettingsForm({
   initialPixelCode,
   initialClarityCode,
+  initialClarityApiToken,
   tenantSlug,
 }: Props) {
   return (
@@ -92,7 +97,141 @@ export function SettingsForm({
         brandColor="#E81123"
         tenantSlug={tenantSlug}
       />
+
+      {/* ===== Clarity API token (לדף /admin/analytics) ===== */}
+      <ClarityApiTokenSection initialToken={initialClarityApiToken} />
     </div>
+  );
+}
+
+/* ============================================================
+   ClarityApiTokenSection — שדה token לחיבור ה-API
+   ============================================================ */
+
+function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
+  const [token, setToken] = useState(initialToken);
+  const [savedToken, setSavedToken] = useState(initialToken);
+  const [show, setShow] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const isDirty = token.trim() !== savedToken.trim();
+  const isConnected = savedToken.trim().length > 0;
+
+  function handleSave() {
+    startTransition(async () => {
+      const result = await updateClarityApiToken(token);
+      if (result.ok) {
+        toast.success(
+          token.trim() ? "API token נשמר — עבור לדף האנליטיקות" : "Token הוסר"
+        );
+        setSavedToken(token.trim());
+      } else {
+        toast.error(("error" in result && result.error) || "שגיאה");
+      }
+    });
+  }
+
+  function handleRemove() {
+    if (!confirm("להסיר את ה-API token?")) return;
+    setToken("");
+    startTransition(async () => {
+      const result = await updateClarityApiToken("");
+      if (result.ok) {
+        toast.success("Token הוסר");
+        setSavedToken("");
+      }
+    });
+  }
+
+  return (
+    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
+            <KeyIcon className="size-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold">Clarity API Token</h2>
+            <p className="mt-0.5 text-sm text-white/55">
+              לקריאה לדף <span className="text-[#C9A24A]">/admin/analytics</span>{" "}
+              עם נתונים חיים מ-Clarity (סשנים, heatmaps summary, rage clicks).
+            </p>
+          </div>
+        </div>
+        {isConnected && (
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-300">
+            <CheckCircleIcon className="size-3.5" />
+            מחובר
+          </span>
+        )}
+      </div>
+
+      <div className="mt-6 grid gap-2">
+        <Label className="text-sm font-semibold text-white/85">API Token</Label>
+        <div className="flex gap-2">
+          <Input
+            type={show ? "text" : "password"}
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="eyJhbGc..."
+            dir="ltr"
+            className="h-10 flex-1 rounded-xl border-white/15 bg-zinc-950 font-mono text-xs text-white placeholder:text-white/25 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+          />
+          <button
+            type="button"
+            onClick={() => setShow((v) => !v)}
+            className="h-10 rounded-xl border border-white/15 bg-white/5 px-3 text-xs text-white/70 hover:bg-white/10"
+          >
+            {show ? "הסתר" : "הצג"}
+          </button>
+        </div>
+        <p className="text-xs text-white/45">
+          נמצא ב-clarity.microsoft.com → Settings → Data Export → Generate new
+          API token.
+        </p>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <Button
+          onClick={handleSave}
+          disabled={isPending || !isDirty}
+          className="h-10 rounded-xl bg-[#C9A24A] px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+        >
+          <SaveIcon className="size-4" />
+          {isPending ? "שומר..." : "שמור"}
+        </Button>
+        {isConnected && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            disabled={isPending}
+            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-300 hover:bg-red-500/10 disabled:opacity-50"
+          >
+            הסר Token
+          </button>
+        )}
+        {isConnected && (
+          <a
+            href="/admin/analytics"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#C9A24A]/30 bg-[#C9A24A]/10 px-4 py-2 text-xs font-bold text-[#C9A24A] hover:bg-[#C9A24A]/20"
+          >
+            פתח אנליטיקות
+            <ExternalLinkIcon className="size-3" />
+          </a>
+        )}
+      </div>
+
+      <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-400/20 bg-amber-500/[0.04] p-4">
+        <InfoIcon className="mt-0.5 size-4 shrink-0 text-amber-300" />
+        <div className="text-xs leading-relaxed text-white/70">
+          <div className="font-bold text-white/90">מגבלות API חינמי</div>
+          <p className="mt-1">
+            10 קריאות API ליום, מקסימום 3 ימים אחורה בכל קריאה. אנחנו cache-ים
+            כל קריאה לשעה, אז מקסימום ~24 קריאות ליום גם תחת שימוש כבד.
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 

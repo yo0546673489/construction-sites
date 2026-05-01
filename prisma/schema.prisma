@@ -38,6 +38,9 @@ model Tenant {
   // קוד Microsoft Clarity מלא (סקריפט הקלטה + heatmaps).
   // נמצא ב-clarity.microsoft.com -> Settings -> Setup.
   clarityCode String?
+  // API token של Clarity — לקריאה לדף /admin/analytics.
+  // נמצא ב-clarity.microsoft.com -> Settings -> Data Export -> Generate new API token.
+  clarityApiToken String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

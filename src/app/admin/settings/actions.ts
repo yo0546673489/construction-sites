@@ -112,6 +112,43 @@ export async function updateClarityCode(input: string) {
   return { ok: true } as const;
 }
 
+/**
+ * עדכון Clarity API token. משמש את דף ה-/admin/analytics לקריאות API.
+ * מחרוזת ריקה — מסירה.
+ */
+export async function updateClarityApiToken(input: string) {
+  const { tenant } = await requireTenantUser();
+  const trimmed = input.trim();
+
+  if (trimmed.length === 0) {
+    await prisma.tenant.update({
+      where: { id: tenant.id },
+      data: { clarityApiToken: null },
+    });
+    revalidatePath("/admin/settings");
+    revalidatePath("/admin/analytics");
+    return { ok: true } as const;
+  }
+
+  // ולידציה רכה — JWT-like או base64-ish, מינימום 30 תווים
+  if (trimmed.length < 30 || trimmed.length > 2000) {
+    return {
+      ok: false,
+      error:
+        "ה-Token לא נראה תקין. הוא אמור להיות מחרוזת ארוכה מ-Clarity Settings → Data Export",
+    } as const;
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenant.id },
+    data: { clarityApiToken: trimmed },
+  });
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/admin/analytics");
+  return { ok: true } as const;
+}
+
 /** בניית קוד הפיקסל הסטנדרטי כשהמשתמש הזין רק מספר */
 function buildStandardPixelCode(pixelId: string): string {
   return `<!-- Meta Pixel Code -->

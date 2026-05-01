@@ -23,6 +23,7 @@ export default async function SettingsPage() {
       <SettingsForm
         initialPixelCode={tenant.facebookPixelCode ?? ""}
         initialClarityCode={tenant.clarityCode ?? ""}
+        initialClarityApiToken={tenant.clarityApiToken ?? ""}
         tenantSlug={tenant.slug}
       />
     </div>
