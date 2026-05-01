@@ -111,7 +111,8 @@ export type ClaritySummary = {
 /** מסכם את הקריאה ל-Clarity לאובייקט נוח לתצוגה. */
 export function summarizeInsights(insights: ClarityInsights): ClaritySummary {
   const traffic = findMetric(insights, "Traffic");
-  const engaged = findMetric(insights, "EngagedSessions");
+  const engagement = findMetric(insights, "EngagementTime");
+  const scroll = findMetric(insights, "ScrollDepth");
   const popular = insights.find((x) => x.metricName === "PopularPages");
   const browsers = insights.find((x) => x.metricName === "Browser");
   const countries = insights.find((x) => x.metricName === "Country");
@@ -126,14 +127,14 @@ export function summarizeInsights(insights: ClarityInsights): ClaritySummary {
     totalSessions: num(traffic?.totalSessionCount),
     botSessions: num(traffic?.totalBotSessionCount),
     distinctUsers: num(traffic?.distinctUserCount),
-    pagesPerSession: num(traffic?.PagesPerSessionPercentage ?? engaged?.pagesPerSessionPercentage),
-    scrollDepthPct: num(engaged?.averageScrollDepth),
-    engagementSeconds: num(engaged?.activeTimeSpent ?? engaged?.totalTime),
-    rageClicks: num(rage?.subTotal ?? rage?.totalSessionsWithMetric),
-    deadClicks: num(dead?.subTotal ?? dead?.totalSessionsWithMetric),
-    quickBacks: num(quick?.subTotal ?? quick?.totalSessionsWithMetric),
-    excessiveScrolls: num(excessive?.subTotal ?? excessive?.totalSessionsWithMetric),
-    jsErrorsTotal: num(jsError?.subTotal ?? jsError?.totalSessionsWithMetric),
+    pagesPerSession: num(traffic?.pagesPerSessionPercentage),
+    scrollDepthPct: num(scroll?.averageScrollDepth),
+    engagementSeconds: num(engagement?.activeTime ?? engagement?.totalTime),
+    rageClicks: num(rage?.subTotal),
+    deadClicks: num(dead?.subTotal),
+    quickBacks: num(quick?.subTotal),
+    excessiveScrolls: num(excessive?.subTotal),
+    jsErrorsTotal: num(jsError?.subTotal),
     topUrls: extractTopList(popular, "url"),
     topBrowsers: extractTopList(browsers, "browser"),
     topCountries: extractTopList(countries, "country"),
