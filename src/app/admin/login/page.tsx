@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AuthError } from "next-auth";
 import { auth, signIn } from "@/auth";
 import { LockKeyholeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,15 +24,31 @@ export default async function LoginPage({
 
   /**
    * Server Action — מבצע signIn דרך NextAuth.
-   * אם הכניסה נכשלת, NextAuth זורק שגיאה ומפנה חזרה עם ?error=...
+   *
+   * NextAuth v5 זורק AuthError כשה-credentials לא תקינים.
+   * ב-server actions ב-Next.js, שגיאה לא-מטופלת = 500 generic error page.
+   * לכן: AuthError → redirect חזרה ל-/admin/login עם ?error=...
+   * שגיאות אחרות (כולל NEXT_REDIRECT אחרי הצלחה) — re-throw.
    */
   async function handleLogin(formData: FormData) {
     "use server";
-    await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirectTo: callbackUrl,
-    });
+    try {
+      await signIn("credentials", {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        redirectTo: callbackUrl,
+      });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        const params = new URLSearchParams({
+          error: error.type,
+          callbackUrl,
+        });
+        redirect(`/admin/login?${params.toString()}`);
+      }
+      // re-throw redirect/internal errors כדי ש-Next.js יפנה כרגיל
+      throw error;
+    }
   }
 
   return (
