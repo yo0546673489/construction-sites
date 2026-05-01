@@ -14,6 +14,11 @@ import { PainList } from "@/components/pain-list";
 import { Counter } from "@/components/counter";
 import { FacebookPixel } from "@/components/facebook-pixel";
 import { ClarityScript } from "@/components/clarity-script";
+import {
+  LocalBusinessSchema,
+  NGOSchema,
+  WebSiteSchema,
+} from "@/components/seo/schemas";
 import { WidgetsCanvas } from "@/components/admin/widget-renderer";
 import { prisma } from "@/lib/db";
 import { parseSiteContent, getElementCSS } from "@/lib/content";
@@ -26,30 +31,81 @@ import { TestimonialCard } from "@/components/renovator/testimonial-card";
 import { FloatingProof } from "@/components/renovator/floating-proof";
 import type { Metadata } from "next";
 
+const SITE_BASE_URL = "https://www.pro-digital.org";
+
 export async function generateMetadata({
   params,
 }: PageProps<"/sites/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const tenant = await prisma.tenant.findUnique({
     where: { slug },
-    select: { content: true, published: true, template: true },
+    select: {
+      content: true,
+      published: true,
+      template: true,
+      slug: true,
+    },
   });
   if (!tenant || !tenant.published) {
-    return { title: "האתר לא נמצא" };
+    return { title: "האתר לא נמצא", robots: { index: false, follow: false } };
   }
 
-  if (tenant.template === "charity") {
-    const content = parseCharityContent(tenant.content);
-    return {
-      title: content.meta.pageTitle,
-      description: content.meta.pageDescription,
-    };
-  }
+  /* ===== מטא-דאטה גנרית לכל סוג אתר ===== */
+  const title =
+    tenant.template === "charity"
+      ? parseCharityContent(tenant.content).meta.pageTitle
+      : parseSiteContent(tenant.content).meta.pageTitle;
+  const description =
+    tenant.template === "charity"
+      ? parseCharityContent(tenant.content).meta.pageDescription
+      : parseSiteContent(tenant.content).meta.pageDescription;
+  const ogImage =
+    tenant.template === "charity"
+      ? parseCharityContent(tenant.content).topBanner?.logo
+      : parseSiteContent(tenant.content).hero.backgroundImage;
+  const canonical = `${SITE_BASE_URL}/sites/${tenant.slug}`;
 
-  const content = parseSiteContent(tenant.content);
   return {
-    title: content.meta.pageTitle,
-    description: content.meta.pageDescription,
+    title,
+    description,
+    metadataBase: new URL(SITE_BASE_URL),
+    alternates: {
+      canonical,
+      languages: { "he-IL": canonical, "x-default": canonical },
+    },
+    openGraph: {
+      type: "website",
+      locale: "he_IL",
+      url: canonical,
+      title,
+      description,
+      siteName: title,
+      images: ogImage
+        ? [{ url: ogImage, width: 1200, height: 630, alt: title }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
+    other: {
+      "geo.region": "IL",
+      "geo.placename": "Israel",
+      "og:locale:alternate": "en_US",
+    },
   };
 }
 
@@ -65,10 +121,22 @@ export default async function PublicLandingPage({
     notFound();
   }
 
+  const tenantUrl = `${SITE_BASE_URL}/sites/${tenant.slug}`;
+
   /* ============== Dispatcher לפי template ============== */
   if (tenant.template === "charity") {
     const charityContent = parseCharityContent(tenant.content);
-    return <CharityLanding content={charityContent} />;
+    return (
+      <>
+        <WebSiteSchema
+          url={tenantUrl}
+          name={charityContent.meta.brandName}
+          description={charityContent.meta.pageDescription}
+        />
+        <NGOSchema content={charityContent} url={tenantUrl} />
+        <CharityLanding content={charityContent} />
+      </>
+    );
   }
 
   /* ============== ברירת מחדל — שיפוצניק ============== */
@@ -83,6 +151,14 @@ export default async function PublicLandingPage({
 
   return (
     <main className="flex flex-1 flex-col bg-[#0B1D2A] text-white">
+      {/* ============== SEO Structured Data ============== */}
+      <WebSiteSchema
+        url={tenantUrl}
+        name={content.meta.brandName}
+        description={content.meta.pageDescription}
+      />
+      <LocalBusinessSchema content={content} url={tenantUrl} />
+
       {/* ============== HERO ============== */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
         <Image
