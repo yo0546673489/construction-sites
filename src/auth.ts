@@ -24,6 +24,10 @@ declare module "next-auth" {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // האפליקציה רצה מאחורי reverse proxy (Caddy) בפרודקשן —
+  // צריך לסמן trustHost: true כדי ש-NextAuth יקבל את ה-host header.
+  trustHost: true,
+
   // session via JWT (חובה ל-Credentials provider)
   session: { strategy: "jwt" },
 
