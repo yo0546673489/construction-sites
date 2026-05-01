@@ -13,6 +13,7 @@ import { Typewriter } from "@/components/typewriter";
 import { PainList } from "@/components/pain-list";
 import { Counter } from "@/components/counter";
 import { FacebookPixel } from "@/components/facebook-pixel";
+import { ClarityScript } from "@/components/clarity-script";
 import { WidgetsCanvas } from "@/components/admin/widget-renderer";
 import { prisma } from "@/lib/db";
 import { parseSiteContent, getElementCSS } from "@/lib/content";
@@ -740,6 +741,9 @@ export default async function PublicLandingPage({
       {tenant.facebookPixelCode && (
         <FacebookPixel code={tenant.facebookPixelCode} />
       )}
+
+      {/* ============== Microsoft Clarity ============== */}
+      {tenant.clarityCode && <ClarityScript code={tenant.clarityCode} />}
     </main>
   );
 }

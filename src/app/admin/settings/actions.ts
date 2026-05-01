@@ -63,6 +63,55 @@ export async function updateFacebookPixel(input: string) {
   return { ok: true } as const;
 }
 
+/**
+ * עדכון קוד Microsoft Clarity עבור ה-tenant הנוכחי.
+ * מקבל את הקוד המלא (כולל <script>) או רק את ה-Project ID.
+ * מחרוזת ריקה — מסירה את הקוד.
+ */
+export async function updateClarityCode(input: string) {
+  const { tenant } = await requireTenantUser();
+  const trimmed = input.trim();
+
+  if (trimmed.length === 0) {
+    await prisma.tenant.update({
+      where: { id: tenant.id },
+      data: { clarityCode: null },
+    });
+    revalidatePath("/admin/settings");
+    revalidatePath(`/sites/${tenant.slug}`);
+    return { ok: true } as const;
+  }
+
+  // ולידציה — או Project ID לבד או קוד שמכיל "clarity"
+  const isProjectId = /^[a-z0-9]{8,16}$/i.test(trimmed);
+  const looksLikeClarity =
+    trimmed.includes("clarity") || trimmed.includes("clarity.ms");
+
+  if (!isProjectId && !looksLikeClarity) {
+    return {
+      ok: false,
+      error:
+        "הקוד אינו נראה כקוד Clarity תקין — הדבק את הקוד המלא מ-clarity.microsoft.com או רק את ה-Project ID",
+    } as const;
+  }
+
+  if (trimmed.length > 4000) {
+    return {
+      ok: false,
+      error: "הקוד ארוך מדי. ודא שהעתקת רק את קוד Clarity",
+    } as const;
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenant.id },
+    data: { clarityCode: trimmed },
+  });
+
+  revalidatePath("/admin/settings");
+  revalidatePath(`/sites/${tenant.slug}`);
+  return { ok: true } as const;
+}
+
 /** בניית קוד הפיקסל הסטנדרטי כשהמשתמש הזין רק מספר */
 function buildStandardPixelCode(pixelId: string): string {
   return `<!-- Meta Pixel Code -->

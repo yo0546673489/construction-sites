@@ -22,6 +22,7 @@ export default async function SettingsPage() {
 
       <SettingsForm
         initialPixelCode={tenant.facebookPixelCode ?? ""}
+        initialClarityCode={tenant.clarityCode ?? ""}
         tenantSlug={tenant.slug}
       />
     </div>

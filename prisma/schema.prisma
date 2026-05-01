@@ -35,6 +35,9 @@ model Tenant {
   // קוד פיקסל פייסבוק מלא (כפי שפייסבוק נותן ב-Events Manager).
   // אופציונלי. מכיל script + noscript, מוטמע as-is באתר הציבורי.
   facebookPixelCode String?
+  // קוד Microsoft Clarity מלא (סקריפט הקלטה + heatmaps).
+  // נמצא ב-clarity.microsoft.com -> Settings -> Setup.
+  clarityCode String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
