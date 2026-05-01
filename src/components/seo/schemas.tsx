@@ -72,7 +72,7 @@ export function NGOSchema({ content, url }: NGOSchemaProps) {
     name: content.meta?.brandName,
     description: content.meta?.pageDescription,
     url,
-    logo: content.topBanner?.logo,
+    logo: content.logoUrl,
     address: {
       "@type": "PostalAddress",
       addressCountry: "IL",

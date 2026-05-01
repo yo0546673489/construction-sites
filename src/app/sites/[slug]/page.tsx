@@ -61,7 +61,7 @@ export async function generateMetadata({
       : parseSiteContent(tenant.content).meta.pageDescription;
   const ogImage =
     tenant.template === "charity"
-      ? parseCharityContent(tenant.content).topBanner?.logo
+      ? parseCharityContent(tenant.content).logoUrl
       : parseSiteContent(tenant.content).hero.backgroundImage;
   const canonical = `${SITE_BASE_URL}/sites/${tenant.slug}`;
 
