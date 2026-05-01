@@ -1,5 +1,4 @@
 import type { SiteContent } from "@/lib/content";
-import type { CharityContent } from "@/lib/charity-content";
 import { JsonLd } from "./json-ld";
 
 /* ============================================================
@@ -60,7 +59,7 @@ export function LocalBusinessSchema({ content, url }: RenovatorSchemaProps) {
    ============================================================ */
 
 type NGOSchemaProps = {
-  content: CharityContent;
+  content: import("@/lib/charity-content").CharitySiteContent;
   url: string;
 };
 
@@ -72,7 +71,7 @@ export function NGOSchema({ content, url }: NGOSchemaProps) {
     name: content.meta?.brandName,
     description: content.meta?.pageDescription,
     url,
-    logo: content.logoUrl,
+    logo: content.meta.logoUrl,
     address: {
       "@type": "PostalAddress",
       addressCountry: "IL",
