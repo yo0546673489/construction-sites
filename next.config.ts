@@ -20,6 +20,23 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
 
+  // ===== URL rewrites =====
+  // הדומיין הראשי `/` יציג ישירות את התוכן של /sites/demo (ללא redirect).
+  // ה-URL בדפדפן יישאר `pro-digital.org/`.
+  // beforeFiles רץ לפני בדיקת file-system, אז Next.js מתעלם מ-app/page.tsx.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          destination: "/sites/demo",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+
   // ===== Compression =====
   compress: true,
 
