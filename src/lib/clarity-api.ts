@@ -102,7 +102,7 @@ export type ClaritySummary = {
   quickBacks: number;
   excessiveScrolls: number;
   jsErrorsTotal: number;
-  topUrls: Array<{ url: string; sessions: number }>;
+  topUrls: Array<{ name: string; sessions: number }>;
   topBrowsers: Array<{ name: string; sessions: number }>;
   topCountries: Array<{ name: string; sessions: number }>;
   topDevices: Array<{ name: string; sessions: number }>;
