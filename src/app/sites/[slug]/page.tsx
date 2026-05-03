@@ -23,10 +23,8 @@ import { WidgetsCanvas } from "@/components/admin/widget-renderer";
 import { prisma } from "@/lib/db";
 import { parseSiteContent, getElementCSS } from "@/lib/content";
 import { parseCharityContent } from "@/lib/charity-content";
-import { parseKingContent } from "@/lib/king-content";
 import { painIcon, solutionIcon, marketingIcon } from "@/lib/icon-map";
 import { CharityLanding } from "@/components/charity/charity-landing";
-import { KingLanding } from "@/components/king/king-landing";
 import { BeforeAfter } from "@/components/renovator/before-after";
 import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
 import { TestimonialCard } from "@/components/renovator/testimonial-card";
@@ -55,21 +53,15 @@ export async function generateMetadata({
   const title =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.pageTitle
-      : tenant.template === "king"
-        ? parseKingContent(tenant.content).meta.pageTitle
-        : parseSiteContent(tenant.content).meta.pageTitle;
+      : parseSiteContent(tenant.content).meta.pageTitle;
   const description =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.pageDescription
-      : tenant.template === "king"
-        ? parseKingContent(tenant.content).meta.pageDescription
-        : parseSiteContent(tenant.content).meta.pageDescription;
+      : parseSiteContent(tenant.content).meta.pageDescription;
   const ogImage =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.logoUrl
-      : tenant.template === "king"
-        ? parseKingContent(tenant.content).meta.logoUrl
-        : parseSiteContent(tenant.content).hero.backgroundImage;
+      : parseSiteContent(tenant.content).hero.backgroundImage;
   const canonical = `${SITE_BASE_URL}/sites/${tenant.slug}`;
 
   return {
@@ -142,20 +134,6 @@ export default async function PublicLandingPage({
         />
         <NGOSchema content={charityContent} url={tenantUrl} />
         <CharityLanding content={charityContent} />
-      </>
-    );
-  }
-
-  if (tenant.template === "king") {
-    const kingContent = parseKingContent(tenant.content);
-    return (
-      <>
-        <WebSiteSchema
-          url={tenantUrl}
-          name={kingContent.meta.brandName}
-          description={kingContent.meta.pageDescription}
-        />
-        <KingLanding content={kingContent} />
       </>
     );
   }
