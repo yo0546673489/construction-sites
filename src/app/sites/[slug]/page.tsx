@@ -23,12 +23,13 @@ import { WidgetsCanvas } from "@/components/admin/widget-renderer";
 import { prisma } from "@/lib/db";
 import { parseSiteContent, getElementCSS } from "@/lib/content";
 import { parseCharityContent } from "@/lib/charity-content";
+import { parseKingContent } from "@/lib/king-content";
 import { painIcon, solutionIcon, marketingIcon } from "@/lib/icon-map";
 import { CharityLanding } from "@/components/charity/charity-landing";
+import { KingLanding } from "@/components/king/king-landing";
 import { BeforeAfter } from "@/components/renovator/before-after";
 import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
 import { TestimonialCard } from "@/components/renovator/testimonial-card";
-import { FloatingProof } from "@/components/renovator/floating-proof";
 import type { Metadata } from "next";
 
 const SITE_BASE_URL = "https://www.pro-digital.org";
@@ -54,15 +55,21 @@ export async function generateMetadata({
   const title =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.pageTitle
-      : parseSiteContent(tenant.content).meta.pageTitle;
+      : tenant.template === "king"
+        ? parseKingContent(tenant.content).meta.pageTitle
+        : parseSiteContent(tenant.content).meta.pageTitle;
   const description =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.pageDescription
-      : parseSiteContent(tenant.content).meta.pageDescription;
+      : tenant.template === "king"
+        ? parseKingContent(tenant.content).meta.pageDescription
+        : parseSiteContent(tenant.content).meta.pageDescription;
   const ogImage =
     tenant.template === "charity"
       ? parseCharityContent(tenant.content).meta.logoUrl
-      : parseSiteContent(tenant.content).hero.backgroundImage;
+      : tenant.template === "king"
+        ? parseKingContent(tenant.content).meta.logoUrl
+        : parseSiteContent(tenant.content).hero.backgroundImage;
   const canonical = `${SITE_BASE_URL}/sites/${tenant.slug}`;
 
   return {
@@ -139,6 +146,20 @@ export default async function PublicLandingPage({
     );
   }
 
+  if (tenant.template === "king") {
+    const kingContent = parseKingContent(tenant.content);
+    return (
+      <>
+        <WebSiteSchema
+          url={tenantUrl}
+          name={kingContent.meta.brandName}
+          description={kingContent.meta.pageDescription}
+        />
+        <KingLanding content={kingContent} />
+      </>
+    );
+  }
+
   /* ============== ברירת מחדל — שיפוצניק ============== */
   const content = parseSiteContent(tenant.content);
   // Helper מקוצר להחלת style override per-element
@@ -173,18 +194,6 @@ export default async function PublicLandingPage({
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B1D2A]/70 via-[#0B1D2A]/50 to-[#0B1D2A]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(200,164,93,0.18),transparent_55%)]" />
-
-        {/* Floating proof popups */}
-        <FloatingProof
-          notificationText={
-            content.floatingElements?.fakeNotificationText ||
-            "לקוח חדש: שיפוץ דירה 120 מ\"ר — תל אביב"
-          }
-          whatsappText={
-            content.floatingElements?.fakeWhatsAppText ||
-            "שלום, צריך הצעת מחיר לשיפוץ"
-          }
-        />
 
         <div className="relative mx-auto w-full max-w-6xl px-6 py-32 md:py-40">
           <div className="max-w-4xl">
