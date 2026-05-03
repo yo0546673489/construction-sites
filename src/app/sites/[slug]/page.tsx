@@ -25,9 +25,10 @@ import { parseSiteContent, getElementCSS } from "@/lib/content";
 import { parseCharityContent } from "@/lib/charity-content";
 import { painIcon, solutionIcon, marketingIcon } from "@/lib/icon-map";
 import { CharityLanding } from "@/components/charity/charity-landing";
-import { BeforeAfter } from "@/components/renovator/before-after";
 import { WhatsAppChat } from "@/components/renovator/whatsapp-chat";
 import { TestimonialCard } from "@/components/renovator/testimonial-card";
+import { IncomingMessages } from "@/components/renovator/incoming-messages";
+import { PhoneOffIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 const SITE_BASE_URL = "https://www.pro-digital.org";
@@ -339,27 +340,61 @@ export default async function PublicLandingPage({
         </div>
       </section>
 
-      {/* ============== BEFORE / AFTER (רקע בהיר) ============== */}
-      <section className="bg-gradient-to-b from-[#F5F5F5] via-white to-[#F5F5F5] py-24 md:py-32">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-14 text-center md:mb-20">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C8A45D]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#8A6E2F]">
-              <span className="size-1.5 rounded-full bg-[#C8A45D]" />
-              {content.beforeAfter.kicker}
+      {/* ============== PAIN — "אין טלפונים" (רקע כהה) ============== */}
+      <section className="relative overflow-hidden border-y border-white/[0.08] bg-[#0B1D2A] py-28 md:py-36">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(200,164,93,0.08),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_70%,rgba(255,80,80,0.06),transparent_60%)]" />
+
+        <div className="relative mx-auto max-w-3xl px-6 text-center">
+          <div className="mx-auto mb-8 flex size-16 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/40">
+            <PhoneOffIcon className="size-7" />
+          </div>
+
+          <h2 className="text-balance text-4xl font-black leading-[1.1] tracking-tight text-white md:text-6xl">
+            <span className="block">אין טלפונים.</span>
+            <span className="block">אין הודעות.</span>
+            <span className="block text-white/55">אין עבודה קבועה.</span>
+          </h2>
+
+          <p className="mx-auto mt-10 max-w-xl text-balance text-lg leading-relaxed text-white/70 md:text-xl">
+            אתה בודק שוב ושוב —
+            <br />
+            ואף אחד לא פונה.
+          </p>
+        </div>
+      </section>
+
+      {/* ============== SOLUTION — "וככה זה נראה כשיש לך מערכת" ============== */}
+      <section className="relative overflow-hidden bg-[#1E2F3F] py-28 md:py-36">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 30%, rgba(37,211,102,0.10), transparent 55%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl px-6">
+          <div className="mb-12 text-center md:mb-16">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#25D366]/15 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#25D366]">
+              <span className="size-1.5 rounded-full bg-[#25D366]" />
+              עם המערכת שלנו
             </div>
-            <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-900 md:text-5xl">
-              {content.beforeAfter.title}
+            <h2 className="text-balance text-3xl font-black leading-[1.1] tracking-tight text-white md:text-5xl">
+              וככה זה נראה{" "}
+              <span className="text-[#25D366]">כשיש לך מערכת.</span>
             </h2>
-            <p className="mt-4 text-base text-zinc-600 md:text-lg">
-              {content.beforeAfter.subtitle}
+            <p className="mt-4 text-base text-white/70 md:text-lg">
+              הודעות נכנסות. עבודה נסגרת. יומן מתמלא.
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {content.beforeAfter.items.map((item, i) => (
-              <BeforeAfter key={i} {...item} />
-            ))}
-          </div>
+          <IncomingMessages
+            messages={[
+              { name: "יוסי", text: "שלום, צריך שיפוץ דירה", time: "09:14" },
+              { name: "רוני", text: "כמה עולה לשפץ אמבטיה?", time: "11:42" },
+              { name: "אבי", text: "מתי אתה פנוי לבוא לראות?", time: "13:08" },
+            ]}
+          />
         </div>
       </section>
 
