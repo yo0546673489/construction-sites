@@ -21,15 +21,22 @@ const nextConfig: NextConfig = {
   },
 
   // ===== URL rewrites =====
-  // הדומיין הראשי `/` יציג ישירות את התוכן של /sites/demo (ללא redirect).
-  // ה-URL בדפדפן יישאר `pro-digital.org/`.
+  // ה-`/` של כל subdomain מוצמד ל-tenant הנכון (URL נשאר נקי, ללא redirect).
   // beforeFiles רץ לפני בדיקת file-system, אז Next.js מתעלם מ-app/page.tsx.
   async rewrites() {
     return {
       beforeFiles: [
+        // הדומיין הראשי + www → אתר השיפוצניק (demo)
         {
           source: "/",
+          has: [{ type: "host", value: "(www\\.)?pro-digital\\.org" }],
           destination: "/sites/demo",
+        },
+        // Subdomain lp3 → tenant charity lp-3
+        {
+          source: "/",
+          has: [{ type: "host", value: "lp3\\.pro-digital\\.org" }],
+          destination: "/sites/lp-3",
         },
       ],
       afterFiles: [],
