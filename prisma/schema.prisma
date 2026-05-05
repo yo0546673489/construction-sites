@@ -41,11 +41,18 @@ model Tenant {
   // API token של Clarity — לקריאה לדף /admin/analytics.
   // נמצא ב-clarity.microsoft.com -> Settings -> Data Export -> Generate new API token.
   clarityApiToken String?
+  // Meta Marketing API — Ad Account ID של ה-tenant (פורמט: act_123456789)
+  metaAdAccountId   String?
+  metaAdAccountName String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   users User[]
   leads Lead[]
+  gmailConnection  GmailConnection?
+  donationKeywords DonationKeyword[]
+  donations        Donation[]
+  shareableReports ShareableReport[]
 
   @@index([slug])
 }
@@ -95,4 +102,113 @@ model Lead {
   updatedAt DateTime @updatedAt
 
   @@index([tenantId, createdAt])
+}
+
+
+// =========================================================
+// Gmail Connection — חיבור OAuth של עמותה ל-Gmail (לסנכרון תרומות)
+// tokens מוצפנים עם encryption.ts לפני שמירה.
+// =========================================================
+model GmailConnection {
+  id             String   @id @default(cuid())
+  tenantId       String   @unique
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  email          String
+  accessToken    String
+  refreshToken   String
+  tokenExpiresAt DateTime
+
+  lastSyncAt     DateTime?
+  lastSyncError  String?
+  syncEnabled    Boolean  @default(true)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// =========================================================
+// DonationKeyword — מילת מפתח שמזהה תרומה כשייכת לקמפיין
+// (למשל "פרויקט 36" → קמפיין "סבב חורף 2026")
+// =========================================================
+model DonationKeyword {
+  id              String   @id @default(cuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  keyword         String
+  campaignName    String
+  metaCampaignId  String?
+  color           String   @default("#3b82f6")
+
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  donations       Donation[]
+
+  @@index([tenantId])
+}
+
+// =========================================================
+// Donation — תרומה שזוהתה אוטומטית במייל
+// =========================================================
+model Donation {
+  id              String   @id @default(cuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  keywordId       String?
+  keyword         DonationKeyword? @relation(fields: [keywordId], references: [id], onDelete: SetNull)
+
+  amount          Float
+  currency        String   @default("ILS")
+  donorName       String?
+  donorPhone      String?
+  donorEmail      String?
+  paymentMethod   String?
+
+  emailSubject    String
+  emailFrom       String
+  emailDate       DateTime
+  emailMessageId  String   @unique
+  rawSnippet      String?
+
+  parserSource    String   @default("universal")
+  needsReview     Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+
+  @@index([tenantId, emailDate])
+  @@index([keywordId])
+  @@index([tenantId, needsReview])
+}
+
+// =========================================================
+// ShareableReport — דוח אנליטיקה ציבורי הניתן לשיתוף ב-link
+// =========================================================
+model ShareableReport {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  token       String   @unique
+  title       String
+
+  showSpend       Boolean @default(true)
+  showDonations   Boolean @default(true)
+  showRoas        Boolean @default(true)
+  showCampaigns   Boolean @default(true)
+
+  password        String?
+  expiresAt       DateTime?
+  viewCount       Int      @default(0)
+  lastViewedAt    DateTime?
+
+  dateRangeDays   Int      @default(30)
+
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  @@index([token])
+  @@index([tenantId])
 }

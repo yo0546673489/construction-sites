@@ -13,6 +13,9 @@ import {
   ArrowLeftCircleIcon,
   SettingsIcon,
   BarChart3Icon,
+  TargetIcon,
+  HeartHandshakeIcon,
+  TrendingUpIcon,
 } from "lucide-react";
 import { exitTenant } from "@/app/admin/tenants/actions";
 
@@ -48,6 +51,9 @@ export function AdminSidebar({ user, tenant, isImpersonating }: Props) {
         { href: "/admin/content", label: "עריכת תוכן", icon: FileTextIcon },
         { href: "/admin/leads", label: "לידים", icon: InboxIcon },
         { href: "/admin/analytics", label: "אנליטיקות", icon: BarChart3Icon },
+        { href: "/admin/campaigns", label: "קמפיינים", icon: TargetIcon },
+        { href: "/admin/donations", label: "תרומות", icon: HeartHandshakeIcon },
+        { href: "/admin/reports", label: "תזרים", icon: TrendingUpIcon },
       ]
     : [];
 
