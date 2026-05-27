@@ -3,7 +3,8 @@
 // זו הליבה של פאזה 3
 
 import { prisma } from './db';
-import { getCampaigns, getAccountSummary, getDateRange } from './meta-api';
+import { getCampaigns, getDateRange } from './meta-api';
+import { metaCampaignMatchesKeyword } from './donations-service';
 import type {
   CashflowSummary,
   DailyCashflow,
@@ -16,8 +17,22 @@ import type {
 
 export async function getCashflowSummary(
   tenantId: string,
-  daysBack = 30
+  rangeOrDays: number | { since: Date; until: Date } = 30
 ): Promise<CashflowSummary | null> {
+  const { since, until, daysBack } = (() => {
+    if (typeof rangeOrDays === 'number') {
+      const until = new Date();
+      until.setHours(23, 59, 59, 999);
+      const since = new Date();
+      since.setDate(since.getDate() - (rangeOrDays - 1));
+      since.setHours(0, 0, 0, 0);
+      return { since, until, daysBack: rangeOrDays };
+    }
+    const ms = rangeOrDays.until.getTime() - rangeOrDays.since.getTime();
+    const days = Math.max(1, Math.round(ms / 86400000) + 1);
+    return { ...rangeOrDays, daysBack: days };
+  })();
+
   // 1. קבל את ה-tenant
   const tenant = await prisma.tenant.findUnique({
     where: { id: tenantId },
@@ -28,13 +43,15 @@ export async function getCashflowSummary(
 
   if (!tenant) return null;
 
-  const dateRange = getDateRange(daysBack);
+  const dateRange = {
+    since: since.toISOString().split('T')[0],
+    until: until.toISOString().split('T')[0],
+  };
+  // legacy compat — getDateRange would return same shape
+  void getDateRange;
 
-  // 2. שלוף נתוני Meta (במקביל לתרומות)
-  const [metaSummary, donations, keywords] = await Promise.all([
-    tenant.metaAdAccountId
-      ? getAccountSummary(tenant.metaAdAccountId, dateRange).catch(() => null)
-      : null,
+  // 2. שלוף תרומות + keywords + קמפייני Meta (במקביל)
+  const [donations, keywords, allMetaCampaigns] = await Promise.all([
     prisma.donation.findMany({
       where: {
         tenantId,
@@ -46,15 +63,30 @@ export async function getCashflowSummary(
       include: { keyword: true },
     }),
     prisma.donationKeyword.findMany({
-      where: { tenantId },
+      where: { tenantId, isActive: true },
     }),
+    tenant.metaAdAccountId
+      ? getCampaigns(tenant.metaAdAccountId, dateRange).catch(() => [])
+      : Promise.resolve([]),
   ]);
 
-  const metaCampaigns = tenant.metaAdAccountId
-    ? await getCampaigns(tenant.metaAdAccountId, dateRange).catch(() => [])
-    : [];
+  // 3. סנן רק קמפייני Meta המקושרים ל-keyword (לפי השוואת שם)
+  // קמפיינים שלא מתאימים לאף keyword מתעלמים מהם בכל החישובים.
+  type MetaCampaignType = (typeof allMetaCampaigns)[number];
+  const linkedMetaCampaigns: Array<{
+    meta: MetaCampaignType;
+    keyword: (typeof keywords)[number];
+  }> = [];
+  for (const metaCampaign of allMetaCampaigns) {
+    const linkedKeyword = keywords.find((k) =>
+      metaCampaignMatchesKeyword(metaCampaign.name, k.campaignName)
+    );
+    if (linkedKeyword) {
+      linkedMetaCampaigns.push({ meta: metaCampaign, keyword: linkedKeyword });
+    }
+  }
 
-  // 3. בנה מפת תרומות יומיות
+  // 4. בנה מפת תרומות יומיות
   const donationsByDate = new Map<string, { amount: number; count: number }>();
   for (const d of donations) {
     const dateKey = d.emailDate.toISOString().split('T')[0];
@@ -65,18 +97,25 @@ export async function getCashflowSummary(
     });
   }
 
-  // 4. בנה מערך יומי משולב
-  const daily: DailyCashflow[] = [];
-  const metaDailyMap = new Map(
-    (metaSummary?.dailyData || []).map((d) => [d.date, d.spend])
+  // 5. סך הוצאות יומי = רק מהקמפיינים המקושרים.
+  // נחלק את ה-spend הכללי של כל קמפיין באופן יחסי לימים — כיוון שאין לנו
+  // breakdown יומי per-campaign, נחשב פרופורציונלית מתוך ה-totalSpend היחסי.
+  const totalLinkedSpend = linkedMetaCampaigns.reduce(
+    (sum, c) => sum + c.meta.spend,
+    0
   );
 
-  for (let i = daysBack - 1; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
+  const daily: DailyCashflow[] = [];
+  const cursor = new Date(since);
+  cursor.setHours(0, 0, 0, 0);
+  while (cursor <= until) {
+    const date = new Date(cursor);
+    cursor.setDate(cursor.getDate() + 1);
     const dateKey = date.toISOString().split('T')[0];
 
-    const metaSpend = metaDailyMap.get(dateKey) || 0;
+    // כיוון שאין לנו daily-per-campaign, אנחנו מחלקים שווה (לא אידיאלי
+    // אבל בסדר עד שנשפר ל-API call נפרד). לטווח קצר זה נכון בקירוב.
+    const metaSpend = totalLinkedSpend / Math.max(daysBack, 1);
     const donationData = donationsByDate.get(dateKey) || { amount: 0, count: 0 };
 
     const netProfit = donationData.amount - metaSpend;
@@ -93,26 +132,15 @@ export async function getCashflowSummary(
     });
   }
 
-  // 5. בנה תזרים לפי קמפיין
+  // 6. בנה תזרים לפי קמפיין — רק על המקושרים
   const byCampaign: CampaignCashflow[] = [];
 
-  // קישור קמפייני Meta למילות מפתח
-  for (const metaCampaign of metaCampaigns) {
-    // מצא את ה-keyword שמקושר לקמפיין הזה
-    const linkedKeyword = keywords.find(
-      (k) => k.metaCampaignId === metaCampaign.id
+  for (const { meta: metaCampaign, keyword } of linkedMetaCampaigns) {
+    const linkedDonations = donations.filter(
+      (d) => d.keywordId === keyword.id
     );
-
-    let donationsAmount = 0;
-    let donationsCount = 0;
-
-    if (linkedKeyword) {
-      const linkedDonations = donations.filter(
-        (d) => d.keywordId === linkedKeyword.id
-      );
-      donationsAmount = linkedDonations.reduce((sum, d) => sum + d.amount, 0);
-      donationsCount = linkedDonations.length;
-    }
+    const donationsAmount = linkedDonations.reduce((sum, d) => sum + d.amount, 0);
+    const donationsCount = linkedDonations.length;
 
     const netProfit = donationsAmount - metaCampaign.spend;
     const roas = metaCampaign.spend > 0 ? donationsAmount / metaCampaign.spend : 0;
@@ -135,15 +163,16 @@ export async function getCashflowSummary(
     });
   }
 
-  // הוסף גם קמפיינים שיש להם תרומות אבל לא מקושרים ל-Meta
+  // 7. הוסף גם keywords שיש להם תרומות אבל אף קמפיין Meta לא תואם להם בשם
+  const linkedKeywordIds = new Set(linkedMetaCampaigns.map((c) => c.keyword.id));
   for (const keyword of keywords) {
-    if (keyword.metaCampaignId) continue; // כבר נטופל
-    
+    if (linkedKeywordIds.has(keyword.id)) continue;
+
     const keywordDonations = donations.filter((d) => d.keywordId === keyword.id);
     if (keywordDonations.length === 0) continue;
 
     const donationsAmount = keywordDonations.reduce((sum, d) => sum + d.amount, 0);
-    
+
     byCampaign.push({
       campaignId: `keyword_${keyword.id}`,
       campaignName: keyword.campaignName,
@@ -151,16 +180,16 @@ export async function getCashflowSummary(
       donationsAmount,
       donationsCount: keywordDonations.length,
       netProfit: donationsAmount,
-      roas: 0, // אין הוצאה - אין ROAS
+      roas: 0,
       status: 'star',
     });
   }
 
   byCampaign.sort((a, b) => b.donationsAmount - a.donationsAmount);
 
-  // 6. סיכומים
-  const totalSpend = daily.reduce((sum, d) => sum + d.metaSpend, 0);
-  const totalDonations = daily.reduce((sum, d) => sum + d.donationsAmount, 0);
+  // 8. סיכומים — רק מהקמפיינים המקושרים
+  const totalSpend = totalLinkedSpend;
+  const totalDonations = donations.reduce((sum, d) => sum + d.amount, 0);
   const netProfit = totalDonations - totalSpend;
   const roas = totalSpend > 0 ? totalDonations / totalSpend : 0;
   const profitPercentage = totalDonations > 0 ? (netProfit / totalDonations) * 100 : 0;

@@ -95,19 +95,19 @@ export function CharityTextStylePanel({
     <div className="grid gap-6">
       {/* TEXT */}
       <Section title="תוכן">
-        <Label className="text-sm font-medium text-white/85">{meta.label}</Label>
+        <Label className="text-sm font-medium text-slate-700">{meta.label}</Label>
         {meta.inputType === "textarea" ? (
           <Textarea
             value={text}
             onChange={(e) => updateText(e.target.value)}
             rows={4}
-            className="rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+            className="rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
           />
         ) : (
           <Input
             value={text}
             onChange={(e) => updateText(e.target.value)}
-            className="h-11 rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+            className="h-11 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
           />
         )}
       </Section>
@@ -128,8 +128,8 @@ export function CharityTextStylePanel({
                 onClick={() => updateStyle({ size: s.value })}
                 className={`rounded-lg border px-2 py-2 text-xs font-bold transition-colors ${
                   active
-                    ? "border-[#C9A24A] bg-[#C9A24A] text-black"
-                    : "border-white/15 bg-white/5 text-white/75 hover:border-[#C9A24A]/40 hover:text-white"
+                    ? "border-emerald-500 bg-emerald-500 text-black"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-300 hover:text-slate-900"
                 }`}
               >
                 {s.label}
@@ -165,8 +165,8 @@ export function CharityTextStylePanel({
                 onClick={() => updateStyle({ weight: w.value })}
                 className={`rounded-lg border px-2 py-2 text-[11px] transition-colors ${
                   active
-                    ? "border-[#C9A24A] bg-[#C9A24A] text-black"
-                    : "border-white/15 bg-white/5 text-white/75 hover:border-[#C9A24A]/40 hover:text-white"
+                    ? "border-emerald-500 bg-emerald-500 text-black"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-300 hover:text-slate-900"
                 }`}
                 style={{ fontWeight: numWeight }}
               >
@@ -195,8 +195,8 @@ export function CharityTextStylePanel({
                   title={c.label}
                   className={`relative size-8 rounded-lg border-2 transition-all ${
                     active
-                      ? "border-[#C9A24A] ring-2 ring-[#C9A24A]/30"
-                      : "border-white/15 hover:scale-110"
+                      ? "border-emerald-500 ring-2 ring-emerald-200"
+                      : "border-slate-200 hover:scale-110"
                   }`}
                   style={{ backgroundColor: c.value }}
                   aria-label={c.label}
@@ -209,13 +209,13 @@ export function CharityTextStylePanel({
               type="color"
               value={style.color ?? "#FFFFFF"}
               onChange={(e) => updateStyle({ color: e.target.value })}
-              className="size-10 cursor-pointer rounded-lg border border-white/15 bg-transparent"
+              className="size-10 cursor-pointer rounded-lg border border-slate-200 bg-transparent"
             />
             <Input
               value={style.color ?? ""}
               placeholder="#FFFFFF"
               onChange={(e) => updateStyle({ color: e.target.value })}
-              className="h-10 flex-1 rounded-lg border-white/15 bg-white/5 font-mono text-sm text-white"
+              className="h-10 flex-1 rounded-lg border-slate-200 bg-slate-50 font-mono text-sm text-slate-900"
               dir="ltr"
             />
           </div>
@@ -244,8 +244,8 @@ export function CharityTextStylePanel({
                 onClick={() => updateStyle({ align: a.value })}
                 className={`flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs transition-colors ${
                   active
-                    ? "border-[#C9A24A] bg-[#C9A24A] text-black"
-                    : "border-white/15 bg-white/5 text-white/75 hover:border-[#C9A24A]/40 hover:text-white"
+                    ? "border-emerald-500 bg-emerald-500 text-black"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-300 hover:text-slate-900"
                 }`}
               >
                 <a.icon className="size-4" />
@@ -260,7 +260,7 @@ export function CharityTextStylePanel({
         <button
           type="button"
           onClick={resetAll}
-          className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] py-2.5 text-sm text-white/60 hover:border-red-500/30 hover:bg-red-500/5 hover:text-red-300"
+          className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white shadow-sm py-2.5 text-sm text-slate-600 hover:border-red-500/30 hover:bg-red-500/5 hover:text-red-700"
         >
           <RotateCcwIcon className="size-4" />
           אפס את כל דריסות העיצוב לאלמנט זה
@@ -284,14 +284,14 @@ function Section({
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between">
-        <Label className="text-xs font-bold uppercase tracking-widest text-white/45">
+        <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
           {title}
         </Label>
         {isOverridden && onReset && (
           <button
             type="button"
             onClick={onReset}
-            className="flex items-center gap-1 text-[10px] font-medium text-white/40 hover:text-[#C9A24A]"
+            className="flex items-center gap-1 text-[10px] font-medium text-slate-400 hover:text-emerald-600"
           >
             <RotateCcwIcon className="size-2.5" />
             אפס

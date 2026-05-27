@@ -52,26 +52,26 @@ export default async function LoginPage({
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 p-6 text-white">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6 text-slate-900">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-4 flex size-14 items-center justify-center rounded-2xl border border-[#C9A24A]/30 bg-[#C9A24A]/10 text-[#C9A24A]">
+          <div className="mb-4 flex size-14 items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-600">
             <LockKeyholeIcon className="size-6" />
           </div>
           <h1 className="text-3xl font-black tracking-tight">
             דשבורד ניהול
           </h1>
-          <p className="mt-2 text-sm text-white/60">
+          <p className="mt-2 text-sm text-slate-600">
             התחבר עם פרטי המשתמש שלך
           </p>
         </div>
 
         <form
           action={handleLogin}
-          className="space-y-5 rounded-3xl border border-white/10 bg-black/40 p-7 shadow-2xl shadow-black/40 backdrop-blur md:p-8"
+          className="space-y-5 rounded-3xl border border-slate-200 bg-black/40 p-7 shadow-2xl shadow-black/40 backdrop-blur md:p-8"
         >
           {errorParam && (
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-center text-sm text-red-200">
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-center text-sm text-red-800">
               אימייל או סיסמה שגויים
             </div>
           )}
@@ -87,7 +87,7 @@ export default async function LoginPage({
               autoComplete="email"
               required
               placeholder="admin@example.com"
-              className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+              className="h-12 rounded-xl border-slate-200 bg-slate-50 text-base text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
             />
           </div>
 
@@ -105,22 +105,22 @@ export default async function LoginPage({
               autoComplete="current-password"
               required
               placeholder="••••••••"
-              className="h-12 rounded-xl border-white/15 bg-white/5 text-base text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+              className="h-12 rounded-xl border-slate-200 bg-slate-50 text-base text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
             />
           </div>
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-xl bg-[#C9A24A] text-base font-bold text-black hover:bg-white"
+            className="h-12 w-full rounded-xl bg-emerald-500 text-base font-bold text-black hover:bg-white"
           >
             התחבר לדשבורד
           </Button>
 
-          <p className="text-center text-xs text-white/45">
-            <span className="font-semibold text-white/60">דמו:</span>{" "}
+          <p className="text-center text-xs text-slate-400">
+            <span className="font-semibold text-slate-600">דמו:</span>{" "}
             admin@example.com / admin123
             <br />
-            <span className="font-semibold text-white/60">בעל עסק:</span>{" "}
+            <span className="font-semibold text-slate-600">בעל עסק:</span>{" "}
             owner@example.com / owner123
           </p>
         </form>

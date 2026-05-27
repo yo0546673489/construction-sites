@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { getEffectiveTenantId, type SessionUser } from '@/lib/auth-helpers';
 import { syncTenantDonations } from '@/lib/donations-service';
 
-export async function POST() {
+export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -25,7 +25,19 @@ export async function POST() {
     );
   }
 
-  const result = await syncTenantDonations(tenantId, 7);
+  // קרא את daysBack מהbody (אופציונלי). דיפולט 7. תקרה 365.
+  let daysBack = 7;
+  try {
+    const body = (await req.json()) as { daysBack?: unknown };
+    const n = Number(body.daysBack);
+    if (Number.isFinite(n) && n > 0) {
+      daysBack = Math.min(Math.floor(n), 365);
+    }
+  } catch {
+    // body ריק — נשארים על ברירת המחדל
+  }
+
+  const result = await syncTenantDonations(tenantId, daysBack);
   return NextResponse.json(result);
 }
 

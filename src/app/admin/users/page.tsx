@@ -25,13 +25,13 @@ export default async function UsersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="text-xs font-semibold uppercase tracking-widest text-[#C9A24A]">
+        <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
           ניהול
         </div>
         <h1 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
           משתמשים
         </h1>
-        <p className="mt-2 text-sm text-white/55">
+        <p className="mt-2 text-sm text-slate-600">
           {canManage
             ? "ניהול הצוות — הוספה, מחיקה, סוג הרשאה."
             : "צפייה בלבד. רק OWNER יכול להוסיף או למחוק משתמשים."}

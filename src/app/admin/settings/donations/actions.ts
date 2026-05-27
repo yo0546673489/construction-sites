@@ -23,7 +23,6 @@ export async function disconnectGmail() {
 export async function createKeywordAction(data: {
   keyword: string;
   campaignName: string;
-  metaCampaignId?: string;
   color?: string;
 }) {
   const { tenant } = await requireTenantUser();
@@ -31,11 +30,12 @@ export async function createKeywordAction(data: {
   await createKeyword(tenant.id, {
     keyword: data.keyword,
     campaignName: data.campaignName,
-    metaCampaignId: data.metaCampaignId || undefined,
     color: data.color,
   });
 
   revalidatePath('/admin/settings/donations');
+  revalidatePath('/admin/campaigns');
+  revalidatePath('/admin/reports');
 }
 
 export async function updateKeywordAction(
@@ -43,7 +43,6 @@ export async function updateKeywordAction(
   data: {
     keyword?: string;
     campaignName?: string;
-    metaCampaignId?: string;
     color?: string;
     isActive?: boolean;
   }
@@ -62,6 +61,8 @@ export async function updateKeywordAction(
 
   await updateKeyword(id, data);
   revalidatePath('/admin/settings/donations');
+  revalidatePath('/admin/campaigns');
+  revalidatePath('/admin/reports');
 }
 
 export async function deleteKeywordAction(id: string) {

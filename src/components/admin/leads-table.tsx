@@ -27,14 +27,14 @@ type Lead = {
 };
 
 const STATUSES = [
-  { value: "NEW", label: "חדש", color: "bg-[#C9A24A]/15 text-[#C9A24A]" },
+  { value: "NEW", label: "חדש", color: "bg-emerald-50 text-emerald-600" },
   {
     value: "CONTACTED",
     label: "יצרתי קשר",
-    color: "bg-blue-500/15 text-blue-300",
+    color: "bg-blue-500/15 text-blue-700",
   },
-  { value: "WON", label: "סגרתי", color: "bg-emerald-500/15 text-emerald-300" },
-  { value: "LOST", label: "פספסתי", color: "bg-red-500/15 text-red-300" },
+  { value: "WON", label: "סגרתי", color: "bg-emerald-500/15 text-emerald-700" },
+  { value: "LOST", label: "פספסתי", color: "bg-red-500/15 text-red-700" },
 ];
 
 export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
@@ -83,7 +83,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
 
   if (leads.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-16 text-center text-white/55">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white shadow-sm p-16 text-center text-slate-600">
         <div className="text-sm">עדיין אין לידים.</div>
         <div className="text-xs">לידים שיגיעו דרך הטופס יופיעו כאן בזמן אמת.</div>
       </div>
@@ -107,10 +107,10 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
         <StatCard label="טופלו" value={handledCount} tone="success" />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-right text-sm">
-            <thead className="border-b border-white/10 text-xs uppercase tracking-wider text-white/50">
+            <thead className="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-5 py-4 font-semibold">טופל</th>
                 <th className="px-5 py-4 font-semibold">שם</th>
@@ -122,7 +122,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                 <th className="px-5 py-4" aria-label="פירוט"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100">
               {leads.map((lead) => {
                 const waText = encodeURIComponent(
                   `שלום ${lead.name}, ראיתי את הפנייה שלך באתר. רציתי לעדכן אותך לגבי השיפוץ.`
@@ -132,7 +132,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                 return (
                   <FragmentRow key={lead.id}>
                     <tr
-                      className={`transition-colors hover:bg-white/[0.02] ${
+                      className={`transition-colors hover:bg-slate-50/60 ${
                         lead.handled ? "opacity-60" : ""
                       }`}
                     >
@@ -149,7 +149,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                           className={`flex size-7 items-center justify-center rounded-md border-2 transition-all ${
                             lead.handled
                               ? "border-emerald-500 bg-emerald-500 text-white"
-                              : "border-white/25 hover:border-emerald-400"
+                              : "border-slate-300 hover:border-emerald-400"
                           }`}
                         >
                           {lead.handled && <CheckIcon className="size-4" />}
@@ -161,16 +161,16 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                       <td className="px-5 py-4">
                         <a
                           href={`tel:${lead.phone}`}
-                          className="text-white/80 hover:text-[#C9A24A]"
+                          className="text-slate-700 hover:text-emerald-600"
                           dir="ltr"
                         >
                           {lead.phone}
                         </a>
                       </td>
-                      <td className="px-5 py-4 text-white/70">
+                      <td className="px-5 py-4 text-slate-600">
                         {lead.area || "—"}
                       </td>
-                      <td className="px-5 py-4 text-white/55">
+                      <td className="px-5 py-4 text-slate-600">
                         {new Date(lead.createdAt).toLocaleDateString("he-IL", {
                           day: "2-digit",
                           month: "2-digit",
@@ -186,14 +186,14 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                           disabled={isPending}
                           className={`rounded-full border-0 px-3 py-1 text-xs font-semibold focus:outline-none ${
                             STATUSES.find((s) => s.value === lead.status)
-                              ?.color ?? "bg-white/10 text-white/70"
+                              ?.color ?? "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {STATUSES.map((s) => (
                             <option
                               key={s.value}
                               value={s.value}
-                              className="bg-zinc-900 text-white"
+                              className="bg-white text-slate-900"
                             >
                               {s.label}
                             </option>
@@ -204,7 +204,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                         <div className="flex items-center gap-1">
                           <a
                             href={`tel:${lead.phone}`}
-                            className="flex size-8 items-center justify-center rounded-lg text-white/55 hover:bg-white/10 hover:text-white"
+                            className="flex size-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                             title="התקשר"
                           >
                             <PhoneIcon className="size-4" />
@@ -213,14 +213,14 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                             href={`https://wa.me/${waNumber}?text=${waText}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex size-8 items-center justify-center rounded-lg text-white/55 hover:bg-emerald-500/10 hover:text-emerald-300"
+                            className="flex size-8 items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-500/10 hover:text-emerald-700"
                             title="שלח וואטסאפ"
                           >
                             <MessageCircleIcon className="size-4" />
                           </a>
                           <button
                             onClick={() => handleDelete(lead.id)}
-                            className="flex size-8 items-center justify-center rounded-lg text-white/40 hover:bg-red-500/10 hover:text-red-300"
+                            className="flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-700"
                             title="מחק"
                           >
                             <TrashIcon className="size-4" />
@@ -233,7 +233,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                           onClick={() =>
                             setExpandedId(isExpanded ? null : lead.id)
                           }
-                          className={`flex size-8 items-center justify-center rounded-lg text-white/55 hover:bg-white/10 hover:text-white ${
+                          className={`flex size-8 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 ${
                             isExpanded ? "rotate-180" : ""
                           }`}
                           title="פירוט מלא"
@@ -245,7 +245,7 @@ export function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                     </tr>
 
                     {isExpanded && (
-                      <tr className="bg-white/[0.015]">
+                      <tr className="bg-slate-50/60">
                         <td colSpan={8} className="px-5 py-5">
                           <div className="grid gap-3 md:grid-cols-2">
                             <DetailField label="שם מלא" value={lead.name} />
@@ -325,10 +325,10 @@ function StatCard({
 }) {
   const toneCls =
     tone === "success"
-      ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-300"
+      ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-700"
       : tone === "warning"
-        ? "border-amber-500/30 bg-amber-500/[0.06] text-amber-300"
-        : "border-white/10 bg-white/[0.04] text-white/85";
+        ? "border-amber-500/30 bg-amber-500/[0.06] text-amber-700"
+        : "border-slate-200 bg-slate-50 text-slate-700";
   return (
     <div className={`rounded-xl border px-4 py-3 ${toneCls}`}>
       <div className="text-xs uppercase tracking-wider opacity-70">{label}</div>
@@ -354,14 +354,14 @@ function DetailField({
 }) {
   const valueCls =
     tone === "success"
-      ? "text-emerald-300 font-bold"
+      ? "text-emerald-700 font-bold"
       : tone === "warning"
-        ? "text-amber-300 font-bold"
-        : "text-white/85";
+        ? "text-amber-700 font-bold"
+        : "text-slate-700";
   const content = href ? (
     <a
       href={href}
-      className="text-[#C9A24A] hover:underline"
+      className="text-emerald-600 hover:underline"
       dir={ltr ? "ltr" : undefined}
     >
       {value}
@@ -370,8 +370,8 @@ function DetailField({
     <span dir={ltr ? "ltr" : undefined}>{value}</span>
   );
   return (
-    <div className="rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3">
-      <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-white/45">
+    <div className="rounded-lg border border-slate-100 bg-white shadow-sm px-4 py-3">
+      <div className="mb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">
         {label}
       </div>
       <div className={`text-sm ${valueCls} ${multiline ? "whitespace-pre-wrap" : ""}`}>

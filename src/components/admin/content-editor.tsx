@@ -130,12 +130,12 @@ export function ContentEditor({
     : "";
 
   return (
-    <div className="-m-6 flex h-[calc(100vh-50px)] flex-col bg-zinc-900 md:-m-10">
+    <div className="-m-6 flex h-[calc(100vh-50px)] flex-col bg-white md:-m-10">
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-white/10 bg-zinc-950 px-5 py-3">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-3">
         <div>
           <h1 className="text-base font-bold">עורך ויזואלי</h1>
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-slate-500">
             לחץ על אלמנט כדי לערוך · בסוף הדף הוסף ווידג'טים חדשים
           </p>
         </div>
@@ -145,7 +145,7 @@ export function ContentEditor({
             href={`/sites/${tenantSlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white/85 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-600"
           >
             <EyeIcon className="size-3.5" />
             דף ציבורי
@@ -154,7 +154,7 @@ export function ContentEditor({
           <Button
             onClick={handleSave}
             disabled={isPending || !hasChanges}
-            className="h-9 rounded-lg bg-[#C9A24A] px-4 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+            className="h-9 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
           >
             <SaveIcon className="size-4" />
             {isPending ? "שומר..." : hasChanges ? "שמור שינויים" : "נשמר"}
@@ -163,15 +163,15 @@ export function ContentEditor({
       </div>
 
       {/* Preview-mode toolbar (shared) */}
-      <div className="flex items-center justify-center gap-1 border-b border-white/10 bg-zinc-950/50 px-4 py-2.5">
-        <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1">
+      <div className="flex items-center justify-center gap-1 border-b border-slate-200 bg-slate-50/50 px-4 py-2.5">
+        <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1">
           <button
             type="button"
             onClick={() => setPreviewMode("desktop")}
             className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
               previewMode === "desktop"
-                ? "bg-[#C9A24A] text-black"
-                : "text-white/60 hover:text-white"
+                ? "bg-emerald-500 text-black"
+                : "text-slate-600 hover:text-slate-900"
             }`}
             aria-label="תצוגת מחשב"
           >
@@ -183,8 +183,8 @@ export function ContentEditor({
             onClick={() => setPreviewMode("mobile")}
             className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
               previewMode === "mobile"
-                ? "bg-[#C9A24A] text-black"
-                : "text-white/60 hover:text-white"
+                ? "bg-emerald-500 text-black"
+                : "text-slate-600 hover:text-slate-900"
             }`}
             aria-label="תצוגת מובייל"
           >
@@ -196,7 +196,7 @@ export function ContentEditor({
 
       <div className="flex flex-1 overflow-hidden">
         {/* Preview pane */}
-        <div className="flex flex-1 flex-col overflow-hidden bg-zinc-900">
+        <div className="flex flex-1 flex-col overflow-hidden bg-white">
           {/* Scrollable preview area */}
           <div
             className="flex-1 overflow-y-auto p-6"
@@ -206,7 +206,7 @@ export function ContentEditor({
               className={`mx-auto overflow-hidden border shadow-2xl shadow-black/40 transition-all duration-500 ${
                 previewMode === "mobile"
                   ? "max-w-[400px] rounded-[2.5rem] border-zinc-700 ring-8 ring-zinc-800"
-                  : "max-w-3xl rounded-2xl border-white/10"
+                  : "max-w-3xl rounded-2xl border-slate-200"
               }`}
             >
               <LandingPreview
@@ -226,19 +226,19 @@ export function ContentEditor({
         </div>
 
         {/* Side panel */}
-        <aside className="flex w-[420px] shrink-0 flex-col border-r border-white/10 bg-zinc-950">
+        <aside className="flex w-[420px] shrink-0 flex-col border-r border-slate-200 bg-slate-50">
           {selected ? (
             <>
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+              <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-widest text-[#C9A24A]">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
                     עריכה
                   </div>
                   <div className="mt-0.5 text-base font-bold">{panelTitle}</div>
                 </div>
                 <button
                   onClick={() => setSelected(null)}
-                  className="flex size-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/5 hover:text-white"
+                  className="flex size-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   aria-label="סגור"
                 >
                   <XIcon className="size-4" />
@@ -362,28 +362,28 @@ export function ContentEditor({
 function EmptyPanel() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#C9A24A]/10 text-[#C9A24A]">
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
         <MousePointer2Icon className="size-6" />
       </div>
       <div>
         <h3 className="text-base font-bold">לחץ על פנסיל בתצוגה</h3>
-        <p className="mt-1.5 text-sm text-white/55">
+        <p className="mt-1.5 text-sm text-slate-600">
           ליד כל אלמנט בדף יש אייקון פנסיל זהוב.
           <br />
           לחיצה עליו פותחת את כל אפשרויות העריכה — טקסט, גודל, צבע, יישור ועוד.
         </p>
       </div>
-      <div className="mt-4 grid w-full gap-1.5 text-right text-xs text-white/55">
-        <div className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-          ✏️ <span className="font-bold text-white/85">טקסטים בודדים</span> —
+      <div className="mt-4 grid w-full gap-1.5 text-right text-xs text-slate-600">
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm px-3 py-2">
+          ✏️ <span className="font-bold text-slate-700">טקסטים בודדים</span> —
           כותרות, פסקאות, כפתורים
         </div>
-        <div className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-          ✏️ <span className="font-bold text-white/85">סקשנים עם רשימות</span>{" "}
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm px-3 py-2">
+          ✏️ <span className="font-bold text-slate-700">סקשנים עם רשימות</span>{" "}
           — כאבים, שלבים, תמונות
         </div>
-        <div className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-          ✏️ <span className="font-bold text-white/85">תמונת רקע + SEO</span> —
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm px-3 py-2">
+          ✏️ <span className="font-bold text-slate-700">תמונת רקע + SEO</span> —
           בפינות הדף
         </div>
       </div>

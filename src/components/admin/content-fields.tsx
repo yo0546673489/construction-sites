@@ -55,24 +55,24 @@ export function Field({
 }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-sm font-medium text-white/85">{label}</Label>
+      <Label className="text-sm font-medium text-slate-700">{label}</Label>
       {children}
-      {hint && <p className="text-xs text-white/45">{hint}</p>}
+      {hint && <p className="text-xs text-slate-400">{hint}</p>}
     </div>
   );
 }
 
 export const fieldClass =
-  "h-11 rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30";
+  "h-11 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200";
 
 export const textareaClass =
-  "min-h-24 rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30";
+  "min-h-24 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200";
 
 const addBtn =
-  "inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/85 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]";
+  "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-600";
 
 const trashBtn =
-  "flex size-10 shrink-0 items-center justify-center rounded-lg text-white/40 hover:bg-red-500/10 hover:text-red-300";
+  "flex size-10 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-700";
 
 /* ---------------- Section forms ---------------- */
 
@@ -241,7 +241,7 @@ export function PainFields({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             הכאבים ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>
@@ -253,7 +253,7 @@ export function PainFields({
           {value.items.map((item, i) => (
             <div
               key={i}
-              className="rounded-xl border border-white/10 bg-black/30 p-3"
+              className="rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start gap-2">
                 <select
@@ -263,10 +263,10 @@ export function PainFields({
                       iconName: e.target.value as PainIconName,
                     })
                   }
-                  className="h-10 rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                  className="h-10 rounded-lg border border-slate-200 bg-slate-50 px-2 text-xs text-slate-900"
                 >
                   {PAIN_ICONS.map((n) => (
-                    <option key={n} value={n} className="bg-zinc-900">
+                    <option key={n} value={n} className="bg-white">
                       {n}
                     </option>
                   ))}
@@ -386,7 +386,7 @@ export function SolutionFields({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             שלבים ({value.steps.length})
           </Label>
           <button type="button" onClick={addStep} className={addBtn}>
@@ -398,7 +398,7 @@ export function SolutionFields({
           {value.steps.map((step, i) => (
             <div
               key={i}
-              className="rounded-xl border border-white/10 bg-black/30 p-3"
+              className="rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid gap-2">
                 <div className="grid grid-cols-[60px_1fr_auto] gap-2">
@@ -415,10 +415,10 @@ export function SolutionFields({
                         iconName: e.target.value as SolutionIconName,
                       })
                     }
-                    className="h-11 rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                    className="h-11 rounded-lg border border-slate-200 bg-slate-50 px-2 text-xs text-slate-900"
                   >
                     {SOLUTION_ICONS.map((n) => (
-                      <option key={n} value={n} className="bg-zinc-900">
+                      <option key={n} value={n} className="bg-white">
                         {n}
                       </option>
                     ))}
@@ -494,7 +494,7 @@ export function ProofFields({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             מספרים ({value.stats.length})
           </Label>
           <button type="button" onClick={addStat} className={addBtn}>
@@ -506,7 +506,7 @@ export function ProofFields({
           {value.stats.map((stat, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[80px_70px_auto] gap-2">
                 <Input
@@ -595,7 +595,7 @@ export function GalleryFields({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             תמונות ({value.items.length})
           </Label>
           <button type="button" onClick={addImg} className={addBtn}>
@@ -607,7 +607,7 @@ export function GalleryFields({
           {value.items.map((img, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start gap-2">
                 {img.src ? (
@@ -618,7 +618,7 @@ export function GalleryFields({
                     className="size-14 shrink-0 rounded-lg object-cover"
                   />
                 ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                     <ImageIcon className="size-5" />
                   </div>
                 )}
@@ -773,7 +773,7 @@ export function CtaFields({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             יתרונות ({value.bullets.length})
           </Label>
           <button type="button" onClick={addBullet} className={addBtn}>
@@ -857,7 +857,7 @@ export function BeforeAfterFields({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             פרויקטים ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>
@@ -869,10 +869,10 @@ export function BeforeAfterFields({
           {value.items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-xs font-bold text-white/60">
+                <span className="text-xs font-bold text-slate-600">
                   זוג {i + 1}
                 </span>
                 <button
@@ -886,7 +886,7 @@ export function BeforeAfterFields({
               </div>
               <div className="grid gap-2 md:grid-cols-2">
                 <div className="grid gap-1.5">
-                  <Label className="text-xs font-medium text-white/70">
+                  <Label className="text-xs font-medium text-slate-600">
                     תמונה — לפני
                   </Label>
                   <div className="flex gap-2">
@@ -898,7 +898,7 @@ export function BeforeAfterFields({
                         className="size-12 shrink-0 rounded-lg object-cover"
                       />
                     ) : (
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                         <ImageIcon className="size-4" />
                       </div>
                     )}
@@ -914,7 +914,7 @@ export function BeforeAfterFields({
                   </div>
                 </div>
                 <div className="grid gap-1.5">
-                  <Label className="text-xs font-medium text-white/70">
+                  <Label className="text-xs font-medium text-slate-600">
                     תמונה — אחרי
                   </Label>
                   <div className="flex gap-2">
@@ -926,7 +926,7 @@ export function BeforeAfterFields({
                         className="size-12 shrink-0 rounded-lg object-cover"
                       />
                     ) : (
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                         <ImageIcon className="size-4" />
                       </div>
                     )}
@@ -1001,7 +1001,7 @@ export function WorkPhotosFields({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             תמונות ({value.items.length})
           </Label>
           <button type="button" onClick={addImg} className={addBtn}>
@@ -1013,7 +1013,7 @@ export function WorkPhotosFields({
           {value.items.map((img, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start gap-2">
                 {img.src ? (
@@ -1024,7 +1024,7 @@ export function WorkPhotosFields({
                     className="size-14 shrink-0 rounded-lg object-cover"
                   />
                 ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                     <ImageIcon className="size-5" />
                   </div>
                 )}
@@ -1118,7 +1118,7 @@ export function MarketingProcessFields({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             יכולות ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>
@@ -1130,7 +1130,7 @@ export function MarketingProcessFields({
           {value.items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[120px_1fr_auto] gap-2">
                 <select
@@ -1140,10 +1140,10 @@ export function MarketingProcessFields({
                       iconName: e.target.value as MarketingIconName,
                     })
                   }
-                  className="h-11 rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                  className="h-11 rounded-lg border border-slate-200 bg-slate-50 px-2 text-xs text-slate-900"
                 >
                   {MARKETING_ICONS.map((n) => (
-                    <option key={n} value={n} className="bg-zinc-900">
+                    <option key={n} value={n} className="bg-white">
                       {n}
                     </option>
                   ))}
@@ -1262,7 +1262,7 @@ export function WhatsAppProofFields({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             הודעות ({value.messages.length})
           </Label>
           <button type="button" onClick={addMsg} className={addBtn}>
@@ -1274,7 +1274,7 @@ export function WhatsAppProofFields({
           {value.messages.map((msg, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[1fr_80px_auto] gap-2">
                 <Input
@@ -1363,7 +1363,7 @@ export function TestimonialsFields({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             המלצות ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>
@@ -1375,7 +1375,7 @@ export function TestimonialsFields({
           {value.items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
                 <Input
@@ -1407,7 +1407,7 @@ export function TestimonialsFields({
               />
               <div className="grid grid-cols-2 gap-2">
                 <div className="grid gap-1.5">
-                  <Label className="text-xs font-medium text-white/70">
+                  <Label className="text-xs font-medium text-slate-600">
                     לפני (פניות בחודש)
                   </Label>
                   <Input
@@ -1420,7 +1420,7 @@ export function TestimonialsFields({
                   />
                 </div>
                 <div className="grid gap-1.5">
-                  <Label className="text-xs font-medium text-white/70">
+                  <Label className="text-xs font-medium text-slate-600">
                     אחרי (פניות בחודש)
                   </Label>
                   <Input

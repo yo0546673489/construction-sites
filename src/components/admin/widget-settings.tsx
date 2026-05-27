@@ -218,7 +218,7 @@ function Section({
 }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-xs font-bold uppercase tracking-widest text-white/45">
+      <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
         {title}
       </Label>
       {children}
@@ -227,7 +227,7 @@ function Section({
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <Label className="text-sm font-medium text-white/85">{children}</Label>;
+  return <Label className="text-sm font-medium text-slate-700">{children}</Label>;
 }
 
 function TInput(
@@ -237,7 +237,7 @@ function TInput(
   return (
     <Input
       {...rest}
-      className={`h-10 rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30 ${
+      className={`h-10 rounded-lg border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200 ${
         full ? "w-full" : ""
       } ${className ?? ""}`}
     />
@@ -248,7 +248,7 @@ function TArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <Textarea
       {...props}
-      className={`rounded-lg border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30 ${
+      className={`rounded-lg border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200 ${
         props.className ?? ""
       }`}
     />
@@ -272,8 +272,8 @@ function ColorRow({
             onClick={() => onChange(c)}
             className={`relative size-7 rounded-md border-2 transition-all ${
               value === c
-                ? "border-[#C9A24A] ring-2 ring-[#C9A24A]/30"
-                : "border-white/15 hover:scale-110"
+                ? "border-emerald-500 ring-2 ring-emerald-200"
+                : "border-slate-200 hover:scale-110"
             }`}
             style={{ backgroundColor: c }}
             aria-label={c}
@@ -285,7 +285,7 @@ function ColorRow({
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="size-9 cursor-pointer rounded-lg border border-white/15 bg-transparent"
+          className="size-9 cursor-pointer rounded-lg border border-slate-200 bg-transparent"
         />
         <TInput
           value={value}
@@ -322,8 +322,8 @@ function AlignRow({
             onClick={() => onChange(o.v)}
             className={`flex items-center justify-center gap-1.5 rounded-lg border py-2 text-xs transition-colors ${
               active
-                ? "border-[#C9A24A] bg-[#C9A24A] text-black"
-                : "border-white/15 bg-white/5 text-white/70 hover:border-[#C9A24A]/40 hover:text-white"
+                ? "border-emerald-500 bg-emerald-500 text-black"
+                : "border-slate-200 bg-slate-50 text-slate-600 hover:border-emerald-300 hover:text-slate-900"
             }`}
           >
             <o.Icon className="size-3.5" />
@@ -360,8 +360,8 @@ function ChipRow<T extends string | number>({
             onClick={() => onChange(o.value)}
             className={`rounded-lg border px-2 py-2 text-xs font-bold transition-colors ${
               active
-                ? "border-[#C9A24A] bg-[#C9A24A] text-black"
-                : "border-white/15 bg-white/5 text-white/75 hover:border-[#C9A24A]/40 hover:text-white"
+                ? "border-emerald-500 bg-emerald-500 text-black"
+                : "border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-300 hover:text-slate-900"
             }`}
           >
             {o.label}
@@ -519,7 +519,7 @@ function VideoSettings({ p, set }: S<VideoProps>) {
           onChange={(e) => set({ url: e.target.value })}
           placeholder="https://www.youtube.com/watch?v=..."
         />
-        <p className="text-[11px] text-white/40">
+        <p className="text-[11px] text-slate-400">
           תומך ב-YouTube ו-Vimeo. ההמרה לפורמט embed היא אוטומטית.
         </p>
       </Section>
@@ -536,8 +536,8 @@ function VideoSettings({ p, set }: S<VideoProps>) {
         />
       </Section>
       <Section title="הפעלה אוטומטית">
-        <label className="flex cursor-pointer items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2.5">
-          <span className="text-sm text-white/85">Autoplay (ללא קול)</span>
+        <label className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
+          <span className="text-sm text-slate-700">Autoplay (ללא קול)</span>
           <input
             type="checkbox"
             checked={p.autoplay}
@@ -598,8 +598,8 @@ function ButtonSettings({ p, set }: S<ButtonProps>) {
         <ColorRow value={p.textColor} onChange={(v) => set({ textColor: v })} />
       </Section>
       <Section title="רוחב">
-        <label className="flex cursor-pointer items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2.5">
-          <span className="text-sm text-white/85">רוחב מלא</span>
+        <label className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
+          <span className="text-sm text-slate-700">רוחב מלא</span>
           <input
             type="checkbox"
             checked={p.fullWidth}
@@ -683,8 +683,8 @@ function IconSettings({ p, set }: S<IconProps>) {
                 onClick={() => set({ iconName: name })}
                 className={`rounded-lg border px-2 py-2.5 text-[10px] font-medium transition-colors ${
                   active
-                    ? "border-[#C9A24A] bg-[#C9A24A]/10 text-[#C9A24A]"
-                    : "border-white/15 bg-white/5 text-white/70 hover:border-[#C9A24A]/40 hover:text-white"
+                    ? "border-emerald-500 bg-emerald-50 text-emerald-600"
+                    : "border-slate-200 bg-slate-50 text-slate-600 hover:border-emerald-300 hover:text-slate-900"
                 }`}
               >
                 {name}
@@ -730,8 +730,8 @@ function IconBoxSettings({ p, set }: S<IconBoxProps>) {
                 onClick={() => set({ iconName: name })}
                 className={`rounded-lg border px-2 py-2.5 text-[10px] font-medium transition-colors ${
                   active
-                    ? "border-[#C9A24A] bg-[#C9A24A]/10 text-[#C9A24A]"
-                    : "border-white/15 bg-white/5 text-white/70 hover:border-[#C9A24A]/40 hover:text-white"
+                    ? "border-emerald-500 bg-emerald-50 text-emerald-600"
+                    : "border-slate-200 bg-slate-50 text-slate-600 hover:border-emerald-300 hover:text-slate-900"
                 }`}
               >
                 {name}
@@ -830,16 +830,16 @@ function GallerySettings({ p, set }: S<GalleryProps>) {
           {p.items.map((it, idx) => (
             <div
               key={idx}
-              className="rounded-lg border border-white/10 bg-white/[0.03] p-2.5"
+              className="rounded-lg border border-slate-200 bg-white shadow-sm p-2.5"
             >
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-bold text-white/60">
+                <span className="text-xs font-bold text-slate-600">
                   תמונה {idx + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => remove(idx)}
-                  className="text-white/35 hover:text-red-400"
+                  className="text-slate-400 hover:text-red-400"
                   aria-label="הסר"
                 >
                   <Trash2Icon className="size-3.5" />
@@ -864,7 +864,7 @@ function GallerySettings({ p, set }: S<GalleryProps>) {
         <button
           type="button"
           onClick={add}
-          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/15 bg-white/[0.02] py-2.5 text-xs text-white/65 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]"
+          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-200 bg-white shadow-sm py-2.5 text-xs text-slate-600 hover:border-emerald-300 hover:text-emerald-600"
         >
           <PlusIcon className="size-3.5" />
           הוסף תמונה
@@ -1042,16 +1042,16 @@ function SocialIconsSettings({ p, set }: S<SocialIconsProps>) {
           {p.items.map((it, idx) => (
             <div
               key={idx}
-              className="rounded-lg border border-white/10 bg-white/[0.03] p-2.5"
+              className="rounded-lg border border-slate-200 bg-white shadow-sm p-2.5"
             >
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-bold text-white/60">
+                <span className="text-xs font-bold text-slate-600">
                   פריט {idx + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => remove(idx)}
-                  className="text-white/35 hover:text-red-400"
+                  className="text-slate-400 hover:text-red-400"
                 >
                   <Trash2Icon className="size-3.5" />
                 </button>
@@ -1059,7 +1059,7 @@ function SocialIconsSettings({ p, set }: S<SocialIconsProps>) {
               <select
                 value={it.network}
                 onChange={(e) => update(idx, "network", e.target.value)}
-                className="mb-1.5 h-9 w-full rounded-md border border-white/15 bg-white/5 px-2 text-xs text-white"
+                className="mb-1.5 h-9 w-full rounded-md border border-slate-200 bg-slate-50 px-2 text-xs text-slate-900"
               >
                 {SOCIAL_NAMES.map((n) => (
                   <option key={n} value={n}>
@@ -1080,7 +1080,7 @@ function SocialIconsSettings({ p, set }: S<SocialIconsProps>) {
         <button
           type="button"
           onClick={add}
-          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/15 bg-white/[0.02] py-2.5 text-xs text-white/65 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]"
+          className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-200 bg-white shadow-sm py-2.5 text-xs text-slate-600 hover:border-emerald-300 hover:text-emerald-600"
         >
           <PlusIcon className="size-3.5" />
           הוסף רשת
@@ -1148,16 +1148,16 @@ function ListPairSettings({
       {items.map((it, idx) => (
         <div
           key={idx}
-          className="rounded-lg border border-white/10 bg-white/[0.03] p-2.5"
+          className="rounded-lg border border-slate-200 bg-white shadow-sm p-2.5"
         >
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-bold text-white/60">
+            <span className="text-xs font-bold text-slate-600">
               פריט {idx + 1}
             </span>
             <button
               type="button"
               onClick={() => remove(idx)}
-              className="text-white/35 hover:text-red-400"
+              className="text-slate-400 hover:text-red-400"
             >
               <Trash2Icon className="size-3.5" />
             </button>
@@ -1180,7 +1180,7 @@ function ListPairSettings({
       <button
         type="button"
         onClick={add}
-        className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-white/15 bg-white/[0.02] py-2.5 text-xs text-white/65 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]"
+        className="mt-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-200 bg-white shadow-sm py-2.5 text-xs text-slate-600 hover:border-emerald-300 hover:text-emerald-600"
       >
         <PlusIcon className="size-3.5" />
         {addLabel}

@@ -311,15 +311,17 @@ function decodeBase64Url(data: string): string {
 
 export function buildSearchQuery(keywords: string[], sinceDays = 7): string {
   // Gmail search syntax: https://support.google.com/mail/answer/7190
-  
+  // עברית: Gmail לא מטפל היטב בחיפוש exact-phrase במרכאות עבור עברית
+  // (מחזיר 0 תוצאות). לכן עוטפים כל keyword בסוגריים — Gmail מבצע
+  // AND בין המילים בתוך הסוגריים. הפרסר עצמו מבצע התאמה מדויקת על body.
+
   const sinceDate = new Date();
   sinceDate.setDate(sinceDate.getDate() - sinceDays);
   const dateStr = sinceDate.toISOString().split('T')[0].replace(/-/g, '/');
-  
-  // יוצר query: (keyword1 OR keyword2) after:DATE
+
   const keywordPart = keywords
-    .map((k) => `"${k}"`)
+    .map((k) => `(${k.trim()})`)
     .join(' OR ');
-  
-  return `(${keywordPart}) after:${dateStr}`;
+
+  return `${keywordPart} after:${dateStr}`;
 }

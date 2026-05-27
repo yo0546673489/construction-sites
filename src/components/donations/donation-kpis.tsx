@@ -22,24 +22,21 @@ export function DonationKPIs({ summary }: Props) {
       value: formatCurrency(summary.totalAmount),
       subValue: `${summary.totalCount} תרומות`,
       icon: TrendingUp,
-      bg: 'bg-green-50',
-      iconColor: 'text-green-600',
+      gradient: 'from-emerald-400 to-teal-500',
     },
     {
       label: 'תורמים ייחודיים',
       value: formatNumber(summary.uniqueDonors),
       subValue: `מתוך ${summary.totalCount} תרומות`,
       icon: Users,
-      bg: 'bg-blue-50',
-      iconColor: 'text-blue-600',
+      gradient: 'from-sky-400 to-blue-500',
     },
     {
       label: 'תרומה ממוצעת',
       value: formatCurrency(summary.averageAmount),
       subValue: 'לתורם',
       icon: BarChart3,
-      bg: 'bg-purple-50',
-      iconColor: 'text-purple-600',
+      gradient: 'from-violet-400 to-purple-500',
     },
     {
       label: 'קמפיינים פעילים',
@@ -49,8 +46,7 @@ export function DonationKPIs({ summary }: Props) {
           ? `מוביל: ${summary.byCampaign[0].campaignName.substring(0, 20)}`
           : 'אין נתונים',
       icon: Heart,
-      bg: 'bg-rose-50',
-      iconColor: 'text-rose-600',
+      gradient: 'from-rose-400 to-pink-500',
     },
   ];
 
@@ -61,14 +57,27 @@ export function DonationKPIs({ summary }: Props) {
         return (
           <div
             key={card.label}
-            className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+            className="group relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-300/20"
           >
-            <div className={`${card.bg} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
-              <Icon className={`w-6 h-6 ${card.iconColor}`} />
+            <div
+              className={`absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br ${card.gradient} opacity-10 blur-2xl transition-opacity group-hover:opacity-20`}
+            />
+            <div className="relative">
+              <div
+                className={`flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br ${card.gradient} shadow-lg shadow-slate-900/5`}
+              >
+                <Icon className="size-5 text-white" />
+              </div>
+              <p className="mt-5 text-sm font-medium text-slate-500">
+                {card.label}
+              </p>
+              <p className="mt-1 text-3xl font-black tracking-tight text-slate-900">
+                {card.value}
+              </p>
+              <p className="mt-1 text-xs font-medium text-slate-400">
+                {card.subValue}
+              </p>
             </div>
-            <p className="text-sm text-gray-500">{card.label}</p>
-            <p className="text-3xl font-bold text-gray-900 mt-1">{card.value}</p>
-            <p className="text-xs text-gray-400 mt-1">{card.subValue}</p>
           </div>
         );
       })}

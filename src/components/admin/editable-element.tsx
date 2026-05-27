@@ -37,8 +37,8 @@ export function EditableElement({
   disableInner = true,
 }: Props) {
   const ringClass = selected
-    ? "ring-2 ring-[#C9A24A] ring-offset-2 ring-offset-black z-10"
-    : "ring-1 ring-[#C9A24A]/20 hover:ring-2 hover:ring-[#C9A24A]/70 hover:ring-offset-2 hover:ring-offset-black hover:z-10";
+    ? "ring-2 ring-emerald-500 ring-offset-2 ring-offset-black z-10"
+    : "ring-1 ring-emerald-500/20 hover:ring-2 hover:ring-emerald-500/70 hover:ring-offset-2 hover:ring-offset-black hover:z-10";
 
   const pencilSize = compact ? "size-5" : "size-6";
   const pencilIcon = compact ? "size-2.5" : "size-3";
@@ -65,7 +65,7 @@ export function EditableElement({
           e.stopPropagation();
           onSelect(elementKey);
         }}
-        className={`absolute z-30 flex ${pencilSize} ${pencilOffset} items-center justify-center rounded-full bg-[#C9A24A] text-black shadow-lg ring-2 ring-black/20 transition-opacity ${
+        className={`absolute z-30 flex ${pencilSize} ${pencilOffset} items-center justify-center rounded-full bg-emerald-500 text-black shadow-lg ring-2 ring-black/20 transition-opacity ${
           selected
             ? "opacity-100"
             : "opacity-50 group-hover/elem:opacity-100"

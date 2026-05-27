@@ -40,16 +40,16 @@ import { CharityLandingPreview } from "./charity-landing-preview";
 import { CharityTextStylePanel } from "./charity-text-style-panel";
 
 const fieldClass =
-  "h-11 rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30";
+  "h-11 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200";
 
 const textareaClass =
-  "min-h-24 rounded-xl border-white/15 bg-white/5 text-white placeholder:text-white/35 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30";
+  "min-h-24 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-500 focus-visible:ring-emerald-200";
 
 const addBtn =
-  "inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/85 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]";
+  "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-600";
 
 const trashBtn =
-  "flex size-10 shrink-0 items-center justify-center rounded-lg text-white/40 hover:bg-red-500/10 hover:text-red-300";
+  "flex size-10 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-700";
 
 type SectionKey =
   | "meta"
@@ -138,12 +138,12 @@ export function CharityContentEditor({
     : "";
 
   return (
-    <div className="-m-6 flex h-[calc(100vh-50px)] flex-col bg-zinc-900 md:-m-10">
+    <div className="-m-6 flex h-[calc(100vh-50px)] flex-col bg-white md:-m-10">
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-white/10 bg-zinc-950 px-5 py-3">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-3">
         <div>
           <h1 className="text-base font-bold">עורך ויזואלי — עמותה</h1>
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-slate-500">
             לחץ על פנסיל ✏️ ליד כל אלמנט כדי לערוך אותו
           </p>
         </div>
@@ -152,7 +152,7 @@ export function CharityContentEditor({
             href={`/sites/${tenantSlug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white/85 hover:border-[#C9A24A]/40 hover:text-[#C9A24A]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-600"
           >
             דף ציבורי
             <ExternalLinkIcon className="size-3" />
@@ -160,7 +160,7 @@ export function CharityContentEditor({
           <Button
             onClick={handleSave}
             disabled={isPending || !hasChanges}
-            className="h-9 rounded-lg bg-[#C9A24A] px-4 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+            className="h-9 rounded-lg bg-emerald-500 px-4 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
           >
             <SaveIcon className="size-4" />
             {isPending ? "שומר..." : hasChanges ? "שמור שינויים" : "נשמר"}
@@ -171,17 +171,17 @@ export function CharityContentEditor({
       {/* Body — split: preview + side panel */}
       <div className="flex flex-1 overflow-hidden">
         {/* Preview pane */}
-        <div className="flex flex-1 flex-col overflow-hidden bg-zinc-900">
+        <div className="flex flex-1 flex-col overflow-hidden bg-white">
           {/* Preview mode toolbar */}
-          <div className="flex items-center justify-center gap-1 border-b border-white/10 bg-zinc-950/50 px-4 py-2.5">
-            <div className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1">
+          <div className="flex items-center justify-center gap-1 border-b border-slate-200 bg-slate-50/50 px-4 py-2.5">
+            <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1">
               <button
                 type="button"
                 onClick={() => setPreviewMode("desktop")}
                 className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
                   previewMode === "desktop"
-                    ? "bg-[#C9A24A] text-black"
-                    : "text-white/60 hover:text-white"
+                    ? "bg-emerald-500 text-black"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <MonitorIcon className="size-3.5" />
@@ -192,8 +192,8 @@ export function CharityContentEditor({
                 onClick={() => setPreviewMode("mobile")}
                 className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors ${
                   previewMode === "mobile"
-                    ? "bg-[#C9A24A] text-black"
-                    : "text-white/60 hover:text-white"
+                    ? "bg-emerald-500 text-black"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <SmartphoneIcon className="size-3.5" />
@@ -211,7 +211,7 @@ export function CharityContentEditor({
               className={`mx-auto overflow-hidden border shadow-2xl shadow-black/40 transition-all duration-500 ${
                 previewMode === "mobile"
                   ? "max-w-[400px] rounded-[2.5rem] border-zinc-700 ring-8 ring-zinc-800"
-                  : "max-w-3xl rounded-2xl border-white/10"
+                  : "max-w-3xl rounded-2xl border-slate-200"
               }`}
             >
               <CharityLandingPreview
@@ -224,19 +224,19 @@ export function CharityContentEditor({
         </div>
 
         {/* Side panel */}
-        <aside className="flex w-[420px] shrink-0 flex-col border-r border-white/10 bg-zinc-950">
+        <aside className="flex w-[420px] shrink-0 flex-col border-r border-slate-200 bg-slate-50">
           {selected ? (
             <>
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+              <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-widest text-[#C9A24A]">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
                     עריכה
                   </div>
                   <div className="mt-0.5 text-base font-bold">{panelTitle}</div>
                 </div>
                 <button
                   onClick={() => setSelected(null)}
-                  className="flex size-8 items-center justify-center rounded-lg text-white/50 hover:bg-white/5 hover:text-white"
+                  className="flex size-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   aria-label="סגור"
                 >
                   <XIcon className="size-4" />
@@ -360,12 +360,12 @@ export function CharityContentEditor({
 function EmptyPanel() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#C9A24A]/10 text-[#C9A24A]">
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
         <MousePointer2Icon className="size-6" />
       </div>
       <div>
         <h3 className="text-base font-bold">לחץ על פנסיל בתצוגה</h3>
-        <p className="mt-1.5 text-sm text-white/55">
+        <p className="mt-1.5 text-sm text-slate-600">
           ליד כל אלמנט בדף העמותה יש פנסיל זהוב.
           <br />
           לחיצה עליו פותחת אפשרויות עריכה — טקסט, גודל, צבע, יישור.
@@ -391,12 +391,12 @@ function HeroMediaForm({
           onChange={(e) =>
             onChange({ sideMediaType: e.target.value as "image" | "video" })
           }
-          className="h-11 rounded-xl border border-white/15 bg-white/5 px-3 text-sm text-white"
+          className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900"
         >
-          <option value="video" className="bg-zinc-900">
+          <option value="video" className="bg-white">
             וידאו (mp4)
           </option>
-          <option value="image" className="bg-zinc-900">
+          <option value="image" className="bg-white">
             תמונה
           </option>
         </select>
@@ -463,7 +463,7 @@ function StoryBodyForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             פסקאות ({value.paragraphs.length})
           </Label>
           <button type="button" onClick={addPara} className={addBtn}>
@@ -510,24 +510,24 @@ function SectionAccordion({
   children: React.ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center gap-4 p-5 text-right transition-colors hover:bg-white/[0.03]"
+        className="flex w-full items-center gap-4 p-5 text-right transition-colors hover:bg-white shadow-sm"
       >
-        <div className="flex size-10 items-center justify-center rounded-xl bg-[#C9A24A]/15 text-[#C9A24A]">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
           <Icon className="size-5" />
         </div>
         <div className="flex-1 text-base font-bold">{label}</div>
         <ChevronDownIcon
-          className={`size-5 text-white/40 transition-transform ${
+          className={`size-5 text-slate-400 transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
         />
       </button>
       {isOpen && (
-        <div className="border-t border-white/10 p-5 md:p-6">{children}</div>
+        <div className="border-t border-slate-200 p-5 md:p-6">{children}</div>
       )}
     </div>
   );
@@ -544,9 +544,9 @@ function Field({
 }) {
   return (
     <div className="grid gap-2">
-      <Label className="text-sm font-medium text-white/85">{label}</Label>
+      <Label className="text-sm font-medium text-slate-700">{label}</Label>
       {children}
-      {hint && <p className="text-xs text-white/45">{hint}</p>}
+      {hint && <p className="text-xs text-slate-400">{hint}</p>}
     </div>
   );
 }
@@ -673,12 +673,12 @@ function HeroForm({
           onChange={(e) =>
             onChange({ sideMediaType: e.target.value as "image" | "video" })
           }
-          className="h-11 rounded-xl border border-white/15 bg-white/5 px-3 text-sm text-white"
+          className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900"
         >
-          <option value="video" className="bg-zinc-900">
+          <option value="video" className="bg-white">
             וידאו (mp4)
           </option>
-          <option value="image" className="bg-zinc-900">
+          <option value="image" className="bg-white">
             תמונה
           </option>
         </select>
@@ -782,12 +782,12 @@ function ReelsForm({
           className={fieldClass}
         />
       </Field>
-      <p className="text-xs text-white/55">
+      <p className="text-xs text-slate-600">
         סקרול אופקי עם snap. וידאו אנכי 9:16 שמתנגן אוטומטית במסך. מומלץ 4-8 פריטים.
       </p>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             Reels ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>
@@ -799,7 +799,7 @@ function ReelsForm({
           {value.items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start gap-2">
                 {item.poster ? (
@@ -810,7 +810,7 @@ function ReelsForm({
                     className="size-14 shrink-0 rounded-lg object-cover"
                   />
                 ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                     <ImageIcon className="size-5" />
                   </div>
                 )}
@@ -898,7 +898,7 @@ function StoryForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             פסקאות ({value.paragraphs.length})
           </Label>
           <button type="button" onClick={addPara} className={addBtn}>
@@ -1001,14 +1001,14 @@ function PopupForm({
         label="הפעל popup"
         hint="הפופאפ יופיע פעם אחת בסשן, אחרי X שניות"
       >
-        <label className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-3">
+        <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
           <input
             type="checkbox"
             checked={value.enabled}
             onChange={(e) => onChange({ enabled: e.target.checked })}
             className="size-5 accent-[#C9A24A]"
           />
-          <span className="text-sm font-medium text-white/85">
+          <span className="text-sm font-medium text-slate-700">
             {value.enabled ? "פעיל" : "כבוי"}
           </span>
         </label>
@@ -1121,7 +1121,7 @@ function GalleryForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             תמונות ({value.items.length})
           </Label>
           <button type="button" onClick={addImg} className={addBtn}>
@@ -1133,7 +1133,7 @@ function GalleryForm({
           {value.items.map((img, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="flex items-start gap-2">
                 {img.src ? (
@@ -1144,7 +1144,7 @@ function GalleryForm({
                     className="size-14 shrink-0 rounded-lg object-cover"
                   />
                 ) : (
-                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/30">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-300">
                     <ImageIcon className="size-5" />
                   </div>
                 )}
@@ -1223,7 +1223,7 @@ function ImpactForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             מספרים ({value.counters.length})
           </Label>
           <button type="button" onClick={addCounter} className={addBtn}>
@@ -1235,7 +1235,7 @@ function ImpactForm({
           {value.counters.map((c, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[100px_70px_auto] gap-2">
                 <Input
@@ -1325,7 +1325,7 @@ function DonationCardsForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             כרטיסים ({value.cards.length})
           </Label>
           <button type="button" onClick={addCard} className={addBtn}>
@@ -1337,7 +1337,7 @@ function DonationCardsForm({
           {value.cards.map((card, i) => (
             <div
               key={i}
-              className="grid gap-2 rounded-xl border border-white/10 bg-black/30 p-3"
+              className="grid gap-2 rounded-xl border border-slate-200 bg-black/30 p-3"
             >
               <div className="grid grid-cols-[100px_1fr_auto] gap-2">
                 <Input
@@ -1481,7 +1481,7 @@ function TrustForm({
       </Field>
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             תוויות אמינות ({value.badges.length})
           </Label>
           <button type="button" onClick={addBadge} className={addBtn}>
@@ -1571,14 +1571,14 @@ function LiveFeedForm({
         label="הפעל popup תרומות בזמן אמת"
         hint="מציג בצד ימין תחתון תרומות לדוגמה לכוון יצירת תחושת תנועה"
       >
-        <label className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-3">
+        <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
           <input
             type="checkbox"
             checked={value.enabled}
             onChange={(e) => onChange({ enabled: e.target.checked })}
             className="size-5 accent-[#C9A24A]"
           />
-          <span className="text-sm font-medium text-white/85">
+          <span className="text-sm font-medium text-slate-700">
             {value.enabled ? "פעיל" : "כבוי"}
           </span>
         </label>
@@ -1586,7 +1586,7 @@ function LiveFeedForm({
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <Label className="text-sm font-medium text-white/85">
+          <Label className="text-sm font-medium text-slate-700">
             תרומות לדוגמה ({value.items.length})
           </Label>
           <button type="button" onClick={addItem} className={addBtn}>

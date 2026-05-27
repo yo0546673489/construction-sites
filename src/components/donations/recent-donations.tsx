@@ -1,8 +1,11 @@
 // components/donations/recent-donations.tsx
 import type { DonationSummary } from '@/lib/feature-types';
+import { Inbox } from 'lucide-react';
 
 interface Props {
   donations: DonationSummary['recentDonations'];
+  title?: string;
+  limit?: number;
 }
 
 const formatCurrency = (n: number) =>
@@ -30,61 +33,83 @@ const paymentMethodEmoji: Record<string, string> = {
   מזומן: '💵',
 };
 
-export function RecentDonations({ donations }: Props) {
+export function RecentDonations({
+  donations,
+  title = 'תרומות אחרונות',
+  limit,
+}: Props) {
+  const list = limit ? donations.slice(0, limit) : donations;
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="p-6 border-b border-gray-100">
-        <h2 className="text-lg font-bold">תרומות אחרונות</h2>
+    <div className="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-sm">
+      <div className="flex items-center justify-between border-b border-slate-100 p-6">
+        <div>
+          <h2 className="text-lg font-bold tracking-tight text-slate-900">
+            {title}
+          </h2>
+          <p className="mt-0.5 text-xs text-slate-500">
+            {donations.length === 0
+              ? 'אין תרומות בטווח זה'
+              : `${list.length} תרומות מתוך ${donations.length}`}
+          </p>
+        </div>
       </div>
 
       {donations.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          אין תרומות בטווח זה
+        <div className="flex flex-col items-center gap-3 p-12 text-center">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-slate-100">
+            <Inbox className="size-5 text-slate-400" />
+          </div>
+          <p className="text-sm text-slate-500">אין תרומות בטווח זה</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-right">
-            <thead className="bg-gray-50">
+          <table className="w-full text-right text-sm">
+            <thead className="border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase">
-                  תורם
-                </th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase">
-                  סכום
-                </th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase">
-                  קמפיין
-                </th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase">
-                  אמצעי תשלום
-                </th>
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase">
-                  תאריך
-                </th>
+                <th className="px-5 py-3 font-semibold">תורם</th>
+                <th className="px-5 py-3 font-semibold">סכום</th>
+                <th className="px-5 py-3 font-semibold">קמפיין</th>
+                <th className="px-5 py-3 font-semibold">אמצעי תשלום</th>
+                <th className="px-5 py-3 font-semibold">תאריך</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
-              {donations.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-4 font-medium">
-                    {d.donorName || <span className="text-gray-400">לא ידוע</span>}
+            <tbody className="divide-y divide-slate-100">
+              {list.map((d) => (
+                <tr
+                  key={d.id}
+                  className="transition-colors hover:bg-slate-50/60"
+                >
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 text-sm font-bold text-emerald-700">
+                        {d.donorName?.charAt(0) || '?'}
+                      </div>
+                      <span className="font-semibold text-slate-900">
+                        {d.donorName || (
+                          <span className="font-normal text-slate-400">
+                            לא ידוע
+                          </span>
+                        )}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-4 py-4 font-bold text-green-600">
+                  <td className="px-5 py-4 font-bold text-emerald-600">
                     {formatCurrency(d.amount)}
                   </td>
-                  <td className="px-4 py-4 text-gray-600">
+                  <td className="px-5 py-4 text-slate-600">
                     {d.campaignName || '—'}
                   </td>
-                  <td className="px-4 py-4 text-gray-600">
+                  <td className="px-5 py-4 text-slate-600">
                     {d.paymentMethod ? (
-                      <>
-                        {paymentMethodEmoji[d.paymentMethod] || '💰'} {d.paymentMethod}
-                      </>
+                      <span className="inline-flex items-center gap-1.5">
+                        {paymentMethodEmoji[d.paymentMethod] || '💰'}{' '}
+                        {d.paymentMethod}
+                      </span>
                     ) : (
-                      '—'
+                      <span className="text-slate-400">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-4 text-gray-500 text-sm">
+                  <td className="px-5 py-4 text-xs font-medium text-slate-400">
                     {formatDate(d.emailDate)}
                   </td>
                 </tr>

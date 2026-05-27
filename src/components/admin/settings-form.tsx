@@ -8,6 +8,7 @@ import {
   InfoIcon,
   KeyIcon,
   SaveIcon,
+  TargetIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +17,7 @@ import {
   updateClarityApiToken,
   updateClarityCode,
   updateFacebookPixel,
+  updateMetaAdAccountId,
 } from "@/app/admin/settings/actions";
 import { Input } from "@/components/ui/input";
 
@@ -23,6 +25,7 @@ type Props = {
   initialPixelCode: string;
   initialClarityCode: string;
   initialClarityApiToken: string;
+  initialMetaAdAccountId: string;
   tenantSlug: string;
 };
 
@@ -50,10 +53,14 @@ export function SettingsForm({
   initialPixelCode,
   initialClarityCode,
   initialClarityApiToken,
+  initialMetaAdAccountId,
   tenantSlug,
 }: Props) {
   return (
     <div className="grid gap-6">
+      {/* ===== Meta Ad Account ID ===== */}
+      <MetaAdAccountSection initialAccountId={initialMetaAdAccountId} />
+
       {/* ===== Facebook Pixel ===== */}
       <PixelSection
         title="פיקסל פייסבוק"
@@ -105,6 +112,136 @@ export function SettingsForm({
 }
 
 /* ============================================================
+   MetaAdAccountSection — מזהה חשבון פרסום של Meta
+   ============================================================ */
+
+function MetaAdAccountSection({ initialAccountId }: { initialAccountId: string }) {
+  const [value, setValue] = useState(initialAccountId);
+  const [savedValue, setSavedValue] = useState(initialAccountId);
+  const [isPending, startTransition] = useTransition();
+
+  const isDirty = value.trim() !== savedValue.trim();
+  const isConnected = savedValue.trim().length > 0;
+
+  function handleSave() {
+    startTransition(async () => {
+      const result = await updateMetaAdAccountId(value);
+      if (result.ok) {
+        toast.success(
+          value.trim() ? "מזהה חשבון נשמר — עבור לדף הקמפיינים" : "מזהה הוסר"
+        );
+        // נורמליזציה — אם נשמר עם act_ והמשתמש הזין רק מספר
+        const normalized = value.trim() && /^[0-9]+$/.test(value.trim())
+          ? `act_${value.trim()}`
+          : value.trim();
+        setSavedValue(normalized);
+        setValue(normalized);
+      } else {
+        toast.error(("error" in result && result.error) || "שגיאה");
+      }
+    });
+  }
+
+  function handleRemove() {
+    if (!confirm("להסיר את מזהה חשבון הפרסום?")) return;
+    setValue("");
+    startTransition(async () => {
+      const result = await updateMetaAdAccountId("");
+      if (result.ok) {
+        toast.success("מזהה הוסר");
+        setSavedValue("");
+      }
+    });
+  }
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6 md:p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#1877F2]/15 text-[#1877F2]">
+            <TargetIcon className="size-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold">מזהה חשבון פרסום Meta</h2>
+            <p className="mt-0.5 text-sm text-slate-600">
+              לקריאה לדף <span className="text-emerald-600">/admin/campaigns</span>{" "}
+              עם נתוני קמפיינים, תקציב, CTR ו-ROAS.
+            </p>
+          </div>
+        </div>
+        {isConnected && (
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">
+            <CheckCircleIcon className="size-3.5" />
+            מחובר
+            <span className="font-mono text-[10px] opacity-75">
+              · {savedValue}
+            </span>
+          </span>
+        )}
+      </div>
+
+      <div className="mt-6 grid gap-2">
+        <Label className="text-sm font-semibold text-slate-700">Account ID</Label>
+        <Input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="act_123456789"
+          dir="ltr"
+          className="h-10 rounded-xl border-slate-200 bg-slate-50 font-mono text-xs text-slate-900 placeholder:text-slate-300 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
+        />
+        <p className="text-xs text-slate-400">
+          נמצא ב-Meta Business Manager → Business Settings → Accounts → Ad
+          Accounts. הדבק כ-<span className="font-mono">act_123456789</span> או רק את המספר.
+        </p>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <Button
+          onClick={handleSave}
+          disabled={isPending || !isDirty}
+          className="h-10 rounded-xl bg-emerald-500 px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+        >
+          <SaveIcon className="size-4" />
+          {isPending ? "שומר..." : "שמור"}
+        </Button>
+        {isConnected && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            disabled={isPending}
+            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-700 hover:bg-red-500/10 disabled:opacity-50"
+          >
+            הסר
+          </button>
+        )}
+        {isConnected && (
+          <a
+            href="/admin/campaigns"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-600 hover:bg-emerald-100"
+          >
+            פתח קמפיינים
+            <ExternalLinkIcon className="size-3" />
+          </a>
+        )}
+      </div>
+
+      <div className="mt-6 flex items-start gap-3 rounded-xl border border-blue-400/20 bg-blue-500/[0.04] p-4">
+        <InfoIcon className="mt-0.5 size-4 shrink-0 text-blue-700" />
+        <div className="text-xs leading-relaxed text-slate-600">
+          <div className="font-bold text-slate-800">חשוב</div>
+          <p className="mt-1">
+            ה-token של Meta כבר מוגדר במערכת (system user token משותף). צריך רק
+            להזין את ה-Account ID של הלקוח הספציפי הזה. וודא שמנהל המערכת הוסיף
+            את ה-token כ-Admin בחשבון הפרסום ב-Business Manager.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
    ClarityApiTokenSection — שדה token לחיבור ה-API
    ============================================================ */
 
@@ -144,22 +281,22 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
   }
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+    <section className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-300">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 text-purple-700">
             <KeyIcon className="size-5" />
           </div>
           <div>
             <h2 className="text-lg font-bold">Clarity API Token</h2>
-            <p className="mt-0.5 text-sm text-white/55">
-              לקריאה לדף <span className="text-[#C9A24A]">/admin/analytics</span>{" "}
+            <p className="mt-0.5 text-sm text-slate-600">
+              לקריאה לדף <span className="text-emerald-600">/admin/analytics</span>{" "}
               עם נתונים חיים מ-Clarity (סשנים, heatmaps summary, rage clicks).
             </p>
           </div>
         </div>
         {isConnected && (
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-300">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">
             <CheckCircleIcon className="size-3.5" />
             מחובר
           </span>
@@ -167,7 +304,7 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
       </div>
 
       <div className="mt-6 grid gap-2">
-        <Label className="text-sm font-semibold text-white/85">API Token</Label>
+        <Label className="text-sm font-semibold text-slate-700">API Token</Label>
         <div className="flex gap-2">
           <Input
             type={show ? "text" : "password"}
@@ -175,17 +312,17 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
             onChange={(e) => setToken(e.target.value)}
             placeholder="eyJhbGc..."
             dir="ltr"
-            className="h-10 flex-1 rounded-xl border-white/15 bg-zinc-950 font-mono text-xs text-white placeholder:text-white/25 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+            className="h-10 flex-1 rounded-xl border-slate-200 bg-slate-50 font-mono text-xs text-slate-900 placeholder:text-slate-300 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
           />
           <button
             type="button"
             onClick={() => setShow((v) => !v)}
-            className="h-10 rounded-xl border border-white/15 bg-white/5 px-3 text-xs text-white/70 hover:bg-white/10"
+            className="h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-600 hover:bg-slate-100"
           >
             {show ? "הסתר" : "הצג"}
           </button>
         </div>
-        <p className="text-xs text-white/45">
+        <p className="text-xs text-slate-400">
           נמצא ב-clarity.microsoft.com → Settings → Data Export → Generate new
           API token.
         </p>
@@ -195,7 +332,7 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
         <Button
           onClick={handleSave}
           disabled={isPending || !isDirty}
-          className="h-10 rounded-xl bg-[#C9A24A] px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+          className="h-10 rounded-xl bg-emerald-500 px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
         >
           <SaveIcon className="size-4" />
           {isPending ? "שומר..." : "שמור"}
@@ -205,7 +342,7 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
             type="button"
             onClick={handleRemove}
             disabled={isPending}
-            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-300 hover:bg-red-500/10 disabled:opacity-50"
+            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-700 hover:bg-red-500/10 disabled:opacity-50"
           >
             הסר Token
           </button>
@@ -213,7 +350,7 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
         {isConnected && (
           <a
             href="/admin/analytics"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[#C9A24A]/30 bg-[#C9A24A]/10 px-4 py-2 text-xs font-bold text-[#C9A24A] hover:bg-[#C9A24A]/20"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-600 hover:bg-emerald-100"
           >
             פתח אנליטיקות
             <ExternalLinkIcon className="size-3" />
@@ -222,9 +359,9 @@ function ClarityApiTokenSection({ initialToken }: { initialToken: string }) {
       </div>
 
       <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-400/20 bg-amber-500/[0.04] p-4">
-        <InfoIcon className="mt-0.5 size-4 shrink-0 text-amber-300" />
-        <div className="text-xs leading-relaxed text-white/70">
-          <div className="font-bold text-white/90">מגבלות API חינמי</div>
+        <InfoIcon className="mt-0.5 size-4 shrink-0 text-amber-700" />
+        <div className="text-xs leading-relaxed text-slate-600">
+          <div className="font-bold text-slate-800">מגבלות API חינמי</div>
           <p className="mt-1">
             10 קריאות API ליום, מקסימום 3 ימים אחורה בכל קריאה. אנחנו cache-ים
             כל קריאה לשעה, אז מקסימום ~24 קריאות ליום גם תחת שימוש כבד.
@@ -307,7 +444,7 @@ function PixelSection({
   }
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+    <section className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
           <div
@@ -321,11 +458,11 @@ function PixelSection({
           </div>
           <div>
             <h2 className="text-lg font-bold">{title}</h2>
-            <p className="mt-0.5 text-sm text-white/55">{subtitle}</p>
+            <p className="mt-0.5 text-sm text-slate-600">{subtitle}</p>
           </div>
         </div>
         {isConnected && (
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-300">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700">
             <CheckCircleIcon className="size-3.5" />
             פעיל
             {detectedId && (
@@ -338,7 +475,7 @@ function PixelSection({
       </div>
 
       <div className="mt-6 grid gap-2">
-        <Label className="text-sm font-semibold text-white/85">
+        <Label className="text-sm font-semibold text-slate-700">
           {labelText}
         </Label>
         <Textarea
@@ -347,16 +484,16 @@ function PixelSection({
           placeholder={placeholder}
           dir="ltr"
           rows={10}
-          className="rounded-xl border-white/15 bg-zinc-950 font-mono text-[12px] leading-relaxed text-white placeholder:text-white/25 focus-visible:border-[#C9A24A] focus-visible:ring-[#C9A24A]/30"
+          className="rounded-xl border-slate-200 bg-slate-50 font-mono text-[12px] leading-relaxed text-slate-900 placeholder:text-slate-300 focus-visible:border-emerald-500 focus-visible:ring-emerald-200"
         />
-        <p className="text-xs text-white/45">{helpText}</p>
+        <p className="text-xs text-slate-400">{helpText}</p>
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Button
           onClick={handleSave}
           disabled={isPending || !isDirty}
-          className="h-10 rounded-xl bg-[#C9A24A] px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
+          className="h-10 rounded-xl bg-emerald-500 px-5 text-sm font-bold text-black hover:bg-white disabled:opacity-50"
         >
           <SaveIcon className="size-4" />
           {isPending ? "שומר..." : "שמור"}
@@ -366,7 +503,7 @@ function PixelSection({
             type="button"
             onClick={handleRemove}
             disabled={isPending}
-            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-300 hover:bg-red-500/10 disabled:opacity-50"
+            className="h-10 rounded-xl border border-red-500/30 bg-red-500/5 px-4 text-sm font-medium text-red-700 hover:bg-red-500/10 disabled:opacity-50"
           >
             הסר
           </button>
@@ -375,7 +512,7 @@ function PixelSection({
           href={helpUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-white/60 hover:text-[#C9A24A]"
+          className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 hover:text-emerald-600"
         >
           {helpLinkText}
           <ExternalLinkIcon className="size-3" />
@@ -383,16 +520,16 @@ function PixelSection({
       </div>
 
       <div className="mt-6 flex items-start gap-3 rounded-xl border border-blue-400/20 bg-blue-500/[0.04] p-4">
-        <InfoIcon className="mt-0.5 size-4 shrink-0 text-blue-300" />
-        <div className="text-xs leading-relaxed text-white/70">
-          <div className="font-bold text-white/90">איך זה עובד</div>
+        <InfoIcon className="mt-0.5 size-4 shrink-0 text-blue-700" />
+        <div className="text-xs leading-relaxed text-slate-600">
+          <div className="font-bold text-slate-800">איך זה עובד</div>
           <p className="mt-1">
             {infoText}{" "}
             <a
               href={`/sites/${tenantSlug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#C9A24A] hover:underline"
+              className="text-emerald-600 hover:underline"
             >
               צפה בדף הציבורי שלך
             </a>

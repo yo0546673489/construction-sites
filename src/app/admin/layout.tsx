@@ -8,10 +8,8 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // ה-proxy כבר מבטיח שיש session, אבל בודקים ליתר ביטחון.
   const session = await auth();
 
-  // ב-/admin/login (וכאשר אין session) — רנדר את הילדים בלי sidebar.
   if (!session?.user) {
     return <>{children}</>;
   }
@@ -22,9 +20,6 @@ export default async function AdminLayout({
     role: session.user.role,
   };
 
-  // קביעת ה-tenant הפעיל:
-  //  - OWNER/EDITOR — ה-tenantId שלהם מהסשן
-  //  - SUPERADMIN — מ-cookie של "active tenant"
   const activeTenantId =
     user.role === "SUPERADMIN"
       ? await getActiveTenantId()
@@ -40,21 +35,30 @@ export default async function AdminLayout({
   const isImpersonating = user.role === "SUPERADMIN" && tenant !== null;
 
   return (
-    <div className="flex min-h-screen bg-zinc-900 text-white">
+    <div className="relative flex min-h-screen bg-slate-50 text-slate-900 antialiased">
+      {/* Soft background accents — subtle emerald glow blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-emerald-400/10 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-teal-400/8 blur-[100px]" />
+      </div>
+
       <AdminSidebar
         user={user}
         tenant={tenant}
         isImpersonating={isImpersonating}
       />
-      <div className="flex-1 overflow-x-auto">
-        {/* באנר עליון כש-SUPERADMIN מנהל לקוח */}
+
+      <div className="relative flex-1 overflow-x-auto">
         {isImpersonating && tenant && (
-          <div className="border-b border-[#C9A24A]/20 bg-[#C9A24A]/5 px-6 py-2.5 text-center text-xs text-[#C9A24A]/90 md:px-10">
-            אתה עובד כעת כמנהל מערכת בתוך הלקוח{" "}
-            <span className="font-semibold">{tenant.name}</span>
+          <div className="sticky top-0 z-30 border-b border-emerald-200/60 bg-emerald-50/90 px-6 py-2.5 text-center text-xs font-medium text-emerald-800 backdrop-blur-md md:px-10">
+            <span className="inline-flex items-center gap-2">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              אתה עובד כעת כמנהל מערכת בתוך הלקוח{" "}
+              <span className="font-bold">{tenant.name}</span>
+            </span>
           </div>
         )}
-        <div className="mx-auto max-w-6xl p-6 md:p-10">{children}</div>
+        <div className="mx-auto max-w-7xl p-6 md:p-10">{children}</div>
       </div>
     </div>
   );

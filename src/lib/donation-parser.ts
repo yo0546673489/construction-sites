@@ -190,13 +190,44 @@ function matchKeyword(
 }
 
 // ============================================
+// 7.5. דחיית דופליקטים ומיילים אינפורמטיביים
+// ============================================
+
+/**
+ * מחזיר true עבור מיילים שהם:
+ * - העתקי קבלה (שולחים אחרי כל עסקה — דופליקט של ההתראה המקורית)
+ * - קבלות אוטומטיות עצמאיות
+ * - הודעות שגיאה / סירוב (לא תרומות אמיתיות)
+ * - דוחות תקופתיים
+ */
+function isDuplicateOrInformational(subject: string): boolean {
+  // עותק קבלה — דופליקט של "התקבלה עסקה חדשה" שנשלח דקה לאחר מכן
+  if (subject.includes('העתק קבלה')) return true;
+  // קבלה ממוחשבת עצמאית
+  if (subject.includes('קבלה ממוחשבת')) return true;
+  // שגיאות/סירובים
+  if (subject.includes('שגיאה') || subject.includes('סירוב')) return true;
+  // דוחות
+  if (subject.includes('דוח הוראות')) return true;
+  if (subject.includes('התראת הוראות')) return true;
+  // טפסים (לא תרומה — נשלח כשמישהו ממלא טופס בלי לתרום)
+  if (subject.includes('התקבל טופס')) return true;
+  return false;
+}
+
+// ============================================
 // 8. הפונקציה הראשית - parseEmail
 // ============================================
 
 export function parseEmail(context: ParserContext): ParsedDonation | null {
+  // 0. דחה מיילים שהם דופליקטים או אינפורמטיביים (לא תרומות אמיתיות)
+  if (isDuplicateOrInformational(context.subject)) {
+    return null;
+  }
+
   const cleanBody = stripHtml(context.body);
   const fullText = `${context.subject}\n${cleanBody}`;
-  
+
   // 1. בדיקת התאמה למילת קוד - חובה
   const matched = matchKeyword(fullText, context.keywords);
   if (!matched) {

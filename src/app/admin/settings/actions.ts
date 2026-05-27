@@ -149,6 +149,49 @@ export async function updateClarityApiToken(input: string) {
   return { ok: true } as const;
 }
 
+/**
+ * עדכון Meta Ad Account ID — מזהה חשבון פרסום של הלקוח ב-Meta Business Manager.
+ * משמש את דף /admin/campaigns לשליפת קמפיינים, hard-spend, ROAS, וכו'.
+ * מקבל פורמט "act_123456789" או רק את המספר. מחרוזת ריקה — מסירה.
+ */
+export async function updateMetaAdAccountId(input: string) {
+  const { tenant } = await requireTenantUser();
+  const trimmed = input.trim();
+
+  if (trimmed.length === 0) {
+    await prisma.tenant.update({
+      where: { id: tenant.id },
+      data: { metaAdAccountId: null },
+    });
+    revalidatePath("/admin/settings");
+    revalidatePath("/admin/campaigns");
+    return { ok: true } as const;
+  }
+
+  // נורמליזציה: אם הזין רק ספרות — נוסיף את הקידומת act_
+  const normalized = /^[0-9]{6,20}$/.test(trimmed)
+    ? `act_${trimmed}`
+    : trimmed;
+
+  // ולידציה: צריך להיות בפורמט act_ + ספרות בלבד
+  if (!/^act_[0-9]{6,20}$/.test(normalized)) {
+    return {
+      ok: false,
+      error:
+        "ה-ID לא נראה תקין. הפורמט המצופה: act_123456789 (או רק את המספר)",
+    } as const;
+  }
+
+  await prisma.tenant.update({
+    where: { id: tenant.id },
+    data: { metaAdAccountId: normalized },
+  });
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/admin/campaigns");
+  return { ok: true } as const;
+}
+
 /** בניית קוד הפיקסל הסטנדרטי כשהמשתמש הזין רק מספר */
 function buildStandardPixelCode(pixelId: string): string {
   return `<!-- Meta Pixel Code -->

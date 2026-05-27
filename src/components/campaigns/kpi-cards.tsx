@@ -50,7 +50,7 @@ export function KPICards({ summary }: Props) {
           : 'אין לידים בטווח',
       icon: Users,
       bg: 'bg-orange-50',
-      iconColor: 'text-orange-600',
+      iconColor: 'text-orange-700',
     },
   ];
 

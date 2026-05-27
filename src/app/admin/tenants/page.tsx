@@ -25,13 +25,13 @@ export default async function TenantsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="text-xs font-semibold uppercase tracking-widest text-[#C9A24A]">
+        <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
           ניהול פלטפורמה
         </div>
         <h1 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
           כל הלקוחות
         </h1>
-        <p className="mt-2 text-sm text-white/55">
+        <p className="mt-2 text-sm text-slate-600">
           לכל לקוח: דשבורד משלו, משתמשים משלו, לידים משלו, ודף נחיתה ב-/sites/[slug].
         </p>
       </div>

@@ -86,7 +86,7 @@ export function CampaignsTable({ campaigns }: Props) {
                   <td className="px-4 py-4 text-gray-600">{formatNumber(c.clicks)}</td>
                   <td className="px-4 py-4 text-gray-600">{c.ctr.toFixed(2)}%</td>
                   <td className="px-4 py-4 text-gray-600">{formatCurrency(c.cpc)}</td>
-                  <td className="px-4 py-4 font-medium text-orange-600">
+                  <td className="px-4 py-4 font-medium text-orange-700">
                     {c.leads > 0 ? formatNumber(c.leads) : '—'}
                   </td>
                   <td className="px-4 py-4 text-gray-600">

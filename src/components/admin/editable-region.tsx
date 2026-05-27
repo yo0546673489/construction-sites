@@ -31,8 +31,8 @@ export function EditableRegion({
   className,
 }: Props) {
   const ringClass = selected
-    ? "ring-2 ring-[#C9A24A] ring-offset-4 ring-offset-black"
-    : "ring-0 ring-transparent hover:ring-2 hover:ring-[#C9A24A]/50 hover:ring-offset-4 hover:ring-offset-black";
+    ? "ring-2 ring-emerald-500 ring-offset-4 ring-offset-black"
+    : "ring-0 ring-transparent hover:ring-2 hover:ring-emerald-500/50 hover:ring-offset-4 hover:ring-offset-black";
 
   return (
     <div
@@ -46,7 +46,7 @@ export function EditableRegion({
     >
       {/* Edit badge */}
       <div
-        className={`pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-full bg-[#C9A24A] px-2.5 py-1 text-xs font-bold text-black shadow-lg transition-opacity ${
+        className={`pointer-events-none absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-xs font-bold text-black shadow-lg transition-opacity ${
           selected ? "opacity-100" : "opacity-0 group-hover/edit:opacity-100"
         }`}
       >

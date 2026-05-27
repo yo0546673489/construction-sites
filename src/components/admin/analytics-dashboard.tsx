@@ -64,7 +64,7 @@ export function AnalyticsDashboard({ summary }: Props) {
 
       {/* ============ Quality / UX issues ============ */}
       <section>
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-white/55">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-600">
           איכות חוויה (כל לחיצה = הזדמנות לשיפור)
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -135,16 +135,16 @@ export function AnalyticsDashboard({ summary }: Props) {
       </div>
 
       {/* ============ Footer hint ============ */}
-      <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.02] p-4">
-        <RefreshCwIcon className="mt-0.5 size-4 shrink-0 text-white/45" />
-        <div className="text-xs leading-relaxed text-white/65">
+      <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+        <RefreshCwIcon className="mt-0.5 size-4 shrink-0 text-slate-400" />
+        <div className="text-xs leading-relaxed text-slate-600">
           הנתונים נשמרים ב-cache למשך שעה. לרענון מהיר — רענן את הדף לאחר 60
           דקות. לסרטוני הקלטה ומפות חום ויזואליות —{" "}
           <a
             href="https://clarity.microsoft.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#C9A24A] hover:underline"
+            className="text-emerald-600 hover:underline"
           >
             פתח את Clarity Dashboard
           </a>
@@ -175,11 +175,11 @@ function KpiCard({
   hint?: string;
 }) {
   const toneCls: Record<Tone, string> = {
-    primary: "border-[#C9A24A]/30 bg-[#C9A24A]/[0.06] text-[#C9A24A]",
-    neutral: "border-white/10 bg-white/[0.03] text-white/85",
-    success: "border-emerald-500/25 bg-emerald-500/[0.05] text-emerald-300",
-    warning: "border-amber-500/25 bg-amber-500/[0.05] text-amber-300",
-    danger: "border-red-500/30 bg-red-500/[0.06] text-red-300",
+    primary: "border-emerald-200 bg-emerald-500/[0.06] text-emerald-600",
+    neutral: "border-slate-200 bg-white shadow-sm text-slate-700",
+    success: "border-emerald-500/25 bg-emerald-500/[0.05] text-emerald-700",
+    warning: "border-amber-500/25 bg-amber-500/[0.05] text-amber-700",
+    danger: "border-red-500/30 bg-red-500/[0.06] text-red-700",
   };
   return (
     <div className={`rounded-2xl border p-4 ${toneCls[tone]}`}>
@@ -206,13 +206,13 @@ function TopList({
 }) {
   const max = Math.max(...items.map((i) => i.sessions), 1);
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-      <div className="mb-4 flex items-center gap-2 text-sm font-bold text-white/85">
-        <Icon className="size-4 text-[#C9A24A]" />
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
+      <div className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-700">
+        <Icon className="size-4 text-emerald-600" />
         {title}
       </div>
       {items.length === 0 ? (
-        <div className="py-3 text-xs text-white/45">אין נתונים זמינים</div>
+        <div className="py-3 text-xs text-slate-400">אין נתונים זמינים</div>
       ) : (
         <ul className="space-y-2">
           {items.map((item, i) => {
@@ -224,22 +224,22 @@ function TopList({
               >
                 <div className="min-w-0">
                   <div
-                    className="truncate text-sm text-white/85"
+                    className="truncate text-sm text-slate-700"
                     title={item.name}
                   >
-                    <ChevronLeftIcon className="ml-1 inline size-3 text-white/30" />
+                    <ChevronLeftIcon className="ml-1 inline size-3 text-slate-300" />
                     {item.name || "—"}
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                     <div
-                      className="h-full rounded-full bg-[#C9A24A]"
+                      className="h-full rounded-full bg-emerald-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
                 </div>
-                <div className="text-xs font-bold tabular-nums text-white/75">
+                <div className="text-xs font-bold tabular-nums text-slate-700">
                   {item.sessions.toLocaleString("he-IL")}{" "}
-                  <span className="text-white/45">{unit}</span>
+                  <span className="text-slate-400">{unit}</span>
                 </div>
               </li>
             );
