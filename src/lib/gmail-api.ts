@@ -323,5 +323,17 @@ export function buildSearchQuery(keywords: string[], sinceDays = 7): string {
     .map((k) => `(${k.trim()})`)
     .join(' OR ');
 
-  return `${keywordPart} after:${dateStr}`;
+  // צמצום לשולחים מורשים בלבד (למשל מערכת הסליקה HYP: ipos@hyp.co.il) —
+  // מונע התאמות-שווא ממיילים של מערכות אחרות שמכילות במקרה את אותן מילים.
+  // ניתן להגדיר כמה שולחים מופרדים בפסיק ב-DONATION_FROM_FILTER.
+  const fromFilter = process.env.DONATION_FROM_FILTER?.trim();
+  const fromPart = fromFilter
+    ? `from:(${fromFilter
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(' OR ')}) `
+    : '';
+
+  return `${fromPart}(${keywordPart}) after:${dateStr}`;
 }
