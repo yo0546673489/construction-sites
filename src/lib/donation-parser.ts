@@ -27,6 +27,9 @@ function stripHtml(html: string): string {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    // פענוח ישויות מספריות (למשל &#8362; = ₪, שנפוץ במיילים של HYP)
+    .replace(/&#x([0-9a-fA-F]+);/g, (_m, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_m, n) => String.fromCodePoint(parseInt(n, 10)))
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -72,6 +75,7 @@ function extractAmount(text: string): number | null {
 // ============================================
 
 const NAME_PATTERNS = [
+  /שם הלקוח[:\s]+([֐-׿]+(?:\s+[֐-׿]+){0,3})/,
   /שם[:\s]+([\u0590-\u05FF\sא-ת]+?)(?=\n|כתובת|טלפון|מייל|סכום|תאריך|$)/,
   /תורם[:\s]+([\u0590-\u05FF\sא-ת]+?)(?=\n|כתובת|טלפון|מייל|סכום|$)/,
   /donor[:\s]+([A-Za-z\s]+?)(?=\n|address|phone|email|$)/i,

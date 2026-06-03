@@ -83,7 +83,20 @@ export default async function DonationsPage({
     </div>
   );
 
-  if (!gmailConnection || !gmailConnection.syncEnabled) {
+  const keywordsCount = await prisma.donationKeyword.count({
+    where: { tenantId: tenant.id, isActive: true },
+  });
+  const donationCount = await prisma.donation.count({
+    where: { tenantId: tenant.id },
+  });
+
+  // מציגים את מסך "חבר Gmail" רק כשאין כלום להציג (אין מילות מפתח ואין תרומות) וגם אין Gmail.
+  // תרומות שנכנסות דרך הצינור הישיר (webhook) מוצגות גם ללא Gmail.
+  if (
+    (!gmailConnection || !gmailConnection.syncEnabled) &&
+    keywordsCount === 0 &&
+    donationCount === 0
+  ) {
     return (
       <div className="space-y-8">
         {header}
@@ -91,10 +104,6 @@ export default async function DonationsPage({
       </div>
     );
   }
-
-  const keywordsCount = await prisma.donationKeyword.count({
-    where: { tenantId: tenant.id, isActive: true },
-  });
 
   if (keywordsCount === 0) {
     return (
@@ -139,7 +148,7 @@ export default async function DonationsPage({
 
       {/* Action bar */}
       <div className="flex flex-wrap items-center gap-2">
-        <SyncButton daysBack={days} />
+        {gmailConnection?.syncEnabled && <SyncButton daysBack={days} />}
         <DateRangePicker currentRange={days} />
       </div>
 
