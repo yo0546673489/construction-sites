@@ -78,8 +78,11 @@ export async function getCashflowSummary(
     keyword: (typeof keywords)[number];
   }> = [];
   for (const metaCampaign of allMetaCampaigns) {
-    const linkedKeyword = keywords.find((k) =>
-      metaCampaignMatchesKeyword(metaCampaign.name, k.campaignName)
+    // התאמה לפי מילת המפתח (למשל "מטרנה") שמופיעה בשם קמפיין המודעות, ובנוסף לפי השם המלא.
+    const linkedKeyword = keywords.find(
+      (k) =>
+        metaCampaignMatchesKeyword(metaCampaign.name, k.keyword) ||
+        metaCampaignMatchesKeyword(metaCampaign.name, k.campaignName)
     );
     if (linkedKeyword) {
       linkedMetaCampaigns.push({ meta: metaCampaign, keyword: linkedKeyword });

@@ -124,8 +124,12 @@ export default async function CampaignsPage({
 
   // קבץ Meta campaigns לפי keyword
   const groups = keywords.map((kw) => {
-    const linked = allCampaigns!.filter((c) =>
-      metaCampaignMatchesKeyword(c.name, kw.campaignName)
+    // ההתאמה מתבססת קודם על מילת המפתח (למשל "מטרנה") שמופיעה בשם קמפיין המודעות,
+    // ובנוסף על שם הקמפיין המלא — כך "קמפיין מטרנה מכירות" יתחבר לקמפיין "מטרנה".
+    const linked = allCampaigns!.filter(
+      (c) =>
+        metaCampaignMatchesKeyword(c.name, kw.keyword) ||
+        metaCampaignMatchesKeyword(c.name, kw.campaignName)
     );
     const spend = linked.reduce((s, c) => s + c.spend, 0);
     const clicks = linked.reduce((s, c) => s + c.clicks, 0);
